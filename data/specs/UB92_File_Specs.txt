@@ -1,0 +1,4189 @@
+
+
+
+
+
+
+
+UB-92
+
+File
+
+Specifications
+
+Version 510
+
+
+
+
+
+
+
+Implementation Date:  August 14, 2011
+Revision Date: February 2012
+
+  
+Table of Contents
+
+Introduction		4
+Record Type: 01	Processor Data	6
+Record Type: 10	Provider Data	8
+Record Type: 20	Patient Data	9
+Record Type: 21	Currently not used.	11
+Record Type: 22	Currently not used.	13
+Record Type: 30	Third Party Payer Data	14
+Record Type: 31	Third Party Payer Data	17
+Record Type: 32	Currently not used.	18
+Record Type: 34	Currently not used.	19
+Record Type: 40 	Claim Data Tan-Occurrence	20
+Record Type: 41 	Claim Data Condition Value	22
+Record Type: 46	Additional Provider Information	25
+Record Type: 50	IP Accommodations Data	26
+Record Type: 60	IP Ancillary Services Data	28
+Record Type: 61 	Outpatient Procedures	30
+Record Type: 66	Third Party Organization (TPO) Output Record	32
+Record Type: 70	Medical Data	34
+Record Type: 71  Currently not used.	37
+Record Type: 72	Currently not used.	38
+Record Type: 73	Currently not used.	39
+Record Type: 74  Currently not used.	40
+Record Type: 75 	Currently not used.	41
+Record Type: 76	Currently not used.	42
+Record Type: 77	Currently not used.	43
+Record Type: 78	Additional Diagnosis & Procedure Code Data	44
+Record Type: 80	Physician Data	46
+Record Type: 90 	Claim Control Screen	48
+Record Type: 91	Claim Remarks	50
+Record Type: 95 	Provider Batch Control	51
+Record Type: 99 File Control	52
+Exhibit # 1 Standard Date and Time Checks	E1
+Exhibit # 2 Standard Address Checks	E2
+Exhibit # 3 Batch and Bill Type Codes	E1
+Exhibit # 4 Type and Source of Admission and Patient Status	E5
+Exhibit # 5 Occurrence Codes	E7
+Exhibit # 6 Occurrence Span Codes	E10
+Exhibit # 7 Condition Codes	E11
+Exhibit # 8 Value Codes	E15
+Exhibit # 9 Revenue Codes & Unit Requirements	E19
+
+
+Introduction
+
+This document provides the format and data contents of the UB-92 health care claim transactions for claim submission to United HealthCare Corporation. The data elements and design of the records are based on the National Uniform Billing Committee. UnitedHealthcare uses this UB-92 format as the basis for its electronic UB-92 claim submission.
+
+This document describes in detail each record type used in a UB-92 claim. The first part of the record type description provides record level information, the record type code and name, comments about the record's physical placement in the transaction file and details about when the record type is required, conditional, optional or not used. This is followed by information about each field in the record type. Each field contains the following information:
+
+Field No.	A unique number assigned to each field within the record type to assist in field identification.
+
+Positions	From Position - Identifies the first or starting position of the field within 	the record layout.
+	To Position - Identifies the last or ending position of the field within the 	 record layout.
+
+Picture	The COBOL programming value assigned to each data element. Following is a list of the different picture clauses that may appear in the specifications:
+			PIC X(n) - alpha/numeric characters
+			PIC 9(n) - numeric characters
+			PIC 9(n)V99 - numeric, dollar amount, decimal implied
+			PIC S9(n)V99 - signed, numeric, dollar amount, decimal implied
+			
+			All alpha/numeric fields must be left justified, space filled.
+			All numeric fields must be right justified, zero filled.
+			All alpha/numeric fields must be initialized to spaces.
+			All numeric fields must be initialized to zeros.
+
+Req Field	Indicates the requirement for the field. There are six possible values which are the following:
+	R    	indicates that the field is required on both inpatient and outpatient claims.
+	RI	indicates that the field is required for inpatient claims only.
+	RO	indicates that the field is required for outpatient claims only.
+ 	O	indicates that the field is optional.
+	C	indicates that the field is conditional. The condition for its presence is identified in the field name/description column.
+	N	indicates that the field is not used.
+
+	Refer to Exhibit # 3 Batch and Bill Type Codes for definitions of inpatient and outpatient claims.
+
+Field Name/Description - Provides a concise definition of the data contained in the field and any special codes or rules for its valid values. 
+Figure 1 below shows the structure of the UB-92 transaction file. The hierarchical structure and relationship between the various records of the UB-92 transaction file is denoted by the indentation of the record type codes.
+
+A batch consists of Record Type 10 through and including record type 95.  There can be multiple batches in one transaction file. 
+
+A claim consists of Record Type 20 through and including record type 91.  There can be multiple claims in one batch. 
+ 
+Record Type
+Code
+Record Type
+Description
+Requirement Description
+Maximum Occurrence
+01
+Processor Data
+Required
+1 per file
+    10
+Provider Data
+Required
+1 per batch
+        20
+Patient Data
+Required
+1 per claim
+        21
+Non Insured Employment
+Conditional
+2 per claim
+        22
+Unassigned State Form Locators
+Not Used
+-
+  30
+Third Party Payer Data
+Required
+3 per claim
+        31
+Third Party Payer Data
+Required
+3 per claim
+        32
+Third Party Payer Data
+Not Used
+-
+        34
+Authorization
+Not Used
+-
+        40
+Claim Data Tan Occurrence
+Required
+99 per claim
+        41
+Claim Data Condition Value
+Required for Inpatient        
+Conditional for Outpatient
+99 per claim
+        46
+Additional Provider Information
+Conditional
+1 per claim
+        50
+IP Accommodations Data
+Required for Inpatient (excluding late charges)
+99 per claim
+        60
+IP Ancillary Services Data
+Conditional
+99 per claim
+        61
+Outpatient Procedures
+Required for
+Outpatient
+99 per claim
+        66
+Third Party Organization (TPO) Output Record
+Conditional
+1 per claim
+        70
+Medical Data
+Required
+1 per claim
+        71
+Plan of Treatment and Patient Information
+Not Used
+-
+        72
+Specific Services and Treatment
+Not Used
+-
+        73
+Plan of Treatment/Medical Update Narrative
+Not Used
+-
+        74
+Patient Information
+Not Used
+-
+        75
+Medical Documentation for Ambulance Claims
+Not Used
+-
+        76
+ESRD Medical Documentation
+Not Used
+-
+        77
+Rehabilitative Services Record
+Not Used
+-
+	78
+Additional Diagnosis & Procedure Code Data
+Conditional
+3 per claim
+        80
+Physician Data
+Desirable
+3 per claim
+        90
+Claim Control Screen
+Required
+1 per claim
+        91
+Remarks
+Conditional
+1 per claim
+    95
+Provider Batch Control
+Required
+1 per batch
+99
+File Control
+Required
+1 per file
+Record Type: 01	Record Name:	Processor Data
+
+    - Only one 01 record is allowed per file; Must be the first record on the file.
+    - Must be followed by Record Type 10
+
+Field	Positions      	Req
+No.     From 	To	Picture    Field	Field Name/Description			
+				
+01	1	2	X(2)	R	Record Type - Must be '01'	
+
+02	3	12	9(10)	R	Submitter EIN
+					The Employer Identification Number (EIN) of the submitter preceded by a zero (0). First position must be equal to '0'.
+					
+03	13	13	9(1)	N	Multiple Provider Billing File Indicator
+					Used to indicate the occurrence of multiple providers within the file. 
+						1 = Single Provider
+						2 = Multiple Providers	
+
+04	14	30	X(17)	N	Filler (National Use) - Unused record space
+
+05	31	31	X(1)	R	Receiver Type Code
+					Indicates the organization designated to receive this file. F = Insurance Company. Must be entered.
+
+06	32	36	9(5)	R	Receiver Identification
+					A number used to identify the organization to receive the file. UnitedHealthcare = 87726 
+						
+07	37	40	X(4)	N	Receiver Sub-Identification
+					A number used to identify the specific location within the receiver's organization to receive the file.
+
+08	41	46	X(6)	N	Filler (National Use) - Unused record space.
+
+09	47	67	X(21) 	O	Submitter Name
+					The name of the organization submitting the claim file.
+
+Submitter Address (Fields 10 - 13) - Address of the submitting organization. See Exhibit # 2 Standard Address Checks
+
+10	68	85	X(18)	O	Submitter Address
+
+11	86	100	X(15)	O	Submitter City
+
+12	101	102	X(2)	O	Submitter State
+ 					
+13	103	111	X(9)	O	Submitter Zip Code
+
+14	112	121	9(10)	N	Submitter Fax Number - Not used.
+
+15	122	125	X(4)	N	Submitter Country Code - Not used.
+
+16	126	135	9(10)	O	Submitter Telephone Number
+					Telephone number of the submitter. Format = XXXYYYZZZZ
+					XXX = Area Code	YYY = Exchange	ZZZZ = Station Number 
+
+17	136	142	X(7)	R	File Sequence & Serial Number
+					The number assigned by the submitter for the claim file. Must be unique for every new file submitted.
+
+18	143	146	X(4)	R	Test/Production Indicator
+					Indicates if the file is for adjudication or testing purposes. Code Values:
+						PROD = Production
+						TEST = Test
+Record Type:	01	Record Name:	Processor Data
+
+Field	Positions      	Req
+No.      From  To	Picture  	Field	Field Name/Description			
+
+19	147	154	9(8)	N	Date of Receipt
+					The date the file was received from the submitter. This is to be entered by the receiver of the file. Format = CCYYMMDD
+
+20	155	162	9(8)	R	Processing Date 
+					The date the submitter prepares the file for transmission to the receiver. Format = CCYYMMDD
+
+21	163	189	X(27)	N	Filler (Local Use) - Unused record space.
+
+22	190	192	X(3)	R	Version Code
+					A code used to identify the version of the specification format being used. Must be equal to '510'.
+Record Type: 10	Record Name:	Provider Data
+
+    - Record Type 10 must be present for each unique Provider Batch combination (i.e., Field 02-Type of Batch and Field 04-Federal Tax Number)
+    - Preceding record types 01 or 95
+    - Following record type 20
+
+Field	Positions      	Req
+No.      From   To	Picture	Field	Field Name/Description			
+			
+01	1	2	X(2)	R	Record Type - Must be '10'	
+
+02	3	5	X(3)	R	Type of Batch
+					Indicates the types of bills that occur in this batch. Batch by first two characters of Type of Bill. See Exhibit # 3 Batch Type Codes.	
+
+03	6	7	9(2)	R	Batch Number
+					Sequential number 01 - 99 assigned to each batch of claims for a provider. When the Federal Tax Number or EIN changes from the previous batch, the batch number must be reset to 01.
+
+04	8	17	9(10)	R	Federal Tax Number or EIN
+					The provider's Tax ID Number (TIN) or Employer ID Number (EIN). First position must be 0. 
+					
+05	18	21	X(4)	N	Federal Tax Sub ID
+					Modifier to the Federal Tax Number listed above. Not used.
+
+06	22	34	X(13)	O	Medicare Provider Number
+					The National Provider Identifier (NPI) assigned to the provider. 
+
+07	35	47	X(13)	N	Medicaid Provider Number 
+					The provider taxonomy code.	
+
+08	48	60	X(13)	N	CHAMPUS Insurer Provider Number - Not used.
+
+09	61	73	X(13)	O	Other Insurer Provider Number - 1
+					Provider ID number assigned by United HealthCare. May be blank.
+
+10	74	86	X(13)	N	Other Insurer Provider Number - 2 - Not used.
+
+11	87	96	9(10)	R	Provider Telephone Number
+					Telephone number of the provider. Format = XXXYYYZZZZ
+					XXX = Area Code	YYY = Exchange	ZZZZ = Station Number
+
+12	97	121	X(25)	R	Provider Name
+					Name of the billing provider submitting this batch of bills.
+
+Provider Address (Fields 13 - 16) - Mailing address of the provider. See Exhibit # 2 Standard Address Checks.
+3
+13	122	146	X(25)	R	Provider Address
+
+14	147	160	X(14)	R	Provider City
+
+15	161	162	X(2)	R	Provider State
+					
+16	163	171	X(9)	R	Provider Zip Code		
+					
+17	172	181	9(10)	O	Provider Fax Number - Not used.
+
+18	182	185	X(4)	N	Provider Country Code - Not used.
+
+19	186	189	X(4)	N	Filler (National Use) - Unused record space.
+
+20	190	192	X(3)	N	Filler (State Use) - Unused record space.
+Record Type: 20	Record Name:	Patient Data
+
+    - This record is required.
+    - All records following up through record type 91 must have the same Patient Control Number.
+    - Preceding record types 10, 90 or 91.
+    - Following record types 21 or 30.
+    - Do not repeat record type 10, if multiple patient claims for same provider (unless batching by type of bill).
+
+Field	Positions      	Req
+No. 	From   To	Picture	Field	Field Name/Description			
+
+01	1	2	X(2)	R	Record Type - Must be '20'	
+
+02	3	4	X(2)	N	Filler (National Use) - Unused record space
+
+03	5	24	X(20)	R	Patient Control Number
+					Unique alpha-numeric ID assigned by the provider.	
+
+04	25	44	X(20)	R	Patient Last Name
+
+05	45	53	X(9)	R	Patient First Name
+
+06	54	54	X(1)	O	Patient Middle Initial
+
+07	55	55	X(1)	R	Patient Sex
+					Values:
+						M = Male
+						F = Female
+						U = Unknown
+
+08	56	63	9(8)	R	Patient Birthdate
+					Must be less than or equal to 20-19 Statement Covers Period From Date. Must be a valid date and in MMDDCCYY format.
+
+09	64	64	X(1)	O	Patient Marital Status
+					Code Values:
+						S = Single
+						M = Married
+						P = Life Partner							X = Legally Separated
+						D = Divorced
+						W = Widowed
+						U = Unknown
+									
+10	65	65	X(1)	R/I	Type of Admission
+					Identifies the priority of this admission. Must equal 1, 2, 3, 4 or 9 if 10-02 Type of Batch is inpatient. Code Values:
+						1 = Emergency
+						2 = Urgent
+						3 = Elective
+						4 = Newborn
+						5 - 8 = Reserved
+						9 = Information Not Available
+					
+11	66	66	X(1)	R/I	Source of Admission
+					Indicates the source of this admission. See Exhibit #4 for valid code values and descriptions.	
+				
+					If 20-10 Type of Admission = 1, 2, 3, or 9 then Source of Admission must equal 1, 2, 3, 4, 5, 6, 7, 8, 9 or A. If 20-10 Type of Admission = 4 then Source of Admission must equal 1, 2, 3, 4 or 9.
+Record Type:	20	Record Name:	Patient Data
+
+Field	Positions      	Req
+No. 	From   To	Picture	Field	Field Name/Description			
+
+Patient Address (Fields 12-16) - The address of the patient. See Exhibit # 2 Standard Address Checks
+
+12	67	84	X(18)	R	Patient Address Line 1
+
+13	85	96	X(12)	C	Patient Address Line 2
+					
+14	97	111	X(15)	R	Patient City
+
+15	112	113	X(2)	R	Patient State
+					
+16	114	122	X(9)	R	Patient Zip Code
+					
+17	123	130	9(8)	R	Admission/Start of Care Date
+					Date patient was admitted for inpatient, outpatient or start of care. Must be less than or equal to 20-19 Statement Covers Period From date. Format CCYYMMDD.
+
+18	131	132	X(2)	R/I	Admission Hour
+					Indicates the hour that the patient was admitted for inpatient or outpatient care. See Exhibit # 1 for values. 
+
+19	133	140	9(8)	R	Statement Covers Period From Date
+					The first service date of the period included on this claim. Format = 
+					CCYYMMDD. Must be equal to or greater than 20-17 Admission/ Start of Care. See Exhibit # 1.
+
+20	141	148	9(8)	R	Statement Covers Period Thru Date
+					The last service date of the period included on this claim. Format = 
+			CCYYMMDD. Must be greater than or equal to 20-19 Statement From Date. Must be less than or equal to 01-20 Processing Date.										
+					Statement Thru Date century and year must equal 20-19 Statement From Date century and year. 
+
+21	149	150	9(2)	R/I	Patient Status
+					Indicates patient's status as of the THROUGH date. See Exhibit # 4 for valid values and descriptions.
+
+22	151	152	X(2)	C	Discharge Hour	
+					Identifies the hour patient was discharged. Must be entered if 10-02 Type of Batch = X10, X11, X14, or X17 and 20-19 Statement From Date = 20-20 Statement Thru Date. See Exhibit # 1 for valid values.
+
+23	153	162	S9(8)V99	C	Patient Payment Received
+					Amount patient has paid to the provider towards this claim. 
+
+24	163	172	S9(8)V99	N	Patient Estimated Amount Due 
+					The amount estimated by the provider which is due from the patient
+
+25	173	189	X(17)	C	Medical Record Number
+					Assigned by provider. Must be entered if different than 20-03 Patient Control Number.
+
+26	190	192	X(3)	N	Filler (National Use) - Unused record space
+
+
+
+
+Record Type: 21	Record Name: 	Non Insured Employment Information
+
+    - Currently not used. 
+    - Record Type 21 is conditional. There may be a maximum of two record types 21.
+    - This record contains employment information pertaining to individuals not claiming insurance. May apply to: patient, patient's spouse, patient's father, and patient's mother. If more than two of these persons are involved in this claim, use a 2nd RT 21 to submit the employment data for the others involved. 
+    - Preceding record types 20 or 21
+    - Following record types 21 or 30
+
+Field	Positions      	Req
+No.      From  To	Picture 	Field	Field Name/Description			
+
+01	1	2	X(2)	R	Record Type - Must be '21'
+
+02	3	4	9(2)	R	Sequence Number - Must be equal to 01 - 02.
+					
+03	5	24	X(20)	R	Patient Control Number
+					Must equal the preceding 20-03 Patient Control Number.
+
+Employment Information Packet One - Enter if 30-18 Patient Relationship is not 01 and 21-09 & 21-16 Employment Status Code = 1-2 or 4-6. 
+
+04	25	48	X(24)	C	Employer Name
+
+05	49	66	X(18)	C	Employer Address
+
+06	67	81	X(15)	C	Employer City
+
+07	82	83	X(2)	C	Employer  State
+				
+08	84	92	X(9)	C	Employer Zip Code
+
+09	93	93	9(1)	C	Employment Status Code
+					Employment status of the individual. Code Values:
+						1 = Employed Full Time
+						2 = Employed Part Time
+						3 = Not Employed
+						4 = Self Employed
+						5 = Retired
+						6 = On Active Military Duty
+						9 = Unknown
+						7 & 8 = Not Used
+
+09a	94	95	9(2)	C	Employer Qualifier (COB only)
+					Patient relationship to the person not claiming insurance. Code Values:
+						01 = Patient is insured
+						02 = Spouse
+						03 = Natural Child/Insured Financial Responsibility
+						04 = Natural Child/Insured Does Not Have Financial Responsibility
+						05 = Step Child
+						06 = Foster Child
+						07 = Ward of the State
+						08 = Employee
+						09 = Unknown
+						10 = Handicapped Dependent
+						11 = Organ Donor
+						12 = Cadaver Donor
+						13 = Grandchild
+						14 = Niece/Nephew
+						15 = Injured Plaintiff
+						16 = Sponsored
+						17 = Minor Dependent of a Minor Dependent
+						18 = Parent
+						19 = Grandparent
+						20 = Life Partner (e.g., significant other)
+Record Type: 	21	Record Name:	Non Insured Employment Information
+
+Field	Positions      	Req
+No.      From   To	Picture     Field	Field Name/Description			
+
+10	96	108	X(13)	N	Filler (National Use) - Unused record space.
+
+Employment Information Packet Two
+
+11	109	132	X(24)	C	Employer Name
+
+12	133	150	X(18)	C	Employer Address
+
+13	151	165	X(15)	C	Employer City
+
+14	166	167	X(2)	C	Employer  State
+					
+15	168	176	X(9)	C	Employer Zip Code
+ 
+16	177	177	9(1)	C	Employment Status Code
+					A code used to define the employment status of the individual. Code Values:
+						1 = Employed Full Time
+						2 = Employed Part Time
+						3 = Not Employed
+						4 = Self Employed
+						5 = Retired
+						6 = On Active Military Duty
+						9 = Unknown
+						7 & 8 = Not Used
+
+16a	178	179	9(2)	C	Employer Qualifier (COB only)
+					Identifies the patient's relationship to the person not claiming insurance. Code Values:
+						01 = Patient is Insured
+						02 = Spouse
+						03 = Natural Child/Insured has Financial Responsibility
+						04 = Natural Child/Insured does not have Financial Responsibility
+						05 = Step Child
+						06 = Foster Child
+						07 = Ward of the State
+						08 = Employee
+						09 = Unknown
+						10 = Handicapped Dependent
+						11 = Organ Donor
+						12 = Cadaver Donor
+						13 = Grandchild
+						14 = Niece/Nephew
+						15 = Injured Plaintiff
+						16 = Sponsored
+						17 = Minor Dependent of a Minor Dependent
+						18 = Parent
+						19 = Grandparent
+						20 = Life Partner (e.g., significant other)
+
+17	180	192	X(13)	N	Filler (National Use) - Unused record space.
+Record Type: 22	Record Name: 	Unassigned State Form Locators
+
+    - Record Type 22 currently not used. If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                  Field	Field Name/Description			
+
+
+Record Type: 30	Record Name: Third Party Payer Data  
+	
+    - There must be at least one Record Type 30. There can be a maximum of three Record Types 30. 
+    - Preceding record types 20, 21, 30 or 31.
+    - Following record types 30, 31, or 40.
+
+Field	Positions	Req
+No. 	From   To	Picture 	Field	Field Name/Description			
+
+01	1	2	X(2)	R	Record Type - Must be '30'
+
+02	3	4	9(2)	R	Sequence Number
+					Must be equal to 01 - 03. 
+						01 - UnitedHealth Group Payer
+						02 - Medicare or the primary OI Payer
+						03 - OI or the secondary OI Payer
+					
+03	5	24	X(20)	R	Patient Control Number
+					Must equal the preceding 20-03 Patient Control Number.
+					
+04	25	25	X(1)	R	Source of Payment Code
+					Indicates the source of payment for this payer record. Code Values:
+						A = Self Pay
+						B = Workers Compensation
+						C = Medicare
+						D = Medicaid
+						E = Other Federal Program
+						F = UnitedHealth Group
+						G = Blue Cross/Blue Shield
+						H = Champus
+						I = Other Insurance Carrier
+						Q = Automobile Accident Insurance
+
+05	26	30	9(5)	R	Payer Identification
+					Must be 87726 on the UnitedHealth Group record; Default to 00000 on the 02 Sequence when there is no 03 Sequence
+
+					When there is a Medicare payer and a non Medicare payer, use 00001 for the non-Medicare payer; default to 00000 for the Medicare payer.
+
+					When there are two non-Medicare payers, use 00001 for the primary payer; default to 00000 for the secondary payer. 
+						
+06	31	34	X(4)	N	Payer Sub-Identification
+					The ID of the office that is responsible for this claim. Not used.
+	
+Note: Payer Identification and Payer Sub-Identification will be redefined as Payer Identifier when implemented.
+
+07	35	53	X(19)	R	Certificate/SSN/Health Insurance Claim/Identification Number
+					Insured's unique ID number assigned by the payer. Left justify, blank fill.
+				
+08a	54	55	X(2)	N	Payer Identification Indicator - Not used.
+
+08b	56	78	X(23)	O	Payer Name
+					The name of the payer that the provider expects reimbursement from.
+
+09	79	79	X(1)	N	Primary Payer Code - Not used.
+
+10	80	96	X(17)	O	Insurance Group Number
+					The ID number of the group that the individual is covered under.
+
+11	97	110	X(14)	O	Insured's Group Name
+					Group or Plan name of the insurance that is provided to the insured.
+
+Record Type: 30	Record Name: 	Third Party Payer Data
+
+Field	Positions 	Req
+No.	From   To	Picture 	Field	Field Name/Description			
+
+12	111	130	X(20)	R	Insured's Last Name
+					Last name of the individual who carries the insurance.
+
+13	131	139	X(9)	R	Insured's First Name
+					First name of the individual who carries the insurance.
+
+14	140	140	X(1)	O	Insured's Middle Initial
+					Middle initial of the individual who carries the insurance.
+
+15	141	141	X(1)	O	Insured's Sex		
+					Code Values: M = Male; F = Female; U = Unknown
+
+16	142	142	X(1)	R	Release of Information Certification Number			
+					Indicates if there is permission to release medical information. Values:
+						Y = Yes Release on File
+						N = No Release
+						R = Restricted or Modified Release
+
+17	143	143	X(1)	R	Assignment of Benefits Certification Number		
+					Indicates if there is consent for the third party payer to pay the provider. 
+						Y = Yes, benefits assigned
+						N = No, benefits NOT assigned
+
+18	144	145	9(2)	R	Patient's Relationship to Insured
+					Indicates the relationship of the patient to the insured. Code Values:
+						01 = Patient is Insured
+						02 = Spouse
+						03 = Natural Child/Insured Financial Responsibility
+						04 = Natural Child/Insured does not have Financial Responsibility
+						05 = Step Child
+						06 = Foster Child
+						07 = Ward of the State
+						08 = Employee
+						09 = Unknown
+						10 = Handicapped Dependent
+						11 = Organ Donor
+						12 = Cadaver Donor
+						13 = Grandchild
+						14 = Niece/Nephew
+						15 = Injured Plaintiff
+						16 = Sponsored
+						17 = Minor Dependent of a Minor Dependent
+						18 = Parent
+						19 = Grandparent
+						20 = Life Partner (e.g., significant other)
+
+19	146	146	9(1)	R	Employment Status Code
+					The employment status of the insured. Code Values:
+						1 = Employed Full Time
+						2 = Employed Part Time
+						3 = Not Employed
+						4 = Self Employed
+						5 = Retired
+						6 = On Active Military Duty
+						7 & 8 = Reserved for National Assignment
+						9 = Unknown
+Record Type:	30	Record Name:	Third Party Payer Data
+
+Field	Positions	Req
+No.      From   To	Picture 	Field	Field Name/Description			
+
+20	147	149	9(3)	N	Covered Days
+					The number of days covered by the primary payer.
+
+21	150	153	9(4)	N	Non Covered Days
+					Days of care not covered by the primary payer.			
+
+22	154	156	9(3)	N	Coinsurance Days
+					The inpatient Medicare days occurring after the 60th day & before the 91st day or inpatient SNF/Swing Bed days occurring after the 20th and before the 101st day in a single spell of illness.
+
+23	157	159	9(3)	N	Lifetime Reserve Days
+					Medicare's lifetime reserve days of inpatient hospital services after using 90 days of inpatient hospital services during a spell of illness.
+
+24	160	172	X(13)	O	Provider Identification Number
+					The identification number assigned to the provider by the payer.
+
+25	173	182	S9(8)V99	R	Payments Received
+					The amount the provider has received toward payment of the claim prior to this current billing date.
+
+26	183	192	S9(8)V99	N	Estimated Amount Due
+					The amount estimated by the provider to be due from the indicated payer.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Record Type: 31	Record Name:	Third Party Payer Data
+
+    - There must be at least one Record Type 31. There can be a maximum of three Record Types 31. For every Record Type 31, there must be a corresponding Record Type 30 preceding it with the same sequence number.
+    - Preceding Record Type 30
+    - Following Record Types 30 or 40
+
+Field	Positions	Req
+No.  	From	To	Picture	Field	Field Name/Description			
+
+01	1	2	X(2)	R	Record Type - Must be '31'
+
+02	3	4	9(2)	R	Sequence Number
+					Must be 01 - 03. Must have a preceding Record Type 30 with the same sequence number.  
+
+03	5	24	X(20)	R	Patient Control Number
+					Must be equal to the preceding 20-03 Patient Control Number.	
+	
+Insured's Address (Fields 4 - 8) - The current mailing address of the insured. See Exhibit # 2 
+
+04	25	42	X(18)	C	Insured's Address - Line 1			
+				
+05	43	54	X(12)	C	Insured's Address - Line 2
+
+05A	55	60	X(6)	N	Filler - Unused record space.
+				
+06	61	75	X(15)	C	Insured's City
+
+07	76	77	X(2)	C	Insured's State
+
+08	78	86	X(9)	C	Insured's Zip Code
+
+09	87	110	X(24)	O	Employer Name
+					The name of the employer that provides health care coverage.
+					
+Employer  Address (Fields 10 - 13) - The address of the employer. Exhibit # 2 Standard Address Checks.
+
+10	111	128	X(18)	C	Employer Address
+
+11	129	143	X(15)	C	Employer City
+
+12	144	145	X(2)	C	Employer State
+					
+13	146	154	X(9)	C	Employer Zip Code
+					
+14	155	177	X(23)	N	ICN/DCN
+					The Internal Control Number or Document Control Number assigned to the original claim by the payer.  Not used.
+
+15	178	192	X(15)	O	Claim ID
+					An identification number assigned by the submitter to identify the claim.
+
+Record Type: 32	Record Name:	Third Party Payer Data
+
+    - Record Type 32 currently not used.  If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                 Field	Field Name/Description
+
+Record Type: 34	Record Name:	Authorization
+
+    - Record Type 34 currently not used.  If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                  Field	Field Name/Description			
+
+
+Record Type: 40 	Record Name:	Claim Data Tan-Occurrence
+
+    - Record Type 40 is required. Must be at least one RT 40 per claim. There may be up to 99 RT 40 per claim
+    - Preceding record types 30, 31 or 40
+    - Following record types: 40 or 41 (inpatient); 40, 41, 46, or 61 (outpatient)
+
+Field	Positions	Req
+No. 	From	To	Picture	Field	Field Name/Description			
+				
+01	1	2	X(2)	R	Record Type - Must be '40'
+
+02	3	4	9(2)	R	Sequence Number
+					Must be equal to 01 through 99.
+					
+03	5	24	X(20)	R	Patient Control Number
+					Must be equal to the preceding 20-03 Patient Control Number.
+
+04	25	27	9(3)	R	Type of Bill
+					Indicates the type of bill. Must equal the preceding 10-02 Type of Batch. See Exhibit # 3 Batch and Bill Type Codes. 
+
+05	28	45	X(18)	N	Treatment Authorization Code-A - Not used.  Blank fill.	
+
+06	46	63	X(18)	N	Treatment Authorization Code-B - Not used.  Blank fill.
+
+07	64	81	X(18)	N	Treatment Authorization Code-C - Not used.  Blank fill.
+
+08	82	83	X(2)	C	Occurrence Code -1
+					Defines an event relating to this bill that may affect processing. All Occurrence Codes must be valid two characters, entered in alphanumeric sequence. See Exhibit # 5 for valid values and definitions.
+
+					If 70-04 Principal Diagnosis Code is equal to 80000 thru 99999 then an Accident Occurrence Code of 01 thru 06 is required.
+
+					If 70-04 Principal Diagnosis Code equals 63000 - 67500, V2200, V2300 or V2400, then Occurrence Code 10, "Last Menstrual Period" is required
+
+					If Occurrence Code 20, 21, 22, or 26 is reported then 40-04 Type of Bill, 2nd digit must be 1 (inpatient).    	
+
+					If Occurrence Code 40 is reported then Occurrence Code 41 is required and 40-04 Type of Bill, 2nd digit must be 3 (outpatient).
+
+					If Occurrence Code 41 is reported then Occurrence Code 40 is required and 40-04 Type of Bill, 2nd digit must be 3 (outpatient).
+
+09	84	91	9(8)	C	Occurrence Date - 1
+					The date associated with the Occurrence Code in the preceding field.  Must be a valid date and in CCYYMMDD format.
+
+					Date for Occurrence Codes 01 -06, 10, 11 or 12 must be less than or equal to 20-19 Statement Covers Period From Date.
+
+					Date for Occurrence Code 10 must not be less than 20-19 Statement Covers Period From Date minus one year.
+
+					Date for Occurrence Code 20 cannot be greater than 20-17 Admission/ Start Of Care plus six working days.
+
+					Date for Occurrence Code 21 cannot be greater than 20-20 Statement Thru Date or less than 20-19 Statement From Date minus three days.
+
+					Date for Occurrence Code 41 must be within seven days of date for Occurrence Code 40. 
+
+10	92	93	X(2)	C	Occurrence Code - 2
+					Refer to 40-08 Occurrence Code - 1.
+Record Type: 40 	Record Name:	Claim Data Tan-Occurrence
+
+Field	Positions      	               Req
+No.	From   To	Picture	Field	Field Name/Description			
+						
+11	94	101	9(8)	C	Occurrence Date - 2
+					Refer to 40-09 Occurrence Date -1.
+
+12	102	103	X(2)	C	Occurrence Code - 3
+					Refer to 40-08 Occurrence Code - 1.
+
+13	104	111	9(8)	C	Occurrence Date - 3
+					Refer to 40-09 Occurrence Date -1.
+									
+14	112	113	X(2)	C	Occurrence Code - 4
+					Refer to 40-08 Occurrence Code - 1.
+
+15	114	121	9(8)	C	Occurrence Date - 4
+					Refer to 40-09 Occurrence Date -1.
+									
+16	122	123	X(2)	C	Occurrence Code - 5
+					Refer to 40-08 Occurrence Code - 1.
+
+17	124	131	9(8)	C	Occurrence Date - 5
+					Refer to 40-09 Occurrence Date -1.
+
+18	132	133	X(2)	C	Occurrence Code - 6
+					Refer to 40-08 Occurrence Code - 1.
+
+19	134	141	9(8)	C	Occurrence Date - 6
+					Refer to 40-09 Occurrence Date -1.
+	
+20	142	143	X(2)	C	Occurrence Code - 7
+					Refer to 40-08 Occurrence Code - 1.
+
+21	144	151	9(8)	C	Occurrence Date - 7
+					Refer to 40-09 Occurrence Date -1.
+
+22	152	153	X(2)	C	Occurrence Span Code - 1
+					Identifies an event that relates to the claim. See Exhibit #6 for valid values and definitions. The occurrence span code/dates are repeated for a total of 2 iterations. 
+
+23	154	161	9(8)	C	Occurrence Span From Date - 1
+					Must be in a valid CCYYMMDD format.
+
+24	162	169	9(8)	C	Occurrence Span Thru Date - 1
+					Must be in a valid CCYYMMDD format.
+
+25	170	171	X(2)	C	Occurrence Span Code - 2
+					Refer to 40-22 Occurrence Span Code -1.
+
+26	172	179	9(8)	C	Occurrence Span From Date - 2
+					Refer to 40-23 Occurrence Span From Date-1.
+
+27	180	187	9(8)	C	Occurrence Span Thru Date - 2
+					Refer to 40-24 Occurrence Span Thru Date-1.	
+
+28	188	192	X(5)	N	Filler (National Use) - Unused record space.
+
+
+
+Record Type: 41 	Record Name:	Claim Data Condition Value
+
+    - Record Type 41 is required for inpatient claims and conditional for outpatient claims. There must be at least one RT 41 for each inpatient claim. There may be up to 99 Record Type 41 per claim.
+    - Preceding record types 40 or 41
+    - Following record types 41, 46, 50, or 60 (inpatient)
+    - Following record types 41, 46, or 61 (outpatient)
+ 
+Field	Positions      	Req
+No. 	From	To	Picture	Field	Field Name/Description			
+
+01	1	2	X(2)	R	Record Type - Must be '41'
+
+02	3	4	9(2)	R	Sequence Number
+					Must be equal to 01 - 99.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must equal the preceding 20-03 Patient Control Number.
+
+04	25	26	X(2)	C	Condition Code - 1
+					See Exhibit 7 for valid values & descriptions. Must be valid value or blank
+
+					If Condition Code = 07, the 1st position of 40-04 Type of Bill must be 8 & the 2nd position must be 2. If Condition Code = 40, 20-19 & 20-20 Statement Covers From/Thru Dates must be equal and 30-20 Covered Days must be zero.
+
+05	27	28	X(2)	C	Condition Code - 2
+					Refer to 41-04 Condition Code - 1.
+
+06	29	30	X(2)	C	Condition Code - 3
+					Refer to 41-04 Condition Code - 1.
+
+07	31	32	X(2)	C	Condition Code - 4
+					Refer to 41-04 Condition Code - 1.
+
+08	33	34	X(2)	C	Condition Code - 5
+					Refer to 41-04 Condition Code - 1.
+
+09	35	36	X(2)	C	Condition Code - 6
+					Refer to 41-04 Condition Code - 1.
+
+10	37	38	X(2)	C	Condition Code - 7
+					Refer to 41-04 Condition Code - 1.
+
+11	39	40	X(2)	C	Condition Code - 8
+					Refer to 41-04 Condition Code - 1.
+
+12	41	42	X(2)	C	Condition Code - 9
+					Refer to 41-04 Condition Code - 1.
+
+13	43	44	X(2)	C	Condition Code - 10
+					Refer to 41-04 Condition Code - 1.
+
+14	45	49	X(5)	N	Form Locator 31 (upper) - Not used, blank fill.
+
+15	50	55	X(6)	N	Form Locator 31 (lower) - Not used, blank fill.
+
+16	56	57	X(2)	C	Value Code - 1 
+					See Exhibit 8 for valid values & descriptions. If Value Code = 04 or 05, there must be Revenue Code 31X, 32X, 33X, 34X, or 35X (Fields 60-04, 60-14 or 60-24). If Value Code = 08, 09, 10 or 11 then 40-04 Type of Bill, Bill Classification must = inpatient. If 40-04 Type of Bill, Bill Classification = inpatient, there must be Value Code 01 or 02.
+Record Type: 41 	Record Name: Claim Data Condition Value
+
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description			
+
+17	58	66	S9(7)V99	C	Value Amount - 1
+					Amount related to the value code in the preceding 41-16 field. Enter if the corresponding Value Code - 1 has been entered otherwise, zero fill.
+
+18	67	68	X(2)	C	Value Code - 2
+					Refer to 41-16 Value Code - 1.
+
+19	69	77	S9(7)V99	C	Value Amount - 2
+					Refer to 41-17 Value Amount - 1.		
+			
+20	78	79	X(2)	C	Value Code - 3
+					Refer to 41-16 Value Code - 1.
+
+21	80	88	S9(7)V99	C	Value Amount - 3
+					Refer to 41-17 Value Amount - 1.	
+				 	
+22	89	90	X(2)	C	Value Code - 4
+					Refer to 41-16 Value Code - 1.
+
+23	91	99	S9(7)V99	C	Value Amount - 4
+					Refer to 41-17 Value Amount - 1.
+
+24	100	101	X(2)	C	Value Code - 5
+					Refer to 41-16 Value Code - 1.
+
+25	102	110	S9(7)V99	C	Value Amount - 5
+					Refer to 41-17 Value Amount - 1.		
+
+26	111	112	X(2)	C	Value Code - 6
+					Refer to 41-16 Value Code - 1.
+
+27	113	121	S9(7)V99	C	Value Amount - 6
+					Refer to 41-17 Value Amount - 1.
+
+28	122	123	X(2)	C	Value Code - 7
+					Refer to 41-16 Value Code - 1.
+
+29	124	132	S9(7)V99	C	Value Amount - 7
+					Refer to 41-17 Value Amount - 1.		
+
+30	133	134	X(2)	C	Value Code - 8
+					Refer to 41-16 Value Code - 1.
+
+31	135	143	S9(7)V99	C	Value Amount - 8
+					Refer to 41-17 Value Amount - 1.
+
+32	144	145	X(2)	C	Value Code - 9
+					Refer to 41-16 Value Code - 1
+
+33	146	154	S9(7)V99	C	Value Amount - 9
+					Refer to 41-17 Value Amount - 1.		
+
+34	155	156	X(2)	C	Value Code - 10
+					Refer to 41-16 Value Code - 1.
+
+35	157	165	S9(7)V99	C	Value Amount - 10
+					Refer to 41-17 Value Amount - 1.
+
+
+Record Type: 41 	Record Name:	Claim Data Condition Value
+ 
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description			
+
+36	166	167	X(2)	C	Value Code - 11
+					Refer to 41-16 Value Code - 1.
+
+37	168	176	S9(7)V99	C	Value Amount - 11
+					Refer to 41-17 Value Amount - 1.
+
+38	177	178	X(2)	C	Value Code - 12
+					Refer to 41-16 Value Code - 1.
+
+39	179	187	S9(7)V99	C	Value Amount - 12
+					Refer to 41-17 Value Amount - 1.
+
+40	188	192	9(5)	C	DRG (PPS) Code 
+					The Prospective Payment System (PPS) code related to the claim.
+
+					Must be entered if a Value Code of 'ZZ' is present in fields 41-16, 41-18, 41-20, 41-22, 41-24, 41-26, 41-28, 41-30, 41-32, 41-34, 41-36 or 41-38.
+
+41	191	192	X(2)	N	Filler (National Use) - DRG (PPS) Code, continued
+					The space from this field is included in the DRG (PPS) field above. It no longer exists as a separate field. 		
+
+
+
+
+Record Type: 46	Record Name:	Additional Provider Information
+
+    - Record Type 46 is conditional. There may be only one Record Type 46 per claim. It may be used to identify rendering provider information when different from the billing information on Record Type 10. It is also used to capture the medical record number and the Operating Physician NPI when provided on the claim.
+    - Preceding record types 40 or 41.
+    - Following record types 50 or 60 (inpatient).
+    - Following record type 61 (outpatient).
+
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description			
+
+01	1	2	X(2)	R	Record Type - Must be '46'
+
+02	3	4	X(2)	N	Filler - Unused record space.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must equal the preceding 20-03 Patient Control Number.
+
+04	25	25	X(1)	C	HMO Indicator  
+					Not used. May be blank. Code Values: Y = claim is to be processed under a HMO agreement as an "encounter". 
+
+05	26	35	9(10)	R	Federal Tax Number Or EIN
+					The Federal Tax Number or EIN of the rendering provider. Right justify, zero fill.
+
+06	36	60	X(25)	C	Organization Name
+					The name of the rendering provider. Either an Organization Name or a Provider First and Last name (Fields 46-07 and 46-08) must be entered.
+
+07	61	80	X(20)	C	Provider Last Name
+					The Last Name of the rendering provider. Either a Provider First and Last Name or an Organization Name (field 46-06) must be entered.
+
+08	81	90	X(10)	C	Provider First Name
+					The First Name of the rendering provider. Either a Provider First & Last Name or an Organization name (field 46-06) must be entered.
+
+09	91	91	X(1)	O	Provider Middle Initial
+					The middle initial of the rendering provider.
+
+10	92	116	X(25)	R	Street Address
+ 	 				The street address of the rendering provider.
+
+11	117	130	X(14)	R	City
+					The city of the rendering provider.
+
+12	131	132	X(2)	R	State
+					The state code of the rendering provider.
+
+13	133	141	X(9)	R	Zip Code
+					The zip code of the rendering provider.
+
+14	142	165	X(24)	R	Medical Record Number
+					The Medical Record Number assigned by the provider. 
+
+15	166	175	X(10)	N	Operating Physician NPI
+					The National Provider ID of the operating physician.
+
+16	176	176	X(1)	C	Medicaid Reclamation Indicator
+					R = Medicaid Reclamation claim. May be blank.
+
+17	177	192	X(16)	N	Filler - Unused record space.
+Record Type: 50	Record Name: IP Accommodations Data
+
+    - Record Type 50 is conditional. Must be entered for all inpatient claims (except late charges) with at least one accommodation charge. An inpatient late charge claim must contain at least one Record Type 50 or one Record Type 60. A late charge is identified by a 10-02 Type of Batch containing a value of xx5. 
+    - There may be a maximum of 99 Record Type 50 per claim. Each occurrence of Record Type 50 may contain up to four accommodations, for a total of up to 396 accommodations per claim
+    - Record Type 50 may not be included on outpatient claims.
+    - Preceding record types 40, 41, 46, or 50
+    - Following record types 50, 60, 66, or 70
+
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description			
+				
+01	1	2	X(2)	R	Record Type - Must be '50'	
+
+02	3	4	9(2)	R	Sequence Number
+					Must be equal to 01 - 99.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must equal the preceding 20-03 Patient Control Number.
+
+			Accommodations (occurs 4 times)
+
+	25	66	9(42)	R	Accommodations - 1
+
+04	25	28	9(4)	R/I	Accommodations Revenue Code - 1
+					Accommodation revenue codes are 100 - 219 and 1000 - 1005. See Exhibit 9 for valid values & descriptions. 
+					
+					Revenue code 001 is required as a summary for every claim and must be the last revenue code on a claim. Revenue code 001 charges are not included in Record Types 90, 95, or 99 control totals, but are for informational purposes only. Revenue code 001 may be entered in Record Type 50 only if Record Type 60 is not present.
+
+05	29	37	9(7)V99	R	Accommodations Rate - 1
+					The rate for this accommodation.
+
+06	38	41	9(4)	C	Accommodations Days - 1
+					Number of accommodation days. See Exhibit # 9 for when required.
+
+07	42	51	S9(8)V99	R	Accommodations Total Charges - 1
+					Total line charges for the accommodations.
+
+08	52	61	S9(8)V99	R	Accommodations Noncovered Chrgs - 1
+					Non-covered accommodations charges for the primary payer. 
+
+09	62	65	X(4)	N	Form Locator 49 - 1 - Not used. Blank fill.
+
+10	66	66	X(1)	N	Filler (National Use) - Unused record space.
+	
+	67	108	9(42)	C	Accommodations - 2
+
+11	67	70	9(4)	C	Accommodations Revenue Code - 2
+					Refer to 50-04 Accommodations Revenue Code - 1.
+
+12	71	79	9(7)V99	C	Accommodations Rate - 2
+					Refer to 50-05 Accommodations Rate - 1.
+
+13	80	83	9(4)	C	Accommodations Days - 2
+					Refer to 50-06 Accommodations Days - 1.
+
+14	84	93	S9(8)V99	C	Accommodations Total Charges - 2
+					Refer to 50-07 Accommodations Total Charges - 1.
+Record Type: 50	Record Name: IP Accommodations Data
+
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description			
+	
+15	94	103	S9(8)V99	C	Accommodations Noncovered Charges-2
+					Refer to 50-08 Accommodations Noncovered Charges - 1.
+
+16	104	107	X(4)	N	Form Locator 49 - 2 - Not used. Blank fill. 
+
+17	108 	108	X(1)	N	Filler (National Use) - Unused record space.
+
+	109	150	9(42)	C	Accommodations - 3
+
+18	109	112	9(4)	C	Accommodations Revenue Code - 3
+					Refer to 50-04 Accommodations Revenue Code - 1.
+
+19	113	121	9(7)V99	C	Accommodations Rate - 3
+					Refer to 50-05 Accommodations Rate - 1.
+
+20	122	125	9(4)	C	Accommodations Days - 3
+					Refer to 50-06 Accommodations Days - 1.
+
+21	126	135	S9(8)V99	C	Accommodations Total Charges - 3
+					Refer to 50-07 Accommodations Total Charges - 1.
+
+22	136	145	S9(8)V99	C	Accommodations Noncovered Chrgs-3
+					Refer to 50-08 Accommodations Noncovered Charges - 1.
+
+23	146	149	X(4)	N	Form Locator 49 - 3 - Not used. Blank fill. 
+
+24	150	150	X(1)	N	Filler (National Use) - Unused record space.
+
+	151	192	9(42)	C	Accommodations - 4
+
+25	151	154	9(4)	C	Accommodations Revenue Code - 4
+					Refer to 50-04 Accommodations Revenue Code - 1.
+
+26	155	163	9(7)V99	C	Accommodations Rate - 4
+					Refer to 50-05 Accommodations Rate - 1.
+
+27	164	167	9(4)	C	Accommodations Days - 4
+					Refer to 50-06 Accommodations Days - 1.
+
+28	168	177	S9(8)V99	C	Accommodations Total Charges - 4
+					Refer to 50-07 Accommodations Total Charges - 1.
+
+29	178	187	S9(8)V99	C	Accommodations Noncovered Chrgs-4
+					Refer to 50-08 Accommodations Noncovered Charges - 1.
+
+30	188	191	X(4)	N	Form Locator 49 - 4 - Not used. Blank fill. 
+
+31	192	192	X(1)	N	Filler (National Use) - Unused record space.
+Record Type: 60	Record Name:	IP Ancillary Services Data
+
+    - Record Type 60 is conditional. Must be entered for inpatient late charge claims if RT 50 is not present. A late charge is identified by a 10-02 Type of Batch containing a value of xx5. Must be entered for inpatient claims if there are ancillary charges associated with the claim. At least one line item must be entered. 
+    - There may be a maximum of 99 Record Type 60 per claim. Each occurrence of RT 60 may contain up to three line items, for a total of up to 297 ancillaries per claim.
+    - Record Type 60 may not be included on outpatient claims.
+    - Preceding record types 40, 41, 46, 50 or 60
+    - Following record types 60, 66, or 70
+
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description			
+
+01	1	2	X(2)	R	Record Type - Must be '60'	
+
+02	3	4	9(2)	R	Sequence Number
+					Must be equal to 01 - 99.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must equal the preceding 20-03 Patient Control Number.
+
+			Inpatient Ancillaries (occurs 3 times)
+
+	25	80	9(56)	R	Inpatient Ancillaries - 1
+
+04	25	28	9(4)	R/I	Inpatient Ancillaries  Revenue Code - 1
+					Ancillary revenue codes are 002 - 099 and 220 - 999. See Exhibit 9 for valid values and descriptions.
+
+					Revenue code 001 is required as a summary for every claim and must be the last revenue code on a claim. Only one revenue code 001 may be entered per claim and it may not be the first ancillary line item if 60-02 = 01. Revenue codes 001 - 099 are not included in Record Types 90, 95, or 99 control totals, but are for informational purposes only.
+					 
+05	29	33	X(5)	C	HCPCS Procedure Code - 1
+					Common Procedure Code System applicable to the ancillary service.
+
+06	34	35	X(2)	C	Modifier 1 (HCPCS & CPT-4) - 1
+					Must be entered if applicable to procedure.
+
+07	36	37	X(2)	C	Modifier 2 (HCPCS & CPT-4) - 1
+					Must be entered if applicable to procedure.
+
+08	38	44	9(7)	C	Inpatient Ancillary Units of Service - 1
+					Number of units for the service See Exhibit # 9 for when required.
+
+09	45	54	S9(8)V99	R	Inpatient Ancillary Total Charges - 1
+					Total line charges for the Inpatient Ancillary service.
+
+10	55	64	S9(8)V99	R	Inpatient Ancillary Noncov. Charges - 1
+					Non-covered Inpatient Ancillary charges for the primary payer. 
+
+11	65	68	X(4)	N	Form Locator 49 - 1 - Not used. Blank fill.
+
+12	69	76	9(8)	C	Inpatient Ancillary Service Date - 1 
+					The date of service in CCYYMMDD format. May only be entered if 60-04 Revenue Code-1 has been entered.  May not be greater than the 20-20. May not be greater than 72 hours prior to the 20-17.
+
+13	    77	   80	 X(4)	N	Filler (National Use) - Unused record space.
+
+Record Type:	60 	Record Name:	IP Ancillary Services Data
+
+Field	   Positions	Req
+No.         From   To	Picture	Field	Field Name/Description			
+
+	81	136	9(56)	C	Inpatient Ancillaries - 2
+
+14	81	84	9(4)	C	Inpatient Ancillaries  Revenue Code - 2
+					Refer to 60-04 Inpatient Ancillary Revenue Code - 1.
+					
+15	85	89	X(5)	C	HCPCS Procedure Code - 2
+					Refer to 60-05 HCPCS Procedure Code -1.
+
+16	90	91	X(2)	C	Modifier 1 (HCPCS & CPT-4) - 2
+					Refer to 60-06 Modifier - 1 - 1.
+
+17	92	93	X(2)	C	Modifier 2 (HCPCS & CPT-4) - 2
+					Refer to 60-07 Modifier - 2 - 1.
+
+18	94	100	9(7)	C	Inpatient Ancillary Units of Service - 2
+					Refer to 60-08 Inpatient Ancillary Units of Service - 1.
+
+19	101	110	S9(8)V99	C	Inpatient Ancillary Total Charges - 2
+					Refer to 60-09 Inpatient Ancillary Total Charges - 1.
+
+20	111	120	S9(8)V99	C	Inpatient Ancillary Noncov. Chrges - 2
+					Refer to 60-10 Inpatient Ancillary Noncovered Charges - 1. 
+
+21	121	124	X(4)	N	Form Locator 49 - 2 - Not used. Blank fill.
+
+22	125	132	9(8)	C	Inpatient Ancillary Service Date - 2
+					Refer to 60-12 Inpatient Ancillary Service Date - 1.
+
+23	133	136	X(4)	N	Filler (National Use) - Unused record space.
+
+	137	192	9(56)	C	Inpatient Ancillaries - 3
+
+24	137	140	9(4)	C	Inpatient Ancillaries  Revenue Code - 3
+					Refer to 60-04 Inpatient Ancillary Revenue Code - 1.
+					
+25	141	145	X(5)	C	HCPCS Procedure Code - 3
+					Refer to 60-05 HCPCS Procedure Code -1.
+
+26	146	147	X(2)	C	Modifier 1 (HCPCS & CPT-4) - 3
+					Refer to 60-06 Modifier - 1 - 1.
+
+27	148	149	X(2)	C	Modifier 2 (HCPCS & CPT-4) - 3
+					Refer to 60-07 Modifier - 2 - 1.
+
+28	150	156	9(7)	C	Inpatient Ancillary Units of Service - 3
+					Refer to 60-08 Inpatient Ancillary Units of Service - 1.
+
+29	157	166	S9(8)V99	C	Inpatient Ancillary Total Charges - 3
+					Refer to 60-09 Inpatient Ancillary Total Charges - 1.
+
+30	167	176	S9(8)V99	C	Inpatient Ancillary Noncov. Chrges - 3
+					Refer to 60-10 Inpatient Ancillary Noncovered Charges - 1. 
+
+31	177	180	X(4)	N	Form Locator 49 - 3 - Not used. Blank fill.
+
+32	181	188	9(8)	C	Inpatient Ancillary Service Date - 3
+					Refer to 60-12 Inpatient Ancillary Service Date - 1.
+
+33	189	192	X(4)	N	Filler (National Use) - Unused record space.
+Record Type: 61 	Record Name:	Outpatient Procedures
+
+    - Record Type 61 is required for outpatient claims. There may be a maximum of 99 RT 61 per claim. Each occurrence of RT 61 may contain up to three service line items, for a total of up to 297 services per claim.
+    - Record Type 61 may not be included on inpatient claims
+    - Preceding record types 40, 41, 46 or 61
+    - Following record types 61, 66, or 70
+
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description			
+
+01	1	2	X(2)	R	Record Type - Must be '61'	
+
+02	3	4	9(2)	R	Sequence Number
+					Must be equal to 01 through 99.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must equal the preceding 20-03 Patient Control Number.
+
+			Revenue Center (occurs 3 times)
+
+	25	80	9(56)	R	Revenue Center - 1
+
+04	25	28	9(4)	R/O	Revenue Code - 1
+					Outpatient revenue codes are 002 - 099 & 220 - 999. See Exhibit # 9 Revenue Codes and Unit Requirements for valid values & descriptions.
+
+					Revenue code 001 is required as a summary for every claim and must be the last revenue code on a claim. Only one revenue code 001 may be entered per claim and it may not be the first service line item if 61-02 = 01. Revenue codes 001 - 099 are not included in Record Types 90, 95, or 99 control totals, but are for informational purposes only.
+
+05	29	33	X(5)	C	HCPCS Procedure Code - 1
+					Common Procedure Code System applicable to the outpatient service.
+
+06	34	35	X(2)	C	Modifier 1 (HCPCS & CPT-4) - 1
+					Must be entered if applicable to procedure.
+
+07	36	37	X(2)	C	Modifier 2 (HCPCS & CPT-4) - 1
+					Must be entered if applicable to procedure.
+
+08	38	44	9(7)	C	Units of Service - 1
+					Number of units for the service. See Exhibit # 9 for when required.
+
+09	45	50	X(6)	N	Form Locator 49 - 1 -Not used.  Blank fill.
+
+10	51	60	S9(8)V99	R	Outpatient Total Charges - 1
+					Total line charges for the Outpatient service.
+
+11	61	70	S9(8)V99	R	Outpatient Noncovered Charges - 1
+					Non-covered Outpatient charges for the primary payer.
+
+12	71	78	9(8)	C	Date of Service - 1
+					Service date in CCYYMMDD format. Enter if 61-04 Revenue Code -1 has been entered. May not be greater than the 20-20. May not be greater than 72 hours prior to the 20-17.
+
+13	79	80	X(2)	N	Filler (National Use) - Unused record space.
+
+	81	136	9(56)	C	Revenue Center - 2
+
+14	81	84	9(4)	C	Revenue Code - 2
+					Refer to 61-04 Revenue Code - 1.
+
+15	85	89	X(5)	C	HCPCS Procedure Code - 2
+					Refer to 61-05 HCPCS Procedure Code -1.
+Record Type:	61	Record Name:	Outpatient Procedures
+
+Field	Positions	Req
+No.	From   To	Picture	Field	Field Name/Description
+
+16	90	91	X(2)	C	Modifier 1 (HCPCS & CPT-4) - 2
+					Refer to 61-06 Modifier - 1 - 1.
+
+17	92	93	X(2)	C	Modifier 2 (HCPCS & CPT-4) - 2
+					Refer to 61-07 Modifier - 2 - 1.
+
+18	94	100	9(7)	C	Units of Service - 2
+					Refer to 61-08 Outpatient Units of Service - 1.
+
+19	101	106	X(6)	N	Form Locator 49 - 2 - Not used. Blank fill.
+
+20	107	116	S9(8)V99	C	Outpatient Total Charges - 2
+					Refer to 61-10 Outpatient Total Charges - 1.
+
+21	117	126	S9(8)V99	C	Outpatient Noncovered Charges - 2
+					Refer to 61-11 Outpatient Noncovered Charges - 1. 
+
+22	127	134	9(8)	C	Date of Service - 2
+					Refer to 61-12 Date of Service - 1.
+
+23	135	136	X(2)	N	Filler (National Use) - Unused record space.
+
+	137	192	9(56)	C	Revenue Center - 3
+
+24	137	140	9(4)	C	Revenue Code - 3
+					Refer to 61-04 Revenue Code - 1.
+					
+25	141	145	X(5)	C	HCPCS Procedure Code - 3
+					Refer to 61-05 HCPCS Procedure Code -1.
+
+26	146	147	X(2)	C	Modifier 1 (HCPCS & CPT-4) - 3
+					Refer to 61-06 Modifier - 1 - 1.
+
+27	148	149	X(2)	C	Modifier 2 (HCPCS & CPT-4) - 3
+					Refer to 61-07 Modifier - 2 - 1.
+
+28	150	156	9(7)	C	Units of Service - 3
+					Refer to 61-08 Outpatient Units of Service - 1.
+
+29	157	162	X(6)	N	Form Locator 49 - 3 - Not used.  Blank fill.
+
+30	163	172	S9(8)V99	C	Outpatient Total Charges - 3
+					Refer to 61-10 Outpatient Total Charges - 1.
+
+31	173	182	S9(8)V99	C	Outpatient Noncovered Charges - 3
+					Refer to 61-11 Outpatient Noncovered Charges - 1. 
+
+32	183	190	9(8)	C	Date of Service - 3
+					Refer to 61-12 Date of Service - 1
+
+33	191	192	X(2)	N	Filler (National Use) - Unused record space.
+Record Type: 66	Record Name:	Third Party Organization (TPO) Output Record
+
+    - Record Type 66 is conditional and is used by a TPO to provide repricing information to the payer.
+    - Record Type 66 may be included on inpatient or outpatient claims. There may be only one RT 66.
+    - For Inpatient Claims, if Record Type 60 is not present, Record Type 66 must follow the last sequence of RT 50. If Record Type 60 is present, RT 66 must follow the last sequence of Record Type 60.
+    - For Outpatient Claims, Record Type 66 must follow the last sequence of Record Type 61.		
+    - Preceding record types 50, 60, or 61
+    - Following record type 70
+
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description			
+
+01	1	2	X(2)	R	Record Type - Must be '66'	
+
+02	3	4	9(2)	R	Sequence Number
+					Must be equal to 01.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must be equal to the preceding 20-03 Patient Control Number.
+
+04	25	33	X(9)	R	TPO ID Number
+					The EIN # of the TPO that the claim is being sent from
+
+05	34	48	X(15)	O	TPO Reference Number
+					Internal control number assigned by the TPO for tracking purposes. 
+					 
+06	49	49	X(1)	C	Rejection Message 
+					The reason TPO may not be able to provide pricing information. Values:
+						1 = Cannot identify provider as TPO participant
+						2 = Cannot identify payer as TPO participant
+						3 = Cannot identify insured as TPO participant
+
+07	50	69	X(20)	O	Authorization Number
+					The authorization number assigned by the TPO. May be blank.
+
+08	70	72	9(3)	C/I	Days Approved
+					Total number of inpatient days the TPO has approved for payment.
+
+09	73	73	X(1)	C	Pricing Methodology
+					Specifies pricing methodology applied to claim. Code Values:
+						0 = Zero pricing (not covered under contract)
+						1 = Priced at 100% as billed (applies to ancillary lines only)
+						2 = Priced at a contractual percentage
+						3 = Bundled pricing
+						4 = Peer review pricing (by report)
+						5 = Per diem pricing
+						6 = Flat rate pricing
+						7 = Combination pricing (for any combination of codes 0-6 & 8-9)
+						8 = Other pricing
+						9 = Maternity pricing
+						A = Adjustment to the original repricing
+
+					If code 3, 4, 7-9, or 0: enter an explanation in 66 -16 Free Form Remarks. If 66-06 Rejection Message = 1, 2, or 3, this field must be blank.
+
+10	74	81	S9(6)V99	C	Pricing Rate
+					Dollar amount of the pricing methodology. If 66-09 Pricing Methodology is 5-7 (when code 7 includes combination pricing of per diem or flat rate), this field is required.
+
+11	82	89	S9(6)V99	C	Allowed Amount
+				The dollar amount allowed by the repricing vendor.
+Record Type:	66	Record Name:	Third Party Organization (TPO) Output Record
+
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description			
+
+12	90	97	S9(6)V99	N	Savings Amount
+					Not used.  Blank fill.
+
+13	98	102	X(5)	C	Approved DRG Code
+					The DRG code the TPO has approved for payment.
+
+14	103	110	S9(6)V99	C	Approved DRG Amount
+					The dollar amount allowed for the indicated DRG Code.  
+
+15	111	129	X(19)	N	Filler
+					Unused record space.
+ 
+16	130	179	X(50)	C	Free Form Remarks
+					Used to provide additional pricing information.
+
+17	180	189	S9(8)V99	N	Total Allowed Amount
+					Not used.
+
+18	190	192	X(3)	N	Filler
+					Unused record space.
+Record Type: 70	Record Name: 	Medical Data
+   
+    - Record Type 70 is required.
+    - There must be at least one (1) and only one (1) Record Type 70 per claim.
+    - Preceding record types 50, 60, 61, or 66.
+    - Following record types 78, 80 or 90.
+
+Field	Positions	Req                  
+No. 	From	To	Picture	Field	Field Name/Description			
+				
+01	1	2	X(2)	R	Record Type - Must be '70'
+
+02	3	4	9(2)	R	Sequence Number 
+					Must be equal to 01.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must be equal to the preceding 20-03 Patient Control Number.
+
+04	25	31	X(7)	R	Principal Diagnosis Code
+The ICD code describing the principal diagnosis. Do not report the decimal as it is implied.
+				
+05	32	32	X(1)	C	Principal Diagnosis POA
+					Present on Admission (POA) indicator for the Principal Diagnosis.  
+							
+06	33	39	X(7)	C	Other Diagnosis Code 1
+					Must be a valid ICD diagnosis code. Do not report the decimal as it is implied. Must have a diagnosis code in 70-04 Principal Diagnosis Code. No Other Diagnosis nor the Principal Diagnosis may be duplicated.
+
+					If any diagnosis code indicates sex specificity, then sex must match the sex of the patient in field 20-07 Patient Sex.
+
+If Other Diagnosis is E800 - E929 or E950 - E999 then 70-04 or any Other Diagnosis code must be within range 800-999. 
+
+					If Principal Diagnosis Code is 650 then any Other Diagnosis Code must not be within the ranges of 640-648 or 651-676.
+
+					If Principal Diagnosis Code is 640-648 or 651-658 then any Other Diagnosis Code (fields 70-05 thru 70-12) must not equal 650.						
+07	40	40	X(1)	C	POA Other Diagnosis Code 1 
+					Present on Admission (POA) indicator for Other Diagnosis Code.1
+					
+08	41	47	X(7)	C	Other Diagnosis Code 2
+					Refer to 70-06 Other Diagnosis Code 1. Must have a diagnosis code in field 70-06.
+ 	
+09	48	48	X(1)	C	POA Other Diagnosis Code 2 
+					Present on Admission (POA) indicator for Other Diagnosis Code 2.
+
+10	49	55	X(7)	C	Other Diagnosis Code 3
+					Refer to 70-06 Other Diagnosis Code 1. Must have a diagnosis code in field 70-08.
+
+11	56	56	X(1)	C	POA Other Diagnosis Code 3
+					Present on Admission (POA) indicator for Other Diagnosis Code 3.
+
+12	57	63	X(7)	C        Other Diagnosis Code 4
+					Refer to 70-06 Other Diagnosis Code 1. Must have a diagnosis code in field 70-10.
+
+13	64	64	X(1)	C	POA Other Diagnosis Code 4 
+					Present on Admission (POA) indicator for Other Diagnosis Code 4
+Record Type: 70	Record Name: 	Medical Data
+
+Field	Positions	Req                  
+No. 	From	To	Picture	Field	Field Name/Description			
+
+14	65	71	X(7)	C	Other Diagnosis Code 5
+					Refer to 70-06 Other Diagnosis Code 1. Must have a diagnosis code in field 70-12.
+
+15	72	72	X(1)	C	POA Other Diagnosis Code 5 
+					Present on Admission (POA) indicator for Other Diagnosis Code 5.
+		
+16	73	79	X(7)	C	Principal Procedure Code 
+					The principal procedure performed. Do not report the decimal as it is implied. Must be a valid ICD-CM procedure code. If sex specific code is used, sex must match sex of the patient in field 20-07 Patient Sex.  
+
+17	80	87	9(8)	C	Principal Procedure Date
+					Date principal procedure was done. Must be valid date in CCYMMDD format. Enter if Principal Procedure Code is entered. Date cannot be earlier than 20-17 Admission/Start of Care Date or later than 20-20 Statement Covers Period Thru Date.
+
+18	88	94	X(7)	C	Other Procedure Code 1
+					Procedure other than the principal procedure. Do not report the decimal as it is implied. Must be a valid ICD procedure code. Enter if 70-13 Principal Procedure Code is reported. If procedure code indicates sex specificity then it must match the sex of the patient in field 20-07.
+
+19	95	102	9(8)	C	Other Procedure Date 1
+					Date Other Procedure 1 was done. Must be valid date in CCYMMDD format. Enter if 70-15 Other Procedure Code 1 is entered. Must not be earlier than 20-19 Statement Covers Period From Date or later than 20-20 Statement Covers Period Thru Date.
+
+20	103	109	X(7)	C	Other Procedure Code 2
+					Refer to 70-18 Other Procedure Code 1. Must have a code in field 70-18.
+
+21	110	117	9(8)	C	Other Procedure Date 2
+					Date Other Procedure 2 was done. Must be a valid date in CCYMMDD format. Enter if 70-17 Other Procedure Code 2 is entered. 
+
+22	118	124	X(7)	C	Other Procedure Code 3
+					Refer to 70-18 Other Procedure Code 1. Must have a code in field 70-20. 
+										
+23	125	132	9(8)	C	Other Procedure Date 3
+					Date Other Procedure 3 was done. Must be valid date in CCYYMMDD format. Must be entered if 70-19 Other Procedure Code 3 is entered. 
+
+24	133	139	X(7)	C	Other Procedure Code 4
+					Refer to 70-18 Other Procedure Code 1. Must have a code in field 70-22
+.
+25	140	147	9(8)	C	Other Procedure Date 4
+					Date Other Procedure 4 was done. Must be valid date in CCYMMDD format. Must be entered if 70-21 Other Procedure Code 4 is entered. 
+
+26	148	154	X(7)	C	Other Procedure Code 5
+					Refer to 70-18 Other Procedure Code 1. Must have a code in field 70-24. 
+
+27	155	162	9(8)	C	Other Procedure Date 5
+					Date Other Procedure 5 was done. Must be a valid date in CCYMMDD format. Must be entered if 70-23 Other Procedure Code 5 is entered. 
+
+Record Type: 70	Record Name: Medical Data
+
+Field	Positions	Req                  
+No. 	From	To	Picture	Field	Field Name/Description			
+
+
+28	163	169	X(7)	C	Admitting Diagnosis Code
+					The ICD diagnosis code provided at the time of admission. The reporting of the decimal is unnecessary because it is implied.
+
+29	170	176	X(7)	O	External Cause of Injury Code (E-code)
+					The ICD code for the external cause of injury.
+
+30	177	177	9(1)	C	Procedure Coding Method Used
+					Identifies the coding method used for procedure coding on this claim. Must be entered if 70-13 Principal Procedure Code is entered. Values:
+						1 - 3 = Reserved for State Assignment
+						4 = CPT-4
+						5 = HCPCS (HCFCA Common Procedure Coding System)
+						6 - 8 = Reserved for National Assignment
+					  	9 = ICD-9-CM
+	
+31	178	178	X(1)	O	ICD Version Indicator
+    					An indicator that denotes the version of the International Classification of Diseases (ICD) Code Values:
+						0 = ICD-10
+						9 = ICD-9
+
+32	179	192	X(14)	N	Filler (National Use)
+					Unused record space.
+Record Type: 71  	Record Name:	Home Health Data Elements for Medical Review of Home Health Claims - Plan of Treatment and Patient Information
+
+    - Record Type 71 currently not used.  If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                 Field	Field Name/Description
+
+Record Type: 72	Record Name:	Home Health Data Elements for Medical Review of Home Health Claims - Specific Services and Treatments
+
+    - Record Type 72 currently not used.  If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                 Field	Field Name/Description
+
+Record Type: 73	Record Name:	Home Health Data Elements for Medical Review of Home Health Claims - Plan of Treatment/Medical Update Narrative
+
+    - Record Type 73 currently not used.  If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                 Field	Field Name/Description
+
+Record Type: 74   	Record Name:	Home Health Data Elements for Medical Review of Home Health Claims - Patient Information
+
+        ? Record Type 74 currently not used.  If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                 Field	Field Name/Description
+Record Type: 75 	Record Name:	Medical Documentation for Ambulance Claims
+
+        ? Record Type 75 currently not used.  If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                 Field	Field Name/Description
+Record Type: 76	Record Name:	ESRD Medical Documentation
+
+        ? Record Type 76 currently not used.  If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                 Field	Field Name/Description
+Record Type: 77	Record Name:	Rehabilitative Services Record
+
+    - Record Type 77 currently not used.  If submitted, will not be processed.
+
+Field	   Positions      	                     Req
+No.         From   To	  Picture                 Field	Field Name/Description
+
+Record Type: 78	Record Name: 	Additional Diagnosis & Procedure Code Data
+   
+    - Record Type 78 is conditional and is only used when there are more than five (5) Other Diagnosis Codes/POA or more than five (5) Other Procedure Codes/Date fields reported on the claim on RT70.  
+    - There can be a maximum of three (3) Record Type 78 per claim.
+    - Other Diagnosis/POA Codes 6 - 12 and Other Procedure Codes/Date 6 - 12 will be output on sequence 01.
+    - Other Diagnosis/POA Codes 13 - 19 and Other Procedure Codes/Date 13 - 19 will be output on sequence 02.
+    - Other Diagnosis/POA Codes 20 - 25 and Other Procedure Codes/Date 20 - 25 will be output on sequence 03.
+    - Preceding record type 70 or 78.  
+    - Following record types 78, 80 or 90.
+
+Field	Positions	Req       
+No.	From	To	Picture	Field	Field Name/Description			
+				
+01	1	2	X(2)	R	Record Type - Must be '78'
+
+02	3	4	9(2)	R	Sequence Number
+					Must be equal to 01-03.  
+
+03	5	24	X(20)	R	Patient Control Number
+					Must be equal to the preceding 20-03 Patient Control Number.
+
+04	25	31	X(7)	C	Other Diagnosis Code 6
+					Must be a valid ICD diagnosis code. Do not report the decimal as it is implied. Must have a diagnosis code in field 70-14. No Other Diagnosis Code nor the Principal Diagnosis may be duplicated.
+
+					If any other diagnosis code indicates sex specificity, then sex must match the sex of the patient in field 20-07 Patient Sex.
+
+If Other Diagnosis is an E800 - E929 or E950 - E999 then 70-04 or any Other Diagnosis code must be within range 800-999. 
+
+					If Principal Diagnosis Code is 650 then any Other Diagnosis Code must not be within the ranges of 640-648 or 651-676.
+
+					If Principal Diagnosis Code is 640-648 or 651-658 then any Other Diagnosis Code (fields 70-05 thru 70-12) must not equal 650.				
+05	32	32	X(1)	C	POA Other Diagnosis Code 6
+					Present on Admission indicator for corresponding Other Diagnosis Code.   
+					
+06	33	39	X(7)	C	Other Diagnosis Code 7
+					Refer to 78-04. Must have a diagnosis code in field 78-04.
+ 						
+07	40	40	X(1)	C	POA Other Diagnosis Code 7
+					Present on Admission indicator for corresponding Other Diagnosis Code.
+
+08	41	47	X(7)	C	Other Diagnosis Code 8
+					Refer to 78-04. Must have a diagnosis code in field 78-06.
+ 
+09	48	48	X(1)	C	POA Other Diagnosis Code 8
+					Present on Admission indicator for corresponding Other Diagnosis Code.
+
+10	49	55	X(7)	C	Other Diagnosis Code 9/16
+					Refer to 78-04. Must have a diagnosis code in field 78-08.
+ 						
+11	56	56	X(1)	C	POA Other Diagnosis Code 9
+					Present on Admission indicator for corresponding Other Diagnosis Code.
+
+12	57	63	X(7)	C	Other Diagnosis Code 10
+					Refer to 78-04. Must have a diagnosis code in field 78-10.
+
+13	64	64	X(1)	C	POA Other Diagnosis Code 10
+					Present on Admission indicator for corresponding Other Diagnosis Code.
+Record Type: 78	Record Name: 	Additional Diagnosis & Procedure Code Data
+   
+Field	Positions	Req       
+No.	From	To	Picture	Field	Field Name/Description			
+				
+14	65	71	X(7)	C	Other Diagnosis Code 11
+					Refer to 78-04. Must have a diagnosis code in field 78-12.
+ 						
+15	72	72	X(1)	C	POA Other Diagnosis Code 11
+					Present on Admission indicator for corresponding Other Diagnosis Code.
+
+16	73	79	X(7)	C	Other Diagnosis Code 12
+					Refer to 78-04. Must have a diagnosis code in field 78-14.
+ 						
+17	80	80	X(1)	C	POA Other Diagnosis Code 12 
+					Present on Admission indicator for corresponding Other Diagnosis Code.
+
+18	81	87	X(7)	C	Other Procedure Code 6
+					Procedure other than the principal procedure. The decimal is implied
+
+19	88	95	9(8)	C	Other Procedure Date 6
+					The date on which the Other Procedure was performed. Must be a valid date and in CCYYMMDD format.
+
+20	96	102	X(7)	C	Other Procedure Code 7
+					Refer to 78-18 Other Procedure Code. Must have a code in field 78-18.
+
+21	103	110	9(8)	C	Other Procedure Date 7
+					Refer to 78-19 Other Procedure Date. 
+
+22	111	117	X(7)	C	Other Procedure Code 8
+					Refer to 78-18 Other Procedure Code. Must have a code in field 78-20.
+
+23	118	125	9(8)	C	Other Procedure Date 8
+					Refer to 78-19 Other Procedure Date. 
+
+24	126	132	X(7)	C	Other Procedure Code 9
+					Refer to 78-18 Other Procedure Code. Must have a code in field 78-22.
+
+25	133	140	9(8)	C	Other Procedure Date 9
+					Refer to 78-19 Other Procedure Date.
+
+26	141	147	X(7)	C	Other Procedure Code 10
+					Refer to 78-18 Other Procedure Code. Must have a code in field 78-24
+
+27	148	155	9(8)	C	Other Procedure Date 10
+					Refer to 78-19 Other Procedure Date.
+
+28	156	162	X(7)	C	Other Procedure Code 11
+					Refer to 78-18 Other Procedure Code. Must have a code in field 78-26
+
+29	163	170	9(8)	C	Other Procedure Date 11
+					Refer to 78-19 Other Procedure Date.
+
+30	171	177	X(7)	C	Other Procedure Code 12
+					Refer to 78-18 Other Procedure Code. Must have a code in field 78-28.
+
+31	178	185	9(8)	C	Other Procedure Date 12
+					Refer to 78-19 Other Procedure Date.
+
+32	186	192	X(7)	N	Filler (National Use) - Unused record space.
+Record Type: 80	Record Name:	Physician Data
+
+    - Record Type 80 is desirable, but not required.
+    - The sequence number for Record Type 80 can be 01 - 03. The 01 Sequence is always for the UHG payer. If the secondary payer uses a different physician ID from the primary payer, the secondary's payer ID number is used on the 02 sequence. If the tertiary uses different physician ID numbers from the primary and secondary, then the 03 sequence is used.  All sequences must match those on Record Type 30.
+    - Preceding record type 70 or 78.
+    - Following record types 80 or 90.
+ 
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description
+
+01	1	2	X(2)	R	Record Type - Must be '80'
+
+02	3	4	9(2)	R	Sequence Number
+					Must equal 01 - 03 and have a matching Record Type 30 Sequence.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must be equal to the preceding 20-03 Patient Control Number.
+
+04	25	26	X(2)	O	Physician Number Qualifying Codes
+					The type of ID Number in the physician ID number fields. Code Values: 
+						UP = UPIN
+						FI   = Federal Taxpayer's Identification Number
+						SL = State License Number
+						SP = Specialty License Number
+
+05	27	42	X(16)	O	Attending Physician Identifier
+					ID number of the Attending physician. 
+
+06	43	58	X(16)	O	Operating Physician Identifier
+					The identification number of the operating physician.
+
+07	59	74	X(16)	O	Other Physician Identifier
+					The ID number of the licensed physician, other than the attending.
+
+08	75	90	X(16)	O	Other Physician Identifier
+					The ID number of the licensed physician, other than the attending.
+
+09	91	106	X(16)	O	Attending Physician Last Name
+					The last name of the attending physician.
+
+10	107	114	X(8)	O	Attending Physician First Name
+					The first name of the attending physician.
+
+11	115	115	X(1)	O	Attending Physician Middle Initial
+					The middle initial of the attending physician. 	 				
+12	116	131	X(16)	O	Operating Physician Last Name
+					The last name of the operating physician.
+
+13	132	139	X(8)	O	Operating Physician First Name
+					The first name of the operating physician.
+
+14	140	140	X(1)	O	Operating Physician Middle Initial
+					The middle initial of the operating physician. 	 						
+15	141	156	X(16)	O	Other Physician Last Name
+					The last name of the other physician.
+
+16	157	164	X(8)	O	Other Physician First Name
+					The first name of the other physician.
+Record Type:	80	Record Name:	Physician Data
+
+Field	Positions		Req
+No.	From	To	Picture	Field	Field Name/Description
+
+17	165	165	X(1)	O	Other Physician Middle Initial
+					The middle initial of the operating physician. 	 		
+
+18	166	181	X(16)	O	Other Physician Last Name
+					The last name of the other physician.
+
+19	182	189	X(8)	O	Other Physician First Name
+					The first name of the other physician.
+
+20	190	190	X(1)	O	Other Physician Middle Initial
+					The middle initial of the operating physician. 	 		
+
+21	191	192	X(2)	N	Filler (National Use) - Unused record space.
+
+Record Type: 90 	Record Name:	Claim Control Screen
+
+    - Record Type 90 is required.
+    - Preceding record types 70, 78 or 80.
+    - Following record types 20, 91 or 95.
+    
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description
+
+01	1	2	X(2)	R	Record Type - Must be '90'
+
+02	3	4	X(2)	N	Filler (National Use) - Unused record space.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must equal the preceding 20-03 Patient Control Number.
+
+04	25	27	9(3)	R	Physical Record Count
+					Number of physical records submitted for this claim. Must equal the computed sum of Record Types 20 - 80 (exclude record types 90 & 91).
+
+05	28	29	9(2)	R	Record Type 2N Count
+					The sum of the total number of 2N records for this claim.
+
+06	30	31	9(2)	R	Record Type 3N Count
+					The sum of the total number of 3N records for this claim.
+
+07	32	33	9(2)	R	Record Type 4N Count
+					The sum of the total number of 4N records for this claim.
+
+08	34	35	9(2)	R	Record Type 5N Count
+					The sum of the total number of 5N records for this claim.
+
+09	36	37	9(2)	R	Record Type 6N Count
+					The sum of the total number of 6N records for this claim.
+
+10	38	39	9(2)	R	Record Type 7N Count
+					The sum of the total number of 7N records for this claim.
+
+11	40	41	9(2)	R	Record Type 8N Count
+					The sum of the total number of 8N records for this claim.
+
+12	42	42	9(1)	R	Record Type 91 Qualifier
+					Indicates if a record type 91 is present. Must equal = 1 if record type 91 follows this record type 90. Values: 
+						0 = No, record type 91 is not present.
+						1 = Yes, record type 91 is present.
+
+13	43	52	S9(8)V99	R	Total Accommodation Charges - Revenue Centers		
+					Sum of Accommodation Total Charges on Record Type 50 fields 07, 14, 21 & 28.
+
+14	53	62	S9(8)V99	R	Noncovered Accommodation Charges - Revenue Centers
+					Sum of Accommodation Noncovered Charges on Record Type 50 fields 08, 15, 22 & 29 for this claim.
+
+15	63	72	S9(8)V99	R	Total Ancillary Charges - Revenue Centers	 
+					Sum of ancillary charges for this claim. For in-patient claims must equal the sum of Ancillary Total Charges on Record Type 60 fields 09, 19 & 29
+
+					For out-patient claims must equal the sum of Total Charges on Record Type 61 fields 10, 20 & 30.
+
+
+Record Type:	90 	Record Name:	Claim Control Screen
+
+Field	Positions		Req
+No.	From	To	Picture	Field	Field Name/Description
+
+16	73	82	S9(8)V99	R	Noncovered Ancillary Charges - Revenue Centers
+					Sum of ancillary non-covered charges for this claim. For inpatient claims must equal sum of Ancillary Non-Covered Charges on Record Type 60 fields 10, 20 and 30.
+				
+					For outpatient claims must equal sum of Ancillary Non-Covered Charges on Record Type 61 fields 11, 21 and 31.
+
+17	83	192	X(110)	C	Remarks
+					A freeform area to be used in those situations where supplementary data is helpful in processing of this claim.
+
+Record Type: 91	Record Name:	Claim Remarks
+
+    - Record Type 91 is conditional.
+    - Preceding record type 90.
+    - Following record type 20 or 95. 
+
+Field	Positions		Req
+No.	From	To	Picture	Field	Field Name/Description
+
+01	1	2	X(2)	R	Record Type - Must be equal to '91'
+
+02	3	4	X(2)	N	Filler (National Use) - Unused record space.
+
+03	5	24	X(20)	R	Patient Control Number
+					Must equal the preceding 20-03 Patient Control Number.
+
+04	25	106	X(82)	C	Remarks
+					A freeform area designed to be used in those situations where supplementary information is helpful in processing a claim.
+
+					Must be entered if 90-12 Remarks Qualifier contains a value of '1'.
+
+05	107	192	X(86)	N	Filler (National Use) - Unused record space.
+			
+
+Record Type: 95 	Record Name:	Provider Batch Control
+
+    - Record Type 95 is required. Must be the last record of a batch of claims. 
+    - Preceding record types 90 or 91.
+    - Following record types 10 or 99. 
+
+Field	Positions		Req
+No.	From	To	Picture	Field	Field Name/Description
+
+01	1	2	X(2)	R	Record Type - Must be equal to '95'
+
+02	3	12	9(10)	R	Federal Tax Number (EIN)
+						Must equal the preceding 10-04 Federal Tax Number (EIN).
+
+03	13	17	9(5)	R	Receiver Identification
+						Must equal the preceding 01-06 Receiver Identification.
+
+04	18	21	X(4)	N	Receiver Sub-Identification
+					
+05	22	24	X(3)	R	Type Of Batch
+						Must equal the preceding 10-02 Type of Batch.
+
+06	25	30	9(6)	R	Number Of Claims
+						Total number of record type 20 in batch. Must equal the sum of all Record Type 20 between the preceding Record Type 10 and this Record Type 95.
+
+07	31	36	9(6)	N	Number of 3M Batch Attachment Records - Not used.
+
+08	37	48	S9(10)V99	R	Accommodations Total Charges For The Batch		
+						Sum of accommodation charges in this batch. For inpatient claims must equal the sum of Total Accommodation Charges-Revenue Centers (90-13) between the preceding Record Type 10 and this Record Type 95.	For out-patient claims, zero fill.
+
+09	49	60	S9(10)V99	R	Accommodations Noncovered Charges For The Batch
+						Sum of all accommodation noncovered charges in this batch. For inpatient claims must equal the sum of Total Accommodation Non-Covered Charges (90-14) between the preceding Record Type 10 and this Record Type 95. For out-patient claims, zero fill.
+
+10	61	72	S9(10)V99	R	Ancillary Total Charges For The Batch
+						Sum of all ancillary charges in this batch. Must equal the sum of Total Ancillary Charges (90-15) between the preceding Record Type 10 and this Record Type 95.
+
+11	73	84	S9(10)V99	R	Ancillary Noncovered Charges For The Batch
+						Sum of ancillary noncovered charges in this batch. Must equal the sum of Total Ancillary Noncovered Charges (90-16) between the preceding Record Type 10 and this Record Type 95.
+
+12	85	96	S9(10)V99	N	Total Charges for Batch (COB only) - Not used.
+
+13	97	108	S9(10)V99	N	Total Noncovered Charges for the Batch (COB only) - Not used.
+
+14	109	120	X(12)	N	Reserved for Future Use
+
+15	121	138	X(18)	N	Filler (National Use) - Not used record space.
+
+16	139	192	X(54)	N	Filler (Local Use) - Unused record space.			
+
+
+Record Type: 99 	Record Name:	File Control
+
+    - Must be preceded by Record Type 95.
+    - Must be the last record on file.
+
+Field	Positions		Req
+No.	From	To	Picture	Field	Field Name/Description
+
+01	1	2	X(2)	R	Record Type - Must be equal to '99'
+
+02	3	12	9(10)	R	Submitter EIN
+					Must equal 01-02 Submitter EIN.
+
+03	13	17	9(5)	R	Receiver Identification
+					Must equal 01-06 Receiver Identification.
+
+04	18	21	X(4)	N	Receiver Sub-Identification
+
+05	22	25	9(4)	R	Number Of Batches Billed This File
+					Count of the number of batches in this file. Must equal the sum of all Record Type 10s included between RT 01 and this RT 99.
+
+06	26	38	S9(11)V99	R	Accommodations Total Charges For The File
+					Sum of accommodation charges in this file. Must equal the computed sum of Total Accommodation Charges for the Batch (95 - 08) included between the prior RT 01 and this RT 99.
+
+07	39	51	S9(11)V99	R	Accommodations Noncovered Charges For The File
+					Sum of all accommodation non-covered charges in this file. Must equal the sum of all Total Accommodations Noncovered Charges (95 - 09) included between the prior RT 01 and this RT 99.
+
+08	52	64	S9(11)V99	R	Ancillary Total Charges For The File
+					Sum of all ancillary charges included in this file. Must equal the sum of all Total Ancillary Charges for the Batch (95 - 10) included between the prior RT 01 and this RT 99.
+
+09	65	77	S9(11)V99	R	Ancillary Noncovered Charges For The File
+					Sum of all ancillary noncovered charges included in this file. Must equal the sum of all Ancillary Noncovered Charges for the Batch (95 - 11) included between the prior RT 01 and this RT 99.
+
+10	78	90	S9(11)V99	N	Total Charges for the File (COB only) - Not used.
+
+11	91	103	S9(11)V99	N	Total Noncovered Charges for the File (COB only) - Not used.
+
+12	104	111	9(8)	N	Number of Claims for the File (COB only) - Not used.
+
+13	112	119	9(8)	N	Number of Records for the File (COB only) - Not used.
+
+14	120	135	X(16)	N	Filler (National Use) - Unused record space.
+
+15	136	192	X(57)	N	Filler (Local Use) - Unused record space.
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UB-92
+
+
+EXHIBITS
+
+
+
+
+
+
+Exhibit # 1
+Standard Date and Time Checks
+
+Format Rules
+
+Date fields are depicted as CCYYMMDD unless otherwise stated, such as Patient Birthdate which is depicted as MMDDCCYY, where: 	MM = Month
+	DD = Day
+	CC = Century
+	YY =  Year
+
+
+Validation Rules
+
+Month (MM)	Must contain a value of 01 - 12.
+
+Day (DD)	Must contain a value of 01 - 31 based on the Month entered:
+			Month (MM)				Day (DD)
+			04, 06, 09, 11				01 thru 30
+			01, 03, 05, 07, 08, 10, 12		01 thru 31
+			02					01 thru 29
+
+Century (CC)	Must contain a value of 19 or 20 for miscellaneous dates. May contain a value of 18, 19 or 20 for date of birth fields.
+
+Year (YY)	May contain a value of 00 thru 99.
+
+
+
+					 
+Time Code Structure
+			
+Code		Time A.M.				Code		Time P.M.
+
+00	12:00 - 12:59 Midnight	12	12:00 - 12:59 Noon
+
+01	01:00 - 01:59	13	01:00 - 01:59
+
+02	02:00 - 02:59	14	02:00 - 02:59
+
+03	03:00 - 03:59	15	03:00 - 03:59
+
+04	04:00 - 04:59	16	04:00 - 04:59
+
+05	05:00 - 05:59	17	05:00 - 05:59
+
+06	06:00 - 06:59	18	06:00 - 06:59
+
+07	07:00 - 07:59	19	07:00 - 07:59
+
+08	08:00 - 08:59	20	08:00 - 08:59
+
+09	09:00 - 09:59	21	09:00 - 09:59
+
+10	10:00 - 10:59	22	10:00 - 10:59
+
+11	11:00 - 11:59	23	11:00 - 11:59
+
+							99		Hour Unknown
+Exhibit # 2
+Standard Address Checks
+
+Address-1, Address-2
+
+May contain the following values:	A - Z
+					0 - 9
+					space
+					comma (,)
+					period (.)
+					ampersand (&)
+					pound sign (#)
+					forward slash (/)
+
+No other special characters are allowed.	
+
+
+City
+
+May contain the following values:	A - Z
+					0 - 9
+					space
+					comma (,)
+					period (.)
+					ampersand (&)
+					pound sign (#)
+					forward slash (/)
+
+No other special characters are allowed. Must be at least 2 characters in length.
+
+
+State
+
+Must be a  valid United States Post Office code.
+
+
+ZIP Code
+
+If the state is within the United States, the first three digits of the Zip Code must be within the state range. If the state is a U.S. Territory (i.e. Virgin Islands) or a foreign country, the Zip Code may contain any value.
+
+If all nine digits are known, enter all nine digits.
+
+If all nine digits are not known: 
+    - The first five positions must contain the Zip Code.
+    - The last four positions must contain zeros or spaces; however, zeros are preferred.					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Exhibit # 3
+Batch and Bill Type Codes
+
+The Batch and Bill Type Code is a three position code containing the following:
+			Information			Position
+	Type of Facility	1
+	Bill Classification	2
+	Frequency	3
+
+Type of Facility/Bill Classification
+
+1XX - Hospital
+		11X - Inpatient  (including Medicare Part A)
+		12X - Inpatient  (Medicare Part B only)
+		13X - Outpatient 
+		14X - Other Outpatient
+		15X - Intermediate Care - Level I
+		16X - Intermediate Care - Level II
+		17X - Subacute Inpatient (Revenue Code 19X required)
+		18X - Swing Beds
+		19X - Reserved for National Assignment
+
+2XX - Skilled Nursing
+		21X - Inpatient  (including Medicare Part A)
+		22X - Inpatient  (Medicare Part B only)
+		23X - Outpatient 
+		24X - Other Outpatient
+		25X - Intermediate Care - Level I
+		26X - Intermediate Care - Level II
+		27X - Subacute Inpatient (Revenue Code 19X required)
+		28X - Swing Beds
+		29X - Reserved for National Assignment
+
+3XX - Home Health
+		31X - Inpatient  (including Medicare Part A)
+		32X - Inpatient  (Medicare Part B only)
+		33X - Outpatient 
+		34X - Other Outpatient
+		35X - Intermediate Care - Level I
+		36X - Intermediate Care - Level II
+		37X - Subacute Inpatient (Revenue Code 19X required)
+		38X - Swing Beds
+		39X - Reserved for National Assignment
+
+4XX - Christian Science Hospital
+	   	41X - Inpatient  (including Medicare Part A)
+		42X - Inpatient  (Medicare Part B only)
+		43X - Outpatient 
+		44X - Other Outpatient
+		45X - Intermediate Care - Level I
+		46X - Intermediate Care - Level II
+		47X - Subacute Inpatient (Revenue Code 19X required)
+		48X - Swing Beds
+		49X - Reserved for National Assignment
+
+5XX - Christian Science Extended Care
+		51X - Inpatient  (including Medicare Part A)
+		52X - Inpatient  (Medicare Part B only)
+		53X - Outpatient 
+		54X - Other Outpatient
+		55X - Intermediate Care - Level I
+		56X - Intermediate Care - Level II
+		57X - Subacute Inpatient (Revenue Code 19X required)
+		58X - Swing Beds
+		59X - Reserved for National Assignment
+6XX - Intermediate Care
+		61X - Inpatient  (including Medicare Part A)
+		62X - Inpatient  (Medicare Part B only)
+		63X - Outpatient 
+		64X - Other Outpatient
+		65X - Intermediate Care - Level I
+		66X - Intermediate Care - Level II
+		67X - Subacute Inpatient (Revenue Code 19X required)
+		68X - Swing Beds
+		69X - Reserved for National Assignment
+
+7XX - Clinic
+71X - Rural Health
+		72X - Hospital Based or Independent Renal  Dialysis Center
+		73X - Free Standing 
+		74X - Outpatient Rehabilitation Facility (ORF)
+		75X - Comprehensive Outpatient Rehabilitation Facilities (CORF)
+		76X - Community Mental Health Center (CMHC)
+		77X - Reserved for National Assignment
+		78X - Reserved for National Assignment
+		79X - Other
+
+8XX - Special Facility
+	    	81X - Hospice (non-hospital based)
+		82X - Hospice (hospital based)
+		83X - Ambulatory Surgery Center
+		84X - Free-Standing Birthing Center
+		85X - Critical Access Hospital
+		86X - Reserved for National Assignment
+		87X - Reserved for National Assignment
+		88X - Reserved for National Assignment
+		89X - Other
+
+Frequency
+		0 - Non Payment/Zero Claim
+		1 - Admit Through  Discharge Claim
+		2 - Interim - First Claim
+		3 - Interim - Continuing Claim
+		4 - Interim - Last Claim
+		5 - Late Charges(s) Only
+		6 - Adjustment of Prior Claim	
+		7 - Replacement of Prior Claim
+		8 - Void/Cancel of Prior Claim
+Definitions:	
+0 - Non Payment/Zero Claim - Used when a bill is submitted to inform the payer of the non-reimbursement periods of confinement or termination of care; the provider does not anticipate payment.
+
+1 - Admit Through Discharge Claim - Used for a bill which is expected to be the only bill for a course of treatment of inpatient confinement. 
+
+2 - Interim - First Claim - Used for the first of a series of bills to the same third party payer for the same confinement or course of treatment.
+
+3 - Interim - Continuing Claim - Used when a bill for the same confinement/course of treatment was previously submitted and it is expected that further bills for the same confinement/course of treatment will be submitted.
+
+4 - Interim - Last Claim - Used for the last of a series of bills, for which payment is expected, to the same third party payer for the same confinement or course of treatment. 
+
+5 - Late Charge(s) Only - Used for submitting charges that were received by the provider after the Admit Through Discharge or the Last Interim Claim has been submitted.
+
+6 - Adjustment of Prior Claim - Used when a bill previously issued for a specific provider, patient, payer, insured and  "Statement Covers Period" date and the reimbursement amount is to be recalculated due to an increase or decrease in charges, per diem calculations, deductibles, co-insurance, and/or prior third party payments.
+
+To properly adjust a prior bill, the respective plus or minus adjustment must be provided, along with the net overall charge and the new reimbursement amount.   
+
+When a revenue code line is to be changed, the provider is to operate on the principle that the change is to be added to information already submitted (new charge line is unsigned) or is to be subtracted from information already submitted (new charge line is a credit).
+
+This code is not to be used in lieu of a Late Charge(s) Only Claim. Note: This code is not currently acceptable.
+
+7 - Replacement of Prior Claim - Used when a previously issued bill needs to be restated in its entirely, except for the same identify information. With this code, the payer is to operate on the principal that the original bill is null and void, and that the information on this bill represents a complete replacement of the previously issued bill.
+
+8 - Void/Cancel of Prior Claim - code reflects the elimination in its entirety of previously submitted bill. The provider may wish to follow a Void Bill with a bill containing the correct information when a Payer is unable to process a Replacement to a Prior Claim. The appropriate Frequency Code must be used when submitting the new bill. The void bill must contain the same claim suffix and charges as the paid claim.
+
+Batch/Claim Type Inpatient/Outpatient Definitions
+										
+1XX - Hospital							IP     OP     N/A
+11X - Inpatient  (including Medicare Part A)             	X
+12X - Inpatient  (Medicare Part B only)		X				
+13X - Outpatient                                                               	X 
+14X - Other Outpatient                                                      	X
+15X - Intermediate Care - Level I  	X
+16X - Intermediate Care - Level II  	X
+17X - Subacute Inpatient (Revenue Code 19X req)	X
+18X - Swing Beds                                                    	X
+19X - Reserved for National Assignment  			X
+
+2XX - Skilled Nursing						IP	OP	N/A
+21X - Inpatient  (including Medicare Part A)             	X
+22X - Inpatient  (Medicare Part B only)	 X
+23X - Outpatient	 X
+24X - Other Outpatient	 X
+25X - Intermediate Care - Level I                             	X
+26X - Intermediate Care - Level II                            	X
+27X - Subacute Inpatient (Revenue Code 19X req)	X
+28X - Swing Beds                                                    	X
+29X - Reserved for National Assignment                                          	X  
+
+3XX - Home Health						IP	OP	N/A
+31X - Inpatient  (including Medicare Part A) 	X
+32X - Inpatient  (Medicare Part B only) 		X
+33X - Outpatient		X
+34X - Other Outpatient		X
+35X - Intermediate Care - Level I 	X 
+36X - Intermediate Care - Level II     	X
+37X - Subacute Inpatient (Revenue Code 19X req)	X
+38X - Swing Beds     	X 
+39X - Reserved for National Assignment        			X
+
+4XX - Christian Science Hospital				IP	OP	N/A
+41X - Inpatient  (including Medicare Part A)           	 X
+42X - Inpatient  (Medicare Part B only) 		X
+43X - Outpatient                		X
+44X - Other Outpatient         		X
+45X - Intermediate Care - Level I                             	X 
+46X - Intermediate Care - Level II                            	X 
+47X - Subacute Inpatient (Revenue Code 19X req)	X
+48X - Swing Beds                                                    	X
+49X - Reserved for National Assignment                                          	X
+
+
+5XX - Christian Science Extended Care			IP	OP	N/A
+51X - Inpatient  (including Medicare Part A)             	X
+52X - Inpatient  (Medicare Part B only)		 X
+53X - Outpatient                                                                  	 X
+54X - Other Outpatient                                                        	 X
+55X - Intermediate Care - Level I                             	X
+56X - Intermediate Care - Level II                            	X
+57X - Subacute Inpatient (Revenue Code 19X req)	X
+58X - Swing Beds                                                    	X
+59X - Reserved for National Assignment                                         	X
+
+6XX - Intermediate Care					IP	OP	N/A
+61X - Inpatient  (including Medicare Part A)             	X
+62X - Inpatient  (Medicare Part B only)		 X
+63X - Outpatient                                                                  	 X
+64X - Other Outpatient		 X
+65X - Intermediate Care - Level I                             	X
+66X - Intermediate Care - Level II                            	X
+67X - Subacute Inpatient (Revenue Code 19X req)	X
+68X - Swing Beds	X
+69X - Reserved for National Assignment                                          	X
+
+7XX - Clinic							IP	OP	N/A	
+71X - Rural Health                                                    		X
+72X - Hospital Based or Independent Renal Dialysis Ctr      	X
+73X - Free Standing                                                     	X
+74X - Outpatient Rehabilitation Facility (ORF)                      	X
+75X - Comprehensive Outpatient Rehab Fac (CORF)          	X
+76X - Community Mental Health Center (CMHC)		X
+77X - Reserved for National Assignment		   	X
+78X - Reserved for National Assignment   			X
+79X - Other                                                                           	X
+
+8XX - Special Facility						IP	OP	N/A
+81X - Hospice (non-hospital based)                                      	X
+82X - Hospice (hospital based)                                            	 X
+83X - Ambulatory Surgery Center                                        	 X
+84X - Free-Standing Birthing Center                                    	 X
+85X - Critical Access Hospital		 X
+86X - Reserved for National Assignment		  	X
+87X - Reserved for National Assignment			X
+88X - Reserved for National Assignment	  		X
+89X - Other                                                                          	 X
+
+Exhibit # 4
+Type and Source of Admission and Patient Status
+
+Type of Admission 
+
+1 - Emergency - Admissions deemed to be immediately necessary for the health and safety of the patient. i.e. admission is required because irreversible damage to limbs or body functions is imminent. 
+	
+2 - Urgent - Admissions deemed to be immediately necessary within a time span of no longer than 5 days from determining the need for hospitalization. This delay will not result in a significant change in the patient's status or harm to the patient.
+
+3 - Elective - Admissions in which no significant risk or health hazard to the patient is apparent should the admission be scheduled beyond the 5 day period (see Urgent Admission above). This does not preclude elective admissions from being admitted to the hospital in a time span of less than 5 days.
+
+4 - Newborn - A baby born within this facility. If this code is used, must use the special Source of Admission codes.
+
+5 - 8	Reserved for National Assignment.
+
+9	Information not available.
+
+Source of Admission (for Emergency, Elective or Other Type of Admission)
+
+1 - Physician Referral	
+	Inpatient: The patient was admitted to this facility on the recommendation of his/her personal physician.
+	Outpatient: The patient was referred to this facility for outpatient or diagnostic services by his/her personal physician or the patient independently requested outpatient services (self-referral).
+
+2 - Clinic Referral		
+	Inpatient: The patient was admitted to this facility on the recommendation of this facility's clinic physician.
+	Outpatient: The patient was referred to this facility for outpatient or diagnostic services by this facility's clinic or other outpatient department physician.
+
+3 - HMO Referral
+	Inpatient: The patient was admitted to this facility on the recommendation of a HMO physician.
+	Outpatient: The patient was referred to this facility for outpatient or diagnostic services by a HMO.
+
+4 - Transfer From A Hospital	
+	Inpatient: The patient was admitted as a transfer from an acute care facility where he/she was an inpatient. 
+	Outpatient: The patient was referred to this facility for outpatient or diagnostic services by a physician of another acute care facility.
+
+5 - Transfer From A Skilled Nursing Facility
+	Inpatient: The patient was admitted as a transfer from a skilled nursing facility where he/she was an inpatient.
+	Outpatient: The patient was referred to this facility for outpatient or diagnostic services by a physician of the skilled nursing facility where he/she was an inpatient.
+
+6 - Transfer From Another Health Care Facility
+	Inpatient: The patient was admitted to this facility as a transfer from a health care facility other than an acute facility or a skilled nursing facility
+	Outpatient: The patient was referred to this facility for outpatient or diagnostic services by a physician of) another health care facility where he/she is an inpatient.
+
+7 - Emergency Room	
+	Inpatient: The patient was admitted on the recommendation of the facility's emergency room physician.
+	Outpatient: The patient was referred to this facility for outpatient or diagnostic services by the facility's emergency room physician.
+
+8 - Court/Law	Enforcement
+	Inpatient: The patient was admitted to this facility on the direction of a court of law, or on the request of a law enforcement agency representative.
+	Outpatient: The patient was referred to this facility on the direction of a court of law, or on the request of a law enforcement agency representative for outpatient or referenced diagnostic services.
+
+
+9 - Information Not Available
+	Inpatient: The means by which the patient was admitted to this hospital is not known.	
+	Outpatient: The means by which the patient was referred to this facility is not known.
+
+A - Transfer From A Critical Access Hospital
+	Inpatient: The patient was admitted as a transfer from a Critical Access Hospital where he/she was an inpatient.
+	Outpatient: The patient was referred to this facility for outpatient diagnostic services by (a physician of) the Critical Access Hospital where he or she was an inpatient.
+
+B - Z	Reserved for National Assignment. 
+
+Admission Source (for Newborn)
+
+1 - Normal Delivery - A baby delivered with complications.
+
+2 - Premature Delivery - A baby delivered with time and/or weight factors qualifying it for premature status.
+
+3 - Sick Baby - A baby delivered with medical complications, other than those relating to premature status.
+
+4 - Extramural Birth - 	A newborn in a non-sterile environment within the hospital.	
+
+5 - 8	Reserved for National Assignment.
+
+9 - Information Not Available	 - Information Not Available.
+
+Patient  Status
+
+01	Discharged to home or self care (routine discharge)
+
+02	Discharged/transferred to another short-term general hospital for inpatient care
+
+03	Discharged/transferred to skilled nursing facility (SNF)
+
+04	Discharged/transferred to an intermediate care facility (ICF)
+
+05	Discharged/transferred to another type of institution for inpatient care or for outpatient services.
+
+06	Discharged/transferred to home under care of organized home health service organization
+
+07	Left against medical advice or discontinued care
+
+08	Discharged/transferred to home under care of a Home IV provider.
+
+09**	Admitted as an inpatient to this hospital
+
+10 - 19	Discharge to be defined at state level, if necessary
+
+20	Expired
+
+21 - 29	Expired to be defined at state level, if necessary
+
+30	Still patient or expected to return for outpatient services
+
+31 - 39	Still patient to be defined at state level, if necessary
+
+40*	Expired at home
+
+41*	Expired in a medical facility, e.g., hospital, SNF, ICF or free-standing hospice
+
+42*	Expired - place unknown
+
+43 - 49	Reserved for National Assignment
+
+50	Hospice - Home
+
+51	Hospice - Medical Facility
+
+52 - 99	Reserved for National Assignment
+
+* For Use only on Medicare and CHAMPUS claims for hospice care
+** For use only on Medicare outpatient claims
+Exhibit # 5
+Occurrence Codes 
+
+Occurrence Codes and Occurrence Span Codes are mutually exclusive. Occurrence Code values are 01 - 69 and A1 - L9.  Occurrence Span Code values are 70 - 99 and M0-Z9. Occurrence Codes require a date; while Occurrence Span Codes require a FROM and THRU date. 
+
+Record Type 40 holds seven (7) Occurrence Code fields and two (2) Occurrence Span Code fields. Occurrence Span Codes may be passed in the Occurrence Code fields if there are more than two (2) to report. Likewise, Occurrence Codes may be passed in the Occurrence Span Code fields if there are more than seven (7) to report.
+
+When an Occurrence Code & date is passed in the Occurrence Span Code fields, the Thru Date is not required. Likewise, when an Occurrence Span Code is passed in the Occurrence Code fields, two (2) occurrences of Occurrence Code/Date are used. The Occurrence Span Code is passed in  the first Occurrence Code field, the from date is passed in the first Occurrence Date field, the Occurrence Span Code (equal to the previous) is passed in the next occurrence of Occurrence Code and the Thru Date is passed in the Occurrence Date field.  
+
+	Accident Related Codes
+
+01	Auto Accident - Indicates the date of an auto accident.
+
+02	No Fault Insurance Involved-Including Auto Accident/Other - Indicates the date of an accident including auto or other, where state has applicable no fault liability laws.  
+
+03	Accident/Tort Liability - Indicates the date of an accident resulting from a third party's action that may involve a civil court process that attempts to require payment by a third party, other than no fault liability.
+
+04	Accident/Employment Related - The date of an accident allegedly relating to the patient's employment.
+
+05	Other Accident - Indicates the date of an accident not described by the above codes.
+
+06	Crime Victim - The date that a medical condition resulted from alleged criminal action.  
+
+07-08	Reserved for National Assignment.
+
+	Medical Condition Codes
+
+09	Start of Infertility Treatment Cycle - Indicates the date of start of infertility treatment cycle.
+
+10	Last Menstrual Period - The date of the last menstrual period; only applies when patient is being treated for maternity-related condition.
+
+11	Onset of Symptoms/Illness - Indicates the date the patient first became aware of symptoms/illness.
+
+	Respite Care (HHA Only)
+
+12	Date of Onset for a Chronically Dependent Individual (HHA Claims only) - The date the patient became a Chronically Dependent Individual (CDI). This is the first month of the 3 month period prior to eligibility under Respite Care benefit.
+
+13-16	Reserved for National Assignment.
+
+	Insurance-Related Codes
+
+17	Date Outpatient Occupational Therapy Plan Established or Last Reviewed - Indicates the date an occupational therapy plan was established or last reviewed.
+
+18	Date of Retirement Patient/Beneficiary - Indicates the date of retirement for the patient/beneficiary.
+
+19	Date of Retirement Spouse - The date of retirement for the patient's spouse.
+
+20	Guarantee of Payment Began - Indicates the date on which provider began claiming Medicare payment under the guarantee of payment provision.
+
+21	UR Notice Received - Indicates the date of receipt by the beneficiary of the UR Committee's finding that an admission or further stay was not medically necessary.
+
+22	Date Active Care Ended - The date covered care ended in a SNF or general hospital or date on which active care ended in a psychiatric or tuberculosis hospital. This code is not required if code 21 is used.
+
+23	Reserved for National Assignment.
+
+24	Date Insurance Denied - The date the denial of coverage was received by the hospital from any insurer.
+
+25	Date Benefits Terminated By Primary Payer - The date that coverage (including Worker's Compensation or no-fault coverage) is no longer available to the patient.
+
+26	Date SNF Bed Available - Code indicating the date on which a SNF bed became available to hospital inpatient who requires only SNF level care.
+	
+27	Date of Hospice Certification or Re-Certification -The date of certification or re-certification of the hospice benefit period, beginning with first two initial benefit periods of 90 days each and the subsequent 60-day benefit periods. Note: Code 27 should not be used by hospitals unless they own the facilities
+
+28	Date Comprehensive Outpatient Rehabilitation Plan Established or Last Reviewed - Indicates the date a comprehensive outpatient rehabilitation plan was established or last reviewed. Note: Code 27 should not be used by hospitals unless they own the facilities
+				
+29	Date Outpatient Physical Therapy Plan Established or Last Reviewed - Indicates the date an outpatient physical therapy plan was established or last reviewed.
+			
+30	Date Outpatient Speech Pathology Plan Established or Last Reviewed - Indicates the date a speech pathology plan was established or last reviewed.
+
+31	Date Beneficiary Notified of Accommodations - The date the notice was provided to the patient by the hospital that inpatient care is no longer required.
+
+32	Date Beneficiary Notified of Intent to Bill (procedures or treatment) - The date of notice provided to the beneficiary that requested diagnostic procedures/treatments are not reasonable or necessary under Medicare.
+
+33	First Day of the Medicare Coordination Period Covered by EGHP - The first day of the Medicare coordination period during which Medicare or CHAMPUS benefits are secondary to benefits payable under an employer group health plan. Required only for ESRD beneficiaries.
+
+34	Date of Election of Extended Care Facilities - The date the guest elected to receive extended care services (used by Christian Science Sanatoria only).
+
+35	Date Treatment Started For PT - Date services begun by the billing provider for Physical Therapy.
+
+36	Date of Inpatient Hospital Discharge for Covered Transplant Patients - Indicates the date of discharge for inpatient hospital stay in which the patient received a covered transplant procedure when the hospital is billing for immunosuppressive drugs.
+
+37	Date of Inpatient Hospital Discharge for Non-Covered Transplant	 Patient - Indicates the date of discharge for the inpatient hospital stay in which the patient received a non-covered transplant procedure when the hospital is billing for immunosuppressive drugs.
+
+38	Date Treatment Started for Home IV Therapy - Indicates the date the patient was first treated in his home for IV therapy (Home IV providers bill type 85X).
+
+39	Date Discharged on a Continuous Course of IV Therapy - Indicates the date the patient was discharged from the hospital on a continuous course of IV Therapy. (Home IV providers bill Type 85X).
+
+	Service Related Codes
+
+40	Scheduled Date of Admission - The date that a patient will be admitted as an inpatient to the hospital (this code may only be used on an outpatient claim).
+
+41	Date of First Test for Pre-Admission Testing - Indicates the date on which the first outpatient diagnostic test was performed as part of a PAT program. This code may only be used if a date of admission was scheduled prior to the administration of the test(s).
+
+42	Date of Discharge - To be used when Statement Covers Thru Date is not the actual discharge date and the frequency code (Position 3) of the Type of Bill is that of a final bill. For final bill for hospice care, enter the date the Medicare beneficiary terminated his election of hospice care.
+
+43	Scheduled Date of Canceled Surgery - The date for which ambulatory surgery is scheduled.
+
+44	Date Treatment Started for OT - The date Occupational Therapy services began by the billing provider.
+
+45	Date Treatment Started for ST - The date Speech Therapy services began by the billing provider.
+
+46	Date Treatment for Cardiac Rehab - 	The date Cardiac Rehab services began by the billing provider.
+					
+47- 49	Payer Codes	These codes are set aside for payer use only. Providers do not report these codes.
+
+50-69	Reserved for State Assignment
+
+70-99	Refer Exhibit # 6 Occurrence Span Codes
+					
+A0	Reserved for National Assignment
+
+A1	Birthdate Insured A - The birth date of the individual in whose name the insurance is carried.
+					
+A2	Effective Date Insured A Policy - Indicates the first date insurance is in force.
+
+A3	Benefits Exhausted - Indicates the last date that benefits are available and after which no payment can be made to payer A.
+
+A4-A9	Reserved for National Assignment.
+
+B0	Reserved for National Assignment.
+
+B1	Birthdate Insured B - The birth date of the individual in whose name the insurance is carried.
+
+B2	Effective Date Insured B Policy - A code indicating the first date insurance is in force.
+
+B3	Benefits Exhausted - The last date that benefits are available and after which no payment can be made to payer B.
+
+B4-B9	Reserved for National Assignment.
+
+C0	Reserved for National Assignment.
+
+C1	Birthdate Insured C - The birth date of the individual in whose name the insurance is carried.
+
+C2	Effective Date Insured C Policy - Indicates the first date the insurance is in force.
+
+C3	Benefits Exhausted - 	The last date of benefits after which no payment can be made to payer C.
+
+C4-C9	Reserved for National Assignment.
+
+D0-D9	Reserved for National Assignment.
+
+J0-L9	Reserved for State Assignment.
+
+M0-Z9	Refer to Exhibit # 6 Occurrence Span Codes.
+
+Exhibit # 6 
+Occurrence Span Codes
+
+70	Qualifying Stay Dates for SNF Use Only - The from/through date of at least a 3-day hospital stay that qualifies the patient for Medicare payment of SNF services billed. Can be used only by SNF billing.
+
+71 	Prior Stay Dates - The from/through dates given by the patient of any hospital stay that ended within 60 days of this admission.
+
+72	First/Last Visit - The from/through dates of outpatient services. For use on outpatient bills only where the entire billing record is not represented by the actual Statement Covers Period.
+
+73	Benefit Eligibility Period - The inclusive dates during which CHAMPUS medical benefits are available on a sponsor's beneficiary as shown on the beneficiary's ID card.
+
+74	Non-Covered Level of Care - The from/through dates of a period at a non-covered level of care in an otherwise covered stay, excluding any period reported by occurrence span code 76 or 77 or 79 below.
+
+75	SNF Level of Care - The from/through dates of a period of SNF level of care during an inpatient hospital stay. Code should be used only when the PSRO/PRO has approved the patient remaining in the hospital because of the non availability of an SNF bed. For hospitals under prospective payment, this code is needed in day outlier cases only.
+
+76	Patient Liability - The from/through dates of a period of non covered care for which the hospital is permitted to charge the Medicare beneficiary. Code should be used only where the PRO or intermediary has approved such charges in advance and patient has been notified in writing at least 3 days prior to the from date of this period.  
+
+77	Provider Liability Period - The from/through dates of a period of non-covered care for which the provider is liable. Utilization is charged.
+
+78	SNF Prior Stay Dates - The from/through dates given by the patient of any SNF or nursing home stay that ended within 60 days of this hospital or SNF admission.
+
+79	Payer Code - This code is set aside for payer use only.
+
+80-99		Reserved for State Assignment.
+
+M0	PRO/UR Approved Stay Dates - The first and last days that were approved where not all of the stay was approved. Use when condition code 3 is used.
+
+M1	Provider Liability - No Utilization - The from/through dates of a period of non covered care that is denied due to lack of medical necessity or as custodial care for which the provider is liable. The beneficiary is not charged with utilization. The provider may not collect Part A or Part B deductible or coinsurance from the beneficiary.
+
+M2-W9		Reserved for National Assignment.
+
+X0-Z9		Reserved for State Assignment.	
+  
+Exhibit # 7
+Condition Codes
+
+	Insurance Codes
+
+01	Military Service Related - Medical condition incurred during military service.
+
+02	Condition is Employment Related - Patient alleges that medical condition is due to environment/events resulting from employment.
+
+03	Patient Covered By Insurance Not Reflected Here - Indicates that patient/patient representative has stated that coverage may exist beyond that reflected on this bill.
+
+04	HMO Enrollee	- Indicates bill is submitted for information only and the Medicare beneficiary is enrolled in a risk-based HMO and the hospital expects to receive payment from the HMO.
+
+05	Lien Has Been Filed - Provider has filed legal claim for recovery of funds potentially due a patient as a result of legal action initiated by or on behalf of the patient.
+
+06	ESRD Patient in 1st 18 Months of Entitlement Covered by Employer Group Health Insurance - Code indicates Medicare may be a secondary insurer if the patient is also covered by employer group health insurance during his first 18 months of end stage renal disease entitlement.
+
+07	Treatment of Non-terminal Condition for Hospice Patient - Indicates the patient is a hospice enrollee, but the provider is not treating his terminal condition and is requesting regular Medicare reimbursement.
+
+08	Beneficiary Would Not Provide Information Concerning Other Insurance Coverage - The beneficiary would not provide information concerning other insurance coverage.
+							
+09	Neither Patient nor Spouse is Employed - The patient and spouse have denied any employment.
+
+10	Patient and/or Spouse is Employed but no EGHP Coverage Exists - The patient and spouse have indicated that they are employed but hold no group coverage from an Employer Group Health Plan.
+
+11	Disability Beneficiary but no LGHP Coverage - The disabled beneficiary and/or family members have indicated that one or more are employed but have no group health insurance from a LGHP or other employer sponsored or provided health insurance that covers the patient.
+
+12-16	Payer Codes - Codes are set aside for payer use only.
+
+Special Conditions		
+
+17	Patient is Homeless - The patient is homeless.
+
+18	Maiden Name Retained - A dependent spouse that does not use her husband's last name.
+
+19	Child Retains Mother's Name - A patient who is a dependent child entitled to benefits that do not have his/her father's last name.
+
+20	Beneficiary Requested Billing - Provider realizes services are non-covered level of care or excluded, but beneficiary requests determination by payer.
+
+21	Billing for Denial Notice - The provider realizes services are non-covered level of care or excluded, but beneficiary requests determination by payer.
+
+22	Patient on Multiple Drug Regimens - A patient receiving multiple intravenous drugs while on IV therapy. 
+
+23	Homecaregiver Available - The patient has a caregiver available to assist him or her during self-administration of an intravenous drug. 		
+		
+24	Home IV Patient also Receiving HHA Services - The patient is under the care of a Home Health Agency while receiving Home IV Drug Therapy Services. 
+
+25	Patient is Non US Resident - The patient is not a resident of the US.
+
+26	VA Eligible Patient Chooses to Receive Services in a Medicare Certified Facility - Patient is a VA eligible patient and chooses to receive services in a Medicare certified provider instead of a VA facility.	
+		
+27	Patient Referred to a Sole Community Hospital for Diagnostic Laboratory - Reported by Sole Community Hospitals only. Patient referred for a diagnostic laboratory which is paid at 62% not 60% fee schedule. 
+28	Patient and/or Spouse's EGHP is Secondary to Medicare - The patient and/or spouse have indicated that one or both are employed and that there is group health insurance from an  EGHP or other employer sponsored health insurance that covers the patient but that either: 
+	1)  EGHP is a single employer plan and the employer has fewer than 20 full and part-time employees or
+	2)  EGHP is a multi or multiple employer plan that elects to pay secondary to Medicare for employees and spouses aged 65 and older for those participating employers who have fewer than 20 employees.
+
+29	Disabled Beneficiary and/or Family Members' LGHP is Secondary to Medicare - The patient has indicated that one or more are employed and there is group health insurance from a LGHP or other employer sponsored health insurance that covers the patient but that either:
+	1) LGHP is a single employer plan and the employer has fewer than 100 full and part-time employees or
+	2) LGHP is a multiple employer plan that elects to pay secondary to Medicare for members 65 and older.
+
+30	Reserved for National Assignment 
+
+Student Status:  Required when patient is a dependent child over 18 years old. Only one of the following codes may be used. Lowest code value number takes precedence.
+
+31	Patient is Student (Full-time-day) - Patient declares that he/she is enrolled as a full-time student.
+
+32	Patient is Student (Cooperative/work study program) - Patient declares that he/she is enrolled in a cooperative/work study program.
+
+33	Patient is Student (Full-time-night) - Patient declares that he/she is enrolled as full-time night student.
+
+34	Patient is Student (Part-time) - Patient declares that he/she is enrolled as a part-time student.
+
+35	Reserved for National Assignment.
+
+	Accommodations
+
+36	General Care Patient in a Special Unit - Patient temporarily placed in special care unit bed because no general care beds available.	
+
+37	Ward Accommodation at Patient's Request - Patient assigned to ward accommodations at their request.
+
+38	Semi-Private Room Not Available - Either private or ward accommodations were assigned because semi-private accommodations were not available.
+
+39	Private Room Medically Necessary - Patient needs a private room for medical requirements.
+
+40	Same Day Transfer - Patient transferred to another facility before midnight on the day of admission.
+
+41	Partial Hospitalization - Claim is for partial hospitalization services. For Medicare this includes a variety of psychiatric programs (such as drug and alcohol).
+
+42-45	Reserved for National Assignment.
+
+	CHAMPUS  Information
+
+46	Non-Availability Statement on File - A non-availability statement must be on file with CHAMPUS claim for non-emergency inpatient care when the CHAMPUS beneficiary resides within the catchment area (usually a 40-mile radius) of a Uniformed Services Hospital.
+
+47	Reserved for CHAMPUS.
+
+48	Psychiatric Residential Treatment Ctrs. Children and Adolescents (RTCs) - Claim submitted by a "CHAMPUS authorized" psychiatric Residential Treatment Center (RTC) for Children and Adolescents.
+
+49-54	Reserved for National Assignment.
+
+	SNF Information
+
+55	SNF Bed not Available - Code indicates the patient's SNF admission was delayed more than 30 days after hospital discharge because an SNF bed was not available. 	
+
+56	Medical Appropriateness - Code indicates the patient's SNF admission was delayed more than 30 days after hospital discharge because his condition made it inappropriate to begin active care within that period.
+
+57	SNF Readmission - Code indicates the patient was previously receiving Medicare covered SNF care within 30 days of this readmission.
+58-59	Reserved for National Assignment.
+
+	Prospective Payment
+
+60 	Day Outlier - Hospital being paid under a prospective payment system is reporting this stay as a day outlier.
+
+61	Cost Outlier - A hospital being paid under a prospective payment system is requesting additional payment for this stay as a cost outlier.
+
+62	Payer Code (DRG CODE) - A code used by payers to indicate the claim was paid under a DRG.
+
+63-65	Codes set aside for payer use only.
+
+66	Provider Does Not Wish Cost Outlier Payment - A hospital being paid under a prospective payment system is NOT requesting additional payment for this stay as a cost outlier.
+
+67	Beneficiary Elects Not To Use Lifetime Reserve (LTR) Days - Indicates beneficiary elects not to use LTR days when charges per day are less than daily coinsurance amounts.
+
+68	Beneficiary Elects To Use Lifetime Reserve (LTR) Days - Indicates beneficiary elects to use LTR days when charges are less than LTR co-insurance amounts.
+	
+69	Reserved for National Assignment.
+
+	Renal Dialysis Setting
+
+70	Self-Administered EPO - The billing is for a home dialysis patient who self-administers EPO.
+
+71	Full Care in Unit - The billing is for staff-assisted dialysis in a hospital or renal dialysis facility.
+
+72	Self Care in Unit - The billing is for a patient who managed his own dialysis services without staff assistance in a hospital or renal dialysis facility.
+
+73	Self Care Training - The billing is for special dialysis services where a patient and his/her helper (if necessary) were learning to perform dialysis.
+
+74	Home - The billing is for a patient who received dialysis services at home, but code 75 below does not apply.
+
+75	Home - 100% Reimbursement - The billing is for a patient who received dialysis service at home, using a machine that was purchased by Medicare under the 100 percent program.
+
+76	Back-up in Facility Dialysis - The billing is for a home dialysis patient who received back-up dialysis services in a facility.
+
+77	Provider Accepts or is Obligated/Required Due to a Contractual Arrangement or Law to Accept Payment as Payment in Full - Provider has accepted or is obligated to accept payment as payment in full.														
+78	New Coverage Not Implemented by HMO - Billing is for a Medicare newly covered service for which the HMO does not pay.  
+
+79	CORF Services Provided Off-Site - Physical therapy, occupational therapy or speech therapy services were provided off-site.
+
+80-99	Reserved for State Assignment.
+
+	Special Program Indicator Codes
+
+A0	CHAMPUS External Partnership Program - This codes identifies CHAMPUS claims submitted under the External Partnership Program.
+
+A1	EPSDT/CHAP - Early and periodic Screening Diagnosis and Treatment.
+
+A2	Physically Handicapped Children's Program - Services provided under this program receive special funding through Title 8 of the Social Security Act or the CHAMPUS program for the Handicapped.
+
+A3	Special Federal Funding - This code has been designed for uniform use by state uniform billing committees.
+
+A4	Family Planning - This code has been designed for uniform use by state uniform billing committees.
+
+A5	Disability - This code has been designed for uniform use by state uniform billing committees.
+
+A6	Vaccines/Medicare 100% Payment - Pneumococcal and influenza vaccine services are reimbursed under special Medicare program provisions.
+
+A7	Induced Abortion Danger To Life - Abortion was performed to avoid danger to woman's life.						
+A8	Induced Abortion Victim Rape/Incest - Self-explanatory.
+
+A9	Second Opinion Surgery - Services requested to support second opinion on surgery. 
+
+B0-B9	Reserved for National Assignment.
+	
+PRO Approval Indicator Services
+
+C0	Reserved for National Assignment.
+
+C1	Approved as Billed - The services provided for this billing period have been reviewed by the PRO/UR or intermediary, as appropriate, and are fully approved including any day or cost outlier.
+
+C2	Automatic Approval As Billed Based on Focused Review - This should include only categories of cases that the PRO/UR has determined it need not review under a focused review program. 
+
+C3	Partial Approval - The services provided for this billing period have been reviewed by the PRO/UR or intermediary, as appropriate, and some portion has been denied (days or services).
+
+C4	Admission/Services Denied - Only used to indicate that all of the services were denied by the PRO/UR.
+
+C5	Postpayment Review Applicable - The PRO/UR review will take place after payment.
+
+C6	Admission Preauthorization - The PRO/UR authorized this admission/service but has not reviewed the services provided.
+
+C7	Extended Authorization - The PRO has authorized these services for an extended length of time but has not reviewed the services provided.
+
+C8-C9	Reserved for National Assignment.
+
+	Claim Change Reasons
+
+D0	Changes to Service Dates - Reserved for payer use only.
+
+D1	Changes to Charges - Reserved for payer use only.
+
+D2	Changes to Revenue Codes/HCPCS - Reserved for payer use only.
+
+D3	Second or Subsequent Interim PPS Bill - Reserved for payer use only.
+
+D4	Change in Grouper Input - Reserved for payer use only.
+
+D5	Cancel to Correct HICN or Provider ID - Reserved for payer use only.
+
+D6	Cancel Only to Repay a Duplicate or OIG Overpayment - Reserved for payer use only.
+
+D7	Change to Make Medicare the Secondary Payer - Reserved for payer use only.
+
+D8	Change to Make Medicare the Primary Payer - Reserved for payer use only.
+
+D9	Any Other Change - Reserved for payer use only.									
+E0	Change in Patient Status - Reserved for payer use only.
+
+E1-L9	Reserved for National Assignment.
+
+M0-M9	Reserved for Payer Assignment
+
+N0-W9	Reserved for National Assignment.
+
+X0-Z9	Reserved for State Assignment.
+
+
+Exhibit # 8
+Value Codes
+
+01	Most Common Semi-Private Rate - The hospital's most common semi-private rate.
+
+02	Hospital Has No Semi-Private Rooms - Hospital has no semi-private rooms so the associated value amount must contain a $0.00 amount.
+
+03	Reserved for National Assignment.
+
+04	Inpatient Professional Component Charges Which are Combined Billed - Amount shown is the sum of the inpatient professional component charges which are combined billed.  
+
+05	Professional Component Included in Charges and also Billed Separate to Carrier - For use on Medicare bills and all Medicaid bills if state specifies the need for this information.
+
+06	Medicare Part A Blood Deductible - Enter the Part A blood deductible amount, if appropriate. 
+
+07	Reserved for National Assignment.
+
+08*	Medicare Lifetime Reserve Amount in the First Calendar Year - Medicare lifetime reserve amount charged in the year of admission.
+
+09*	Medicare Coinsurance Amount in the First Calendar Year - Medicare coinsurance amounts charged in the year of admission.
+
+10*	Lifetime Reserve Amount in the Second Calendar Year - Medicare lifetime reserve coinsurance amount charged in the year of discharge where the bill spans two calendar years.
+
+11*	Coinsurance Amount in the Second Calendar Year - Medicare coinsurance amount charged in the year of discharge where the inpatient bill spans two calendar years.
+
+*Use this code only for Medicare Part A bills. For Part B coinsurance amounts, use Value Codes A2, B2, C2.
+
+12	Working Aged Beneficiary/Spouse with Employer Group Health Plan - The portion of a payment from a higher priority employer group health insurance made on behalf of an aged beneficiary that the provider is applying to Medicare covered services on this bill.
+
+ 13	ESRD Beneficiary in a Medicare Coordination Period with an Employer's Group Health Plan - The portion of a payment from a higher priority employer group health insurance payment made on behalf of an ESRD beneficiary that the provider is applying to Medicare covered services on this bill.
+
+14	No Fault, Including Auto/Other - The portion from a higher priority no-fault insurance made on behalf of the patient or insured. 
+
+15	Worker's Compensation - The portion of a payment from a higher priority worker's compensation insurance made on behalf of the patient or insured. 
+
+16	PHS, or Other Federal Agency - The portion from a higher priority Public Health Service or Federal Agency made on behalf of a Medicare beneficiary that the provider applied to Medicare covered services on this bill.
+
+17	Payer Code - The associated amount is the amount of day or cost outlier payment to be made. This code is for internal payer use only; providers do not report this code.
+
+18-20	These codes are set aside for payer use only.
+
+	Medicaid-Specific Codes
+
+21	Catastrophic - Medicaid-eligibility requirements to be determined at state level.
+
+22	Surplus - Medicaid-eligibility requirements to be determined at state level.
+
+23	Recurring Monthly Income - Medicaid-eligibility requirements to be determined at state level.
+
+24	Medicaid Rate Code - Medicaid-eligibility requirements to be determined at state level.
+
+25-29	Reserved for National Assignment - Medicaid.
+
+30	Pre-Admission Testing - Charges for outpatient tests in preparation for a previously scheduled admission.
+
+31	Patient Liability Amount - The amount approved to charge the beneficiary for non-covered services.
+
+32-36	Reserved for National Assignment.
+
+37	Pints of Blood Furnished - Number of pints of whole blood or units of packed red cells given to the patient.
+
+38	Blood Deductible Pints - Total number of un-replaced deductible pints of blood supplied.
+
+39	Pints of Blood Replaced - Total number of pints of whole blood or units of packed red cells furnished to the patient that have been replaced by or on behalf of the patient.
+
+40	New Coverage Not Implemented by HMO - Amount shown is for inpatient charges covered by the HMO. (Use this code when the bill includes inpatient charges for newly covered services which are not paid by the HMO.) Note: Condition codes 04 and 78 should also be reported.
+			  
+41	Black Lung Amount shown is the portion of a higher priority Black Lung payment made on behalf of a Medicare beneficiary which is being applied to covered Medicare charges on this bill.
+
+42	VA - Amount shown is the portion of a higher priority VA payment made on behalf of a Medicare beneficiary which is being applied to covered Medicare charges on this bill.
+
+43	Disabled Beneficiary Under 65 With LGHP - Amount shown is the portion of a higher priority LGHP payment made on behalf of a disabled beneficiary that is being applied to covered Medicare charges on this bill.
+
+44	Amount Provider Agreed to Accept from Primary Payer When this Amount is Less than Charges but Higher than Payment Received, then a Medicare Secondary Payment is Due - The amount is what the provider was obligated to accept from a primary payer. When a lesser amount is received and the received amount is less than charges, a Medicare secondary payment is due.
+
+45	Accident Hour - The hour the accident occurred that necessitated medical treatment. Enter the appropriate value right justified to the left of the dollars/cents delimiter. See Exhibit # 1 Standard Date and Time Checks.
+
+46	Number of Grace Days - Following the date of PRO/UR determination, this is the number of days determined by the PRO/UR to be necessary to arrange for patient's post-discharge care. 
+
+47	Any Liability Insurance - Amount shown is the portion from a higher priority liability insurance made on behalf of a Medicare beneficiary which is being applied to Medicare covered services on this bill.
+
+48	Hemoglobin Reading -The latest hemoglobin reading. Whole numbers are to be right justified to the left of the dollar/cents delimiter and decimals are to be right justified to the right of the delimiter.
+
+49	Hematocrit Reading - Hematocrit reading taken prior to the last administration of EPO related to the use of erythropoietin. Whole numbers are to be right justified to the left of the dollar/cents delimiter and decimals, are to be right justified to the right of the dollar/cents delimiter.
+
+50	Physical Therapy Visit - Number of physical therapy visits from onset (at the billing provider) through this billing period. Value should be right justified to the left of the dollar/cents delimiter.
+
+51	Occupational Therapy Visits - Number of occupational therapy visits from onset of symptoms (at the billing provider) through this billing period. Value should be right justified to the left of the dollar/cents delimiter.
+
+52	Speech Therapy Visits - Number of speech therapy visits from onset of symptoms (at the billing provider) through this billing period. Value should be right justified to the left of the dollar/cents delimiter.
+
+53	Cardiac Rehab Visits - Number of cardiac rehabilitation visits from onset of symptoms (at the billing provider) through this billing period. Value should be right justified to the left of the dollar/cents delimiter.
+
+54-55	Reserved for National Assignment.
+
+Home Health - Specific Codes
+ 
+56	Skilled Nurse - Home Visit Hours (HHA only) - Number of in home skilled nursing hours during the billing period. Exclude travel time. Report in whole hours, right justified to the left of the dollar/cents delimiter.
+
+57	Home Health Aide -Home Visit Hours (HHA only) - Hours of home health aide services provided during the billing period. Exclude travel time. Report in whole hours, right justified to the left of the dollar/cents delimiter.
+
+58	Arterial Blood Gas - Arterial blood gas value at beginning of each reporting period for oxygen therapy. Report right justified to the right of the dollar/cents delimiter.
+
+59	Oxygen Saturation - Oxygen saturation at the beginning of each reporting period for oxygen therapy. Report right justified to the right of the dollar/cents delimiter.
+
+60	HHA Branch MSA - MSA in which HHA branch is located (Report MSA when branch location is different than the HHS's).
+
+61	Location Where Service is Furnished (HHA and Hospice) - MSA number or rural state code of the location where the home health or hospice service is delivered. Report the number right justified to the left of the dollar/cents delimiter.
+
+62-66	Reserved for National Assignment.
+
+67	Peritoneal Dialysis - The number of hours of peritoneal dialysis provided in the home during the billing period. Exclude travel time. Report in whole hours, right justified to the left of the dollar/cents delimiter. (Round to the nearest whole hour.)
+
+68	EPO-DRUG - Number of units of EPO administered and/or supplied relating to the billing period. Report the amount in whole units, right justified to the left of the dollar/cents delimiter.  
+   
+70-72	Payer Codes - These codes are set aside for payer use only.
+
+73	Drug Deductible - The amount of the drug deductible to be applied to the claim. For internal use by third party payers only.
+
+74	Drug Coinsurance - The amount of the drug coinsurance to be applied to the claim. For internal use by third party payers only.
+
+75-79	Payer Codes - These codes are set aside for payer use only.
+
+80-94	Reserved for State Assignment.
+
+95	Blue Cross Medicare Carve-Out Claim Processing  - Value Code 95 should be included along with the total Medicare Part A & B Allowed Amount.
+
+96-99	Reserved for State Assignment.
+
+A1*	Deductible Payer A - Amount assumed by the provider to be applied to the patient's deductible of this payer.
+
+B1*	Deductible Payer B - Amount assumed by the provider to be applied to the patient's deductible of this payer.
+
+C1*	Deductible Payer C - Amount assumed by the provider to be applied to the patient's deductible of this payer.
+
+E1*	Deductible Payer D - Amount assumed by the provider to be applied to the patient's deductible of this payer.
+
+F1*	Deductible Payer E - Amount assumed by the provider to be applied to the patient's deductible of this payer.
+
+* Medicare Blood Deductibles Should Be Reported Under Value Code 6.
+
+G1*	Deductible Payer F - Amount assumed by the provider to be applied to the deductible of this payer.
+
+A2#	Coinsurance Payer A - Amount assumed by the provider to be applied to the coinsurance of this payer.
+
+B2#	Coinsurance Payer B - Amount assumed by the provider to be applied to the coinsurance of this payer.
+
+C2#	Coinsurance Payer C - Amount assumed by the provider to be applied to the coinsurance of this payer.
+
+E2#	Coinsurance Payer D - Amount assumed by the provider to be applied to the coinsurance of this payer.
+
+F2#	Coinsurance Payer E - Amount assumed by the provider to be applied to the coinsurance of this payer.
+
+G2#	Coinsurance Payer F - Amount assumed by the provider to be applied to the coinsurance of this payer.
+
+* Medicare Blood Deductibles Should Be Reported Under Value Code 6.
+
+# For Medicare, Use This Code Only For Reporting Part B Coinsurance Amounts. For Part A Coinsurance Amounts, Use Value Codes 8-11.
+
+A3	Estimated Responsibility Payer A - The amount estimated by the provider to be paid by this payer.
+
+B3	Estimated Responsibility Payer B - The amount estimated by the provider to be paid by this payer.
+
+C3	Estimated Responsibility Payer C - The amount estimated by the provider to be paid by this payer.
+
+D3	Estimated Responsibility Patient - The amount estimated by the provider to be paid by the patient.
+
+E3	Estimated Responsibility Payer D - The amount estimated by the provider to be paid by this payer.
+
+F3	Estimated Responsibility Payer E - The amount estimated by the provider to be paid by this payer.
+
+G3	Estimated Responsibility Payer F The amount estimated by the provider to be paid this payer.
+
+A0	Reserved for National Assignment.
+
+A4@	Covered Self-Administrable Drugs-Emergency - The amount included in covered charges for self-administrable drugs administered to the patient in an emergency situation. 
+
+A5@	Covered Self-Administrable Drugs-not Self Administrable in Form & Situation Furnished to Patient -The amount included in covered charges for self- administrable drugs administered to the patient because the drug was not self-administrable in the form and situation in which it was furnished to the patient.
+
+A6@	Covered Self-Administrable Drugs - Diagnostic Study & Other - The amount included in covered charges for self-administrable drugs administered to the patient because the drug was necessary for diagnostic study or other reason (e.g. the drug is specifically covered by the payer).
+
+@ For use with Revenue Code 637.
+
+A7	Wording changed 2005.
+
+A8	Patient Weight in Kilograms
+
+A9	Patient Height in Centimeters
+
+AA-AZ	Reserved for National Assignment.
+
+B0	Reserved for National Assignment.	
+
+B4-BZ	Reserved for National Assignment.	
+
+C0	Reserved for National Assignment.	
+
+C4-CZ	Reserved for National Assignment.
+
+D0-D2	Reserved for National Assignment.	
+
+D4-DQ	Reserved for National Assignment.
+
+DR	Katrina Disaster 	
+
+DS-DZ	Reserved for National Assignment.
+
+E0	Reserved for National Assignment.	
+
+E4-EZ	Reserved for National Assignment.	
+
+F0	Reserved for National Assignment.	
+F4-FZ	Reserved for National Assignment.	
+
+G0	Reserved for National Assignment.	
+
+G4-GZ	Reserved for National Assignment.	
+
+H0-YZ	Reserved for National Assignment.
+
+X0-ZZ	Reserved for State Assignment.
+
+UnitedHealthcare Specific Values Codes
+
+YY  Per Diem Rate - The per diem amount billed by NY "exempt" facilities.
+
+ZZ  NY DRG Amount - The DRG (Diagnostic Related Group) dollar amount billed by NY facilities.
+ 		 					
+
+Exhibit # 9
+Revenue Codes & Unit Requirements 
+
+This exhibit lists the valid revenue code values, their definitions, and unit requirements.
+
+Unit Requirement Key:	IP	Only required on Inpatient claims
+				OP	Only required on Outpatient claims
+				HH	Only required on Home Health claims
+				X	Required on all claims
+	
+	Sub
+Rev Code	Code	Req/Type 	Description						
+001			X	Total Charge
+				Represents the total charges (including taxes) for the claim.
+
+01X				Reserved for Internal Payer Use
+
+02X - 06X				Reserved for National Assignment
+
+07X - 09X				Reserved for State Use
+
+09X				CT Assigned Codes
+
+		1		Chronic Disease Hospital
+		2		HealthTrack Screening - Initial or Periodic
+		3		HealthTrack Screening with Referral - Initial or Periodic
+		4		HealthTrack Screening with Treatment - Initial or Periodic
+		9		Inpatient Acute Care Rehabilitation
+
+10X			IP / Days	All Inclusive Rate
+				Flat fee incurred on either a daily or total stay basis for services rendered. May cover room & board or room & board + ancillary services.
+	
+		0		All Inclusive Room and Board plus Ancillary
+		1		All Inclusive Room and Board 
+
+11X			IP / Days	Room and Board - Private (Medical or General)
+				Routine service charges for one bed rooms. Most payers require that private rooms be separately identified. 
+
+	0		General Classification
+	1		Medical / Surgical / GYN 
+	2		OB
+	3		Pediatric
+	4		Psychiatric
+	5		Hospice
+	6		Detoxification
+	7		Oncology
+	8		Rehabilitation
+	9		Other
+
+12X		IP / Days	Room and Board - Semi-private Two Bed (Medical or General)
+				Routine service charges incurred for accommodations with two beds
+
+	0			General Classification
+	1			Medical / Surgical / GYN 
+	2			OB
+	3			Pediatric
+	4			Psychiatric
+	5			Hospice
+	6			Detoxification
+	7			Oncology
+	8			Rehabilitation
+	9			Other
+	Sub
+Rev Code	Code	Req/Type 	Description					
+
+13X		 IP / Days	Room and Board - Semi-private Three & Four Beds(Medical or General)
+			Routine service charges incurred for accommodations with three and four beds. 
+
+	0		General Classification
+	1		Medical / Surgical / GYN 
+	2		OB
+	3		Pediatric
+	4		Psychiatric
+	5		Hospice
+	6		Detoxification
+	7		Oncology
+	8		Rehabilitation
+	9		Other
+				
+14X	               IP / Days         Room and Board - Private (Deluxe)
+			Deluxe rooms are accommodations with amenities substantially in excess of those provided to other 	patients.
+
+	0		General Classification
+	1		Medical / Surgical / GYN 
+	2		OB
+	3		Pediatric
+	4		Psychiatric
+	5		Hospice
+	6		Detoxification
+	7		Oncology
+	8		Rehabilitation
+	9		Other
+
+15X			IP / Days Room and Board - Ward (Medical or General)
+			Routine service charges for accommodations with five or more.beds. 
+
+	0		General Classification
+	1		Medical / Surgical / GYN 
+	2		OB
+	3		Pediatric
+	4		Psychiatric
+	5		Hospice
+	6		Detoxification
+	7		Oncology
+	8		Rehabilitation
+	9		Other
+
+16X	                IP / Days       Other Room and Board 
+			Any routine service charges for accommodations that cannot be included in the more specific revenue codes.
+	
+	0		General Classification
+	4		Sterile Environment
+	7		Self Care
+	9		Other
+
+			Revenue Code 164 - Sterile Environment - is a room and board charge to be used by hospitals that are currently separating this charge for billing.
+
+17X		IP / Days	Nursery 
+			Charges for nursing care to newborn/premature infants in nurseries.
+
+			Subcategories 1-4 to be used by facilities with nursery services designed around distinct areas and/or levels of care. Levels of care defined under state regulations or other statutes supersede the following guidelines.
+	Sub
+Rev Code	Code	Req/Type 	Description						
+				
+Level I - Routine care of apparently normal full-term or preterm neonates (Newborn Nursery**)
+Level II - Low birth-weight neonates who are not sick, but require frequent feeding, and neonates who require more hours of nursing than do normal neonates. (Continuing Care**)
+Level III - Sick neonates who need 6-12 hours of nursing each day. (Intermediate Care**)
+Level IV - Constant nursing, cardiopulmonary and other support for severely ill infants. (Intensive Care**)
+
+	0		General Classification
+	1		Newborn - Level I
+	2		Newborn - Level II
+	3		Newborn - Level III
+	4		Newborn - Level IV
+	9		Other
+
+**Guidelines adapted from chapter 2 (physical facilities) of guidelines for prenatal care, second edition, published by the American Academy of Pediatrics and the American College of Obstetricians and Gynecologists (1988).
+
+18X		IP / Days	Leave of Absence
+			Charges for holding a room while the patient is temporarily away from the provider. 
+
+	0		General Classification
+	1		Reserved 
+	2		Patient Convenience
+	3		Therapeutic Leave
+	4		ICF/MR - Any Reason
+	5		Nursing Home (for Hospitalization)
+	9		Other Leave of Absence
+
+19X		IP / Days	Subacute Care
+			Accommodation charges for sub-acute care in hospital/skilled nursing facility.
+
+Level I - Minimal nursing intervention. Co-morbidities do not complicate treatment plan. Assessment of vitals and body systems required 1-2 times per day (Skilled Care).
+Level II - Moderate to extensive nursing intervention. Active treatment of co-morbidities. Assessment of vitals and body systems required 2-3 times per day (Comprehensive Care).
+Level III - Moderate to extensive nursing intervention. Potential for co-morbidities to affect the treatment plan. Assessment of vitals and body systems required 3-4 times per day (Complex Care).
+Level IV - Extensive nursing and technical intervention. Potential for co-morbidities to affect the treatment plan. Assessment of vitals and body systems required 4-6 times per day (Intensive Care).
+
+	0		General Classification
+	1		Subacute Care - Level I
+	2		Subacute Care - Level II
+	3		Subacute Care - Level III
+	4		Subacute Care - Level IV
+	9		Other Subacute Care
+
+Note: Revenue code 19X may be used in multiple types of bills. But, if bill type X7X is used in form locator 4, revenue code 19X must be used 
+
+20X		IP / Days	Intensive Care
+			Routine service charge for medical/surgical care provided for a more intensive level of care than that is rendered in the general medical/ surgical unit. 
+
+	0		General Classification
+	1		Surgical 
+	2		Medical
+	3		Pediatric
+	4		Psychiatric
+	6		Intermediate ICU
+	7		Burn Care
+	8		Trauma
+	9		Other Intensive Care
+	Sub
+Rev Code	Code	Req/Type 	Description					
+
+21X		IP / Days	Coronary Care
+			Routine service charge for medical care provided to those with coronary illness that require more intensive care than that rendered in the general medical unit. 
+
+	0		General Classification
+	1		Myocardial Infarction 
+	2		Pulmonary Care
+	3		Heart Transplant
+	4		Intermediate CCU
+	9		Other Coronary Care
+
+22X			Special Charges
+			Charges incurred during an inpatient stay for certain services. Some hospitals prefer to identify the component of services rendered in greater detail and break out charges for items that normally would be part of routine services.
+
+	0		General Classification
+	1		Admission Charge
+	2		Technical Support Charge
+	3		U.R. Service Charge
+	4		Late Discharge, medically necessary
+	9		Other Special Charges
+				
+23X			Incremental Nursing Charge Rate
+			Charge for nursing service assessed in addition to room and board.
+
+	0		General Classification
+	1		Nursery 
+	2		OB
+	3		ICU
+	4		CCU
+	5		Hospice
+	9		Other 
+
+			Revenue code 230 may be used to report nursing acuity charges.
+
+24X			All Inclusive Ancillary
+			A flat rate incurred on either a daily or total stay basis for ancillary services only. Hospitals that bill in this manner may wish to segregate these charges.
+
+	0		General Classification
+	9		Other Inclusive Ancillary
+
+25X (See 63X, an extension of 25X)	Pharmacy
+			Charges for medication manufactured, packaged, controlled, assayed, dispensed, and distributed under the direction of a licensed pharmacist.  
+			Subcode 4 is for providers that do not bill drugs used for other diagnostic services under Revenue Code 929.  	
+			Subcode 5 is for providers that do not bill for drugs used for radiology under Revenue Code 329 or 339.
+
+	0		General Classification
+	1		Generic Drugs 
+	2		Non-generic Drugs
+	3		Take Home Drugs
+	4		Drugs incident to Other Diagnostic Services
+	5		Drugs Incident to Radiol
+	6		Experimental Drugs
+	7		Non-Prescription
+	8		IV Solutions
+	9		Other Pharmacy
+
+Rev	Sub
+Code	Code	Req/Type 	Description						
+
+26X			IV Therapy
+			Equipment charge or administration of intravenous solution by specially trained personnel. For outpatient home intravenous drug therapy equipment, which is part of the basic per diem fee schedule. Providers must identify the actual cost for each type of pump for updating of the per diem.
+
+	0		General Classification
+	1		Infusion Pump 
+	2		IV Therapy / Pharmacy Services
+	3		IV Therapy / Drug / Supply Delivery
+	4		IV Therapy / Supplies
+	9		Other IV Therapy
+
+			Note: For home IV providers, requires the HCPCS code which describes the pump to be entered.
+
+27X		Items 	Medical / Surgical Supplies and Devices
+			Charges for supply items required for patient care. Additional breakdowns are provided for item that hospitals may wish to identify because of internal or payer requirements.
+
+	0		General Classification
+	1		Non Sterile Supply 
+	2		Sterile Supply
+	3		Take Home Supplies
+	4		Prosthetic / Orthotic Devices
+	5		Pacemaker
+	6		Intraocular Lens
+	7		Oxygen - Take Home
+	8		Other Implants
+	9		Other Supplies / Devices
+
+28X			Oncology
+			Charges for the treatment of tumors and related diseases.
+
+	0		General Classification
+	9		Other Oncology 
+
+29X		Items	Durable Medical Equipment (Other Than Renal)
+			Charges for medical equipment (excluding renal equipment).
+
+	0		General Classification
+	1		Rental 
+	2		Purchase of New DME
+	3		Purchase of Used DME
+	4		Supplies/Drugs for DME Effectiveness (Home Health Agency)
+	9		Other Equipment
+
+30X			OP/Tests Laboratory
+			Charges for diagnostic and routine clinical laboratory tests. A breakdown of the major areas in the laboratory is provided in order to meet hospital needs or payer requirements.
+
+	0		General Classification
+	1		Chemistry 
+	2		Immunology
+	3		Renal Patient (Home)
+	4		Non-Routine Dialysis
+	5		Hematology
+	6		Bacteriology & Microbiology
+	9		Other Laboratory
+
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+31X		Tests	Laboratory Pathological
+			Charges for diagnostic and routine laboratory tests on tissues & culture. A breakdown of the major areas that a hospital may wish to identify is provided.
+
+	0		General Classification
+	1		Cytology 
+	2		Histology
+	4		Biopsy
+        	9		Other 
+
+32X		Tests	Radiology - Diagnostic
+			Charges for diagnostic radiology services. Includes taking, processing, examining and interpreting radiographs and fluorographs. A breakdown is provided of the major procedures that individual hospitals may wish to identify.
+
+	0		General Classification
+	1		Angiocardiography 
+	2		Arthrography
+	3		Arteriography
+	4		Chest X-Ray
+	9		Other
+
+33X		Tests	Radiology - Therapeutic
+			Charges for therapeutic radiology services and chemotherapy. Includes therapy by injection or ingestion of radioactive substances. A breakdown is provided of the major areas that hospitals or payers may wish to identify. 
+
+	0		General Classification
+	1		Chemotherapy - Injected 
+	2		Chemotherapy - Oral
+	3		Radiation Therapy
+	5		Chemotherapy - IV
+	9		Other
+
+34X		Tests	Nuclear Medicine
+			Charges for procedures and tests performed by a radioisotope laboratory utilizing radioactive materials as required for diagnosis and treatment. 
+
+	0		General Classification
+	1		Diagnostic
+	2		Therapeutic
+	9		Other 
+
+35X		X/Scans	CT Scan
+			Charges for computed tomography scans. Due to coverage limitations, some payers require that the specific test be identified.
+
+	0		General Classification
+	1		Head Scan
+	2		Body Scan
+	9		Other 
+
+36X			Operating Room Services
+			Charges for services provided by specially trained personnel to provide assistance to physicians during surgical and related procedures immediately following surgery as well as the operating room (heat, lights) and equipment. 
+
+	0		General Classification
+	1		Minor Surgery
+	2		Organ Transplant - Other than Kidney
+	7		Kidney Transplant
+	9		Other Operating Room Services 
+
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+
+37X			Anesthesia
+			Subcode 1 is for providers that separate anesthesia used for diagnostic services from the charge for the service. Subcode 2 is for anesthesia used for radiology under radiology revenue codes as part of the procedure charge.
+
+	0		General Classification
+	1		Anesthesia Incident to Radiology
+	2		Anesthesia Incident to Other Diagnostic Services
+	4		Acupuncture
+	9		Other Anesthesia 
+
+38X		Pints	Blood
+			Charges for blood must be separately identified for private payer purposes. 
+
+	0		General Classification
+	1		Packed Red Cells 
+	2		Whole Blood
+	3		Plasma
+	4		Platelets
+	5		Leucocytes
+	6		Other Components
+	7		Other Derivatives (Cryopricipitates)
+	9		Other Blood 
+
+39X			Blood Storage and Processing
+			Charges for the storage and processing of whole blood. 
+
+	0		General Classification
+	1		Blood Administration
+	2		Whole Blood
+	9		Other Blood Storage & Processing 
+
+40X		Tests	Other Imaging Services
+
+	0		General Classification
+	1		Diagnostic Mammography 
+	2		Ultrasound
+	3		Screening Mammography
+	4		Positron Emission Tomography
+	9		Other Imaging Services 
+
+41X		OP/Treatmts	Respiratory Services
+			Charges for administration of oxygen and certain	drugs thru inhalation or positive pressure and analysis of blood to evaluate the patient's ability to exchange oxygen and other gases.
+
+	0		General Classification
+	2		Inhalation Services
+	3		Hyperbaric Oxygen Therapy
+	9		Other Respiratory Services
+
+42X		OP/Treatmts	Physical Therapy
+			Charges for therapeutic exercises, massage and 	effective properties of light, heat, cold, water, electricity and assistive devices for diagnosis and rehabilitation of patients who have neuromuscular, orthopedic and other disabilities. 
+
+	0		General Classification
+	1		Visit Charge
+	2		Hourly Charge
+	3		Group Rate
+	4		Evaluation or Re-evaluation
+	9		Other Physical Therapy 
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+43X		OP/Treatmts	Occupational Therapy
+			Services for therapeutic interventions to improve, sustain or restore an individual's level of function in performance of activities of daily living and work. 
+
+		0		General Classification
+		1		Visit Charge
+		2		Hourly Charge
+		3		Group Rate
+		4		Evaluation or Re-evaluation
+		9		Other Occupational Therapy
+
+44X		OP/Treatmts	Speech - Language Pathology
+			Charges for services to improve impaired functional communications skills. 
+
+	0		General Classification
+	1		Visit Charge
+	2		Hourly Charge
+	3		Group Rate
+	4		Evaluation or Re-evaluation
+	9		Other Speech - Language Pathology 
+
+45X		OP/Visits	Emergency Room
+			Charges for emergency treatment to those who require immediate unscheduled care. Under the Emergency Medical Treatment and Active Labor Act (EMTALA), hospitals with an emergency room must provide an exam and stabilizing treatment to any individual with an emergency condition and to any woman in active labor regardless of the patient's Medicare eligibility.  
+
+	0		General Classification
+	1		EMTALA Emergency Medical Screening Services
+	2		ER Beyond EMTALA Screening
+	6		Urgent Care
+	9		Other Emergency Room
+
+			The sum of 451 and 452 is equivalent to 450. Payers that do not require a breakdown should roll-up 451 and 452 into 450. Standalone usage of 452 is not acceptable. Standalone usage of 451 is acceptable when no services beyond an initial screening/assessment are rendered. 
+	
+46X		Tests	Pulmonary Function
+			Tests that measure inhaled and exhaled gases. Includes analysis of blood and tests that evaluate the patient's ability to exchange oxygen and other gases. 
+
+
+	0		General Classification
+	9		Other Pulmonary Function
+ 
+47X		Tests	Audiology
+			Charges for the detection and management of communication handicaps caused in whole or in part on the hearing function.	
+
+	0		General Classification
+	1		Diagnostic
+	2		Treatment
+	9		Other Audiology
+
+48X		Tests	Cardiology
+			Charges for cardiac procedures rendered in a separate unit in the hospital. 
+
+	0		General Classification
+	1		Cardiac Cath Lab
+	2		Stress Test
+	3		Echocardiology
+	9		Other Cardiology
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+49X			Ambulatory Surgical Care
+			Charges for ambulatory surgery not covered by other categories.
+
+	0		General Classification
+	9		Other Ambulatory Surgical Care
+
+50X			Outpatient Services
+			Outpatient charges for services given to a patient who is admitted as an inpatient before midnight of the day following the date of services.
+
+	0		General Classification
+	9		Other Outpatient Services 
+
+51X		OP/Visits	Clinic
+			Non-emergency/scheduled outpatient charges for diagnostic, preventive, curative, rehabilitative and educational services to ambulatory patients. 
+
+	0		General Classification
+	1		Chronic Pain Center
+	2		Dental Clinic
+	3		Psychiatric Clinic
+	4		OB-GYN Clinic
+	5		Pediatric Clinic
+	6		Urgent Care Clinic
+	7		Family Practice Clinic
+	9		Other Clinic
+
+52X		OP/Visits	Free-Standing Clinic
+			
+	0		General Classification
+	1		Rural Health - Clinic
+	2		Rural Health - Home
+	3		Family Practice Clinic
+	6		Urgent Care Clinic
+	9		Other Free-Standing Clinic
+
+53X		OP/Visits	Osteopathic Services
+			Charges for structural evaluation of the cranium, cervical, dorsal and lumbar spine by a doctor of osteopathy. 
+
+	0		General Classification
+	1		Osteopathic Therapy
+	9		Other Osteopathic Services 
+
+54X		X/Miles	Ambulance
+			Charges for ambulance service. Heartmobile is a specifically designed ambulance for cardiac patients.
+
+	0		General Classification
+	1		Supplies
+	2		Medical Transport
+	3		Heartmobile
+	4		Oxygen
+	5		Air Ambulance
+	6		Neonatal Ambulance Service
+	7		Pharmacy
+	8		Telephone Transmission EKG
+	9		Other Ambulance
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+55X		IP/Visits	Skilled Nursing
+			Charges for nursing services that must be provided under the direct supervision of a licensed nurse to assure the safety of the patient and to achieve the medically desired result. This code may be used for nursing home services, CORFS, or a service charge for home health billing.
+
+	0		General Classification
+	1		Visit Charge
+	2		Hourly Charge
+	9		Other Skilled Nursing
+
+56X		HH/Visits	Medical Social Services
+			Charges for services such as counseling and interviewing patients and interpreting problems of social situation rendered on any basis. 
+
+	0		General Classification
+	1		Visit Charge
+	2		Hourly Charge
+	9		Other Medical Social Services 
+
+57X		HH/Visits	Home Health Aide (Home Health)
+			Charges by a home health agency for personnel that are primarily responsible for the personal care of the patient.
+
+	0		General Classification
+	1		Visit Charge
+	2		Hourly Charge
+	9		Other Home Health Visits
+
+58X		HH/Visits	Other Visits (Home Health)
+			Charges made by a home health agency for visits other than physical, occupational or speech therapy which must be specifically identified.
+
+	0		General Classification
+	1		Visit Charge
+	2		Hourly Charge
+	9		Other Home Health Visits
+
+59X		HH/Visits	Units of Service (Home Health)
+			Revenue code used on home health agency bills based of units of service.
+
+	0		General Classification
+	9		Other Home Health Units
+
+60X		Rental Mos.	Oxygen (Home Health) 
+(Ft/lbs)			Charges by a home health agency for oxygen equipment supplies or contents,
+(601 only)			excluding purchased equipment. If a patient has purchased a stationary oxygen system, oxygen concentrator or portable equipment, revenue codes 292 or 293 apply. DME is billed under current revenue codes 291, 292, or 293.
+
+	0		General Classification
+	1		Oxygen - Stat Equip / Supply / or Contents
+	2		Oxygen - Stat Equip / Under 1 LPM
+	3		Oxygen - Stat Equip / Over 4 LPM
+       	4		Oxygen - Portable Add-on 
+
+61X		Tests	MRI
+			Charges for Magnetic Resonance Imaging of the 	brain and other parts of the body.
+
+	0		General Classification
+	1		Brain (Including Brainstem)
+	2		Spinal Cord (Including Spine)
+	9		Other MRI
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+62X		Days	Medical / Surgical Supplies - Extension of 27X
+			Supplies required for patient care. The category is an addition of 27X for reporting additional breakdown where needed.  
+			Subcode 1 is for providers that do not bill supplies used under radiology revenue codes as part of the radiology procedure charges. Subcode 2 is for providers that do not bill supplies used for other diagnostic services as part of the charge for services in the diagnostic service. 
+
+	1		Supplies Incident to Radiology
+	2		Supplies Incident to Other Diagnostic Services
+	3		Surgical Dressings
+	4		FDA Investigational Devices
+	
+63X (Extension of 25X)	Units	Drugs Requiring Specific Identification
+			Charges for medication manufactured, controlled, assayed, dispensed and distributed under the direction of a licensed pharmacist. The category is an extension of 25X for reporting additional breakdown where needed.
+
+	0		Reserved
+	1		Single Source Drug 
+	2		Multiple Source Drug
+	3		Restrictive Prescription
+	4		Erythropoietin (EPO) Less than 10,000 Units
+	5		Erythropoietin (EPO) 10,000 or More Units
+	6		Drugs Requiring Detailed Coding (a)
+	7		Self-administrative Drugs (b)
+
+    (a)  The units of service reported should be in 100s, rounded to the nearest hundred (no decimal).
+    (b)  Self-administered drugs not requiring detailed coding. Use Value Codes A4, A5 & A6. 
+
+64X		Units	Home IV Therapy Services
+			Charges for IV drug therapy services performed in the patient's residence. Report units in one hour increments. 
+
+	0		General Classification
+	1		Nonroutine Nursing, Central Line
+	2		IV Site Care, Central Line
+	3		IV Start / Change, Peripheral Line
+	4		Nonroutine Nursing, Peripheral Line
+	5		Training Patient / Caregiver, Central Line
+	6		Training Disabled Patient, Central Line
+	7		Training Patient / Caregiver, Peripheral Line
+	8		Training Disabled Patient, Peripheral Line
+	9		Other IV Therapy Services
+			 
+65X		X/Days	Hospice  Services
+			Charges for hospice care for a terminally ill patient.
+
+	0		General Classification
+	1		Routine Home Care
+	2		Continuous Home Care
+	3		Reserved
+	4		Reserved
+	5		Inpatient Respite Care
+	6		General Inpatient Care (Non-respite)
+	7		Physician Services
+	9		Other Hospice
+			Use 651 for less than 8 hours of care. Use 652 for a minimum of 8 hours rendered in a 24-hour period. A portion of an hour counts as an hour.
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+66X		Hours	Respite Care (HHA)
+			Charges for hours under the Respite Care Benefit for services of a homemaker, home health aide, and nursing care provided by a licensed nurse.
+
+		0		General Classification
+		1		Hourly Charge / Skilled Nursing
+		2		Hourly Charge / Home Health Aide /Homemaker 
+
+67X			Outpatient Special Residence Charges
+			Residence arrangements for patients requiring continuous outpatient care.
+		
+	0		General Classification
+	1		Hospital Based
+	2		Contracted
+	9		Other Special Residence Charges	
+
+68X			Not Assigned
+
+69X			Not Assigned
+
+70X			Cast Room
+			Charges the application, maintenance and removal of casts.
+
+	0		General Classification
+	9		Other Cast Room
+
+71X			Recovery Room
+			
+	0		General Classification
+	9		Other Recovery Room
+
+72X		X(724)/Days	Labor Room / Delivery
+			Charges for labor and delivery. Includes prenatal care during labor, assistance during delivery, postnatal care in the recovery room and minor gynecological procedures if they are performed in the delivery suite.
+
+	0		General Classification
+	1		Labor							
+	2		Delivery
+	3		Circumcision
+	4		Birthing Center
+	5		Fetal Monitoring
+	6		Abortion
+	9		Other Labor Room / Delivery
+
+73X		Tests	EKG/ECG (Electrocardiogram)
+			Charges for operation of electrocardiogram equipment.
+
+	0		General Classification
+	1		Holter Monitor
+	2		Telemetry
+	9		Other EKG/ECG
+	
+74X		Tests	EEG (Electroencephalogram)
+			Charges for operation of specialized equipment used to diagnose brain disorders.
+
+	0		General Classification
+	9		Other EEG - Including ENG
+
+75X		Tests	Gastro-Intestinal Services
+			Procedure room charges for procedures not performed in the operating room.
+
+	0		General Classification
+	9		Other Gastro-Intestinal
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+76X			Treatment or Observation Room
+			Charges for the use of a treatment room or the room associated with outpatient observation services. Only 762 should be used for observation services.
+
+			Observation services are those services furnished by a hospital on the hospital's premises, including use of a bed and periodic monitoring by a hospital's nursing or other staff, which are reasonable and necessary to evaluate an outpatient's condition or determine the need for a possible admission to the hospital as an inpatient. Most observation services do not exceed one day. 
+
+	0		General Classification
+	1		Treatment Room
+	2		Observation Room
+	9		Other Treatment Room 
+
+77X			Preventive Care Services
+			Used to capture preventive care services.
+
+	0		General Classification
+	1		Vaccination Administration
+	9		Other 
+
+78X		Units	Telemedicine
+			Facility telemedicine charges related to a three year Medicare demonstration project commencing October 1, 1996.
+
+	0		General Classification
+	9		Other Telemedicine
+
+79X			Lithotripsy
+			Charges for the use of the lithotripsy in the treatment of kidney stones.
+
+	0		General Classification
+	9		Other Lithotripsy
+
+80X		X/Sessions	Inpatient Renal Dialysis
+			A waste removal process performed in an inpatient setting that uses an artificial kidney when the body's own kidneys have failed. The waste may be removed directly from the blood (hemodialysis) or indirectly from the blood by flushing a special solution between the abdominal covering and the 	tissue (peritoneal dialysis). Specific identification required for billing purposes.
+
+	0		General Classification
+	1		Inpatient Hemodialysis
+	2		Inpatient Peritoneal (Non-CAPD)
+	3		Inpatient Continuous Ambulatory Peritoneal Dialysis (CAPD)
+	4		Inpatient Continuous Cycling Peritoneal Dialysis (CCPD)
+	9		Other Inpatient Dialysis
+
+81X			Organ Acquisition
+			The acquisition and storage of various organs used for transplantation.  Living donor is a living person from whom various organs are obtained for transplantation. Cadaver is an individual who has been pronounced dead according to medical and legal criteria, from whom various organs are obtained for transplantation.  
+
+	0		General Classification
+	1		Living Donor
+	2		Cadaver Donor
+	3		Unknown Donor
+	4		Unsuccessful Organ Search Donor Bank Charge*
+	9		Other Organ Donor 
+
+			*Revenue Code 814 is to be used only when costs incurred for an organ search do not result in an eventual organ acquisition and transplantation.
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+82X		OP/Sessions	Hemodialysis - Outpatient or Home
+			Process performed in an outpatient or home setting, necessary when the body's own kidneys have failed. Waste is removed directly from the blood. 
+
+	0		General Classification
+	1		Hemodialysis / Composite or Other Rate
+	2		Home Supplies
+	3		Home Equipment
+	4		Maintenance / 100%
+	5		Support Services
+	9		Other Outpatient Hemodialysis
+
+83X		OP/Sessions	Peritoneal Dialysis - Outpatient or Home
+			Process performed in an outpatient or home setting, necessary when the body's own kidneys have failed. Waste is removed indirectly by flushing a special solution between the abdominal covering and the tissue. 
+
+	0		General Classification
+	1		Peritoneal / Composite or Other Rate
+	2		Home Supplies
+	3		Home Equipment
+	4		Maintenance / 100%
+	5		Support Services
+	9		Other Outpatient Peritoneal Dialysis
+
+84X		OP/Days	Continuous Ambulatory Peritoneal Dialysis (CAPD) - Outpatient or Home
+			A continuous dialysis process performed in an outpatient or home setting which uses the patient peritoneal membrane as a dialyzer.
+
+	0		General Classification
+	1		CAPD / Composite or Other Rate
+	2		Home Supplies
+	3		Home Equipment
+	4		Maintenance / 100%
+	5		Support Services
+	9		Other Outpatient CAPD
+
+85X		OP/Days	Continuous Cycling Peritoneal Dialysis (CCPD) - Outpatient or Home
+			A continuous dialysis process performed in an outpatient or home setting which uses a machine to make automatic exchanges at night.
+
+	0		General Classification
+	1		CCPD / Composite or Other Rate
+	2		Home Supplies
+	3		Home Equipment
+	4		Maintenance / 100%
+	5		Support Services
+	9		Other Outpatient CCPD
+
+86X			Reserved for Dialysis (National Assignment)
+
+87X			Reserved for Dialysis (National Assignment)
+
+88X			Sessions Miscellaneous Dialysis
+			Charges for dialysis services not identified elsewhere. Ultrafiltration uses a dialysis machine but without the dialysate solution. Only use when the procedure is not performed as part of a normal dialysis session.
+
+	0		General Classification
+	1		Ultrafiltration
+	2		Home Dialysis Aid Visit
+	9		Miscellaneous Dialysis Other
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+89X			Reserved for National Assignment
+
+90X			X/Visits Psychiatric / Psychological Treatments
+
+	0		General Classification
+	1		Electroshock Therapy
+	2		Milieu Therapy
+	3		Play Therapy
+	4		Activity Therapy
+	9		Other
+
+91X		X/Visits	Psychiatric / Psychological Services
+			Charges for nursing and professional services for emotionally disturbed patients including those admitted for diagnosis and treatment. 912 and 913 are zero billed (no dollars in the amount field) used to supply program information.
+
+	0		General Classification
+	1		Rehabilitation
+	2		Partial Hospitalization - Less Intensive
+	3		Partial Hospitalization - Intensive
+	4		Individual Therapy
+	5		Group Therapy
+	6		Family Therapy
+	7		Bio Feedback
+	8		Testing
+	9		Other
+
+92X		X/Tests	Other Diagnostic Services
+
+	0		General Classification
+	1		Peripheral Vascular Lab
+	2		Electromyelogram
+	3		Pap Smear
+	4		Allergy Test
+	5		Pregnancy Test
+	9		Other Diagnostic Services (Includes Diagnostic Sleep Disorder Listing)
+
+93X			Not Assigned
+
+94X		X/Visits	Other Therapeutic Services
+			
+	0		General Classification
+	1		Recreational Therapy
+	2		Education / Training
+	3		Cardiac Rehabilitation
+	4		Drug Rehabilitation
+	5		Alcohol Rehabilitation
+	6		Complex Medical Equipment - Routine
+	7		Complex Medical Equipment - Ancillary
+	9		Other Therapeutic Services 
+
+95X			Not Assigned
+
+96X			Professional Fees
+			Charges for medical professionals that are required to be identified singly. 
+
+	0		General Classification
+	1		Psychiatric
+	2		Ophthalmology
+	3		Anesthesiologist (MD)
+	4		Anesthetist (CRNA)
+	9		Other Professional Fees 
+Rev	Sub
+Code	Code	Req/Type 	Description							
+
+97X			Professional Fees (Extension of 96X)
+
+	1		Laboratory
+	2		Radiology - Diagnostic
+	3		Radiology - Therapeutic
+	4		Radiology - Nuclear Medicine
+	5		Operating Room
+	6		Respiratory Therapy
+	7		Physical Therapy
+	8		Occupational Therapy
+	9		Speech Pathology
+
+98X			Professional Fees (Extension of 96X & 97X)
+
+	1		Emergency Room
+	2		Outpatient Services
+	3		Clinic
+	4		Medical Social Services
+	5		EKG
+	6		EEG
+	7		Hospital Visit
+	8		Consultation
+	9		Private Duty Nurse
+
+99X			Patient Convenience Items
+			Charges for items that are generally considered by the payers to be strictly convenience items and, as such, are not covered.
+
+	0		General Classification
+	1		Cafeteria / Guest Tray
+	2		Private Linen Service
+	3		Telephone / Telegraph
+	4		TV / Radio
+	5		Nonpatient Room Rentals
+	6		Late Discharge Charge
+	7		Admission Kits
+	8		Beauty Shop
+	9		Other Patient Convenience Items
+
+1XXX to 8999		Reserved for National Assignment
+
+9000 to 9044			Reserved for Medicare Skilled Nursing Facility Demonstration Project
+
+9045 to 9999			Reserved for National Assignment

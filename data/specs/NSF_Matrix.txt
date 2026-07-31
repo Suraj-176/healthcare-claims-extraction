@@ -1,0 +1,1826 @@
+
+
+
+
+
+
+National
+ 
+Standard
+
+Format
+
+Matrix
+
+
+Version 002.15
+
+for 
+
+Keying Vendors
+
+
+
+																						
+									  Revision Date: June 2013
+	
+TABLE OF CONTENTS
+AA0 Header Record - Submitter Data	3
+BA0 Batch Header Record "Provider Data 1"	3
+BA1  Batch Header Record "Provider Data 2"	3
+CA0 Patient Data?		3
+CA1 Patient Data This record is not used for commercial claims	3
+CB0 Legal Representative Data This record is not used for commercial claims.	3
+DA0 Insurance Information - Payer Data1	3
+DA1 Insurance Information Payer Data 2	3
+DA2 Insurance Information Payer Data 3	3
+EA0 Claim Data??	3
+EA1 Claim Data This record is not used for commercial claims.	3
+EA2 Claim Data This record is not used for commercial claims.	3
+EK0 Miscellaneous Claim Data - Keyed Claims	3
+FA0 Claim Root Segment	3
+FB0 Medical Segment	3
+FB1 Service Line Detail This record is not used for commercial claims.	3
+FB2 Service Line Detail Medical Segment This record is not used for commercial claims.	3
+FD0 Service Line Detail Dental Segment This record is not used for commercial claims.	3
+FE0 Third Party Organization Segment	3
+GA0 Ambulance Certification Record This record is not used for commercial claims.	3
+GC0 Chiropractic Certification Record This record is not used for commercial claims.	3
+GD0 D M E Certification Record This record is not used for commercial claims.	3
+GD1 Narrative Information for DME This record is not used for commercial claims.	3
+GE0 Certification Record This record is not used for commercial claims.	3
+GP0 Certification Record This record is not used for commercial claims.	3
+GU0 Certification Record This record is not used for commercial claims.	3
+GX0 Oxygen Certification Record This record is not used for commercial claims.	3
+GX1 Oxygen Certification Record This record is not used for commercial claims.	3
+GX2 Oxygen Certification RecordThis record is not used for commercial claims.	3
+HA0 Extra Narrative Record	3
+XA0 Claim Trailer Record	3
+YA0 Batch Trailer Record	3
+ZA0 File Trailer Record	3
+Appendix - United HealthCare Commercial Provider Specialty Codes	3
+
+	Legend:
+					R = REQUIRED
+					C = CONDITIONAL
+					O = OPTIONAL
+					N = NOT USED/ NOT APPLICABLE
+Record Type:	AA0	Record Name:	File Header Record - Submitter Data 
+
+This record is required for every submission.
+
+Field	Positions	Req
+No. 	From	To	Picture	Field	Field Name/Description
+
+01.0	01	03	X(03)	R	RECORD ID - Must be AA0
+
+02.0	04	19	X(16)	R	Submitter Id - Nine digits
+					Submitter ID assigned by UnitedHealthcare. Must equal Submitter ID in Record ZA0- 02.0. See "General Instructions". Left justify, blank fill.
+
+03.0	20	28	X(09)	N	Reserved record space -  Blank fill.
+
+04.0  	29	34	X(06)	R	Submission Type
+					Identifies Input Medium or Method Used to submit claims.
+
+				Async		BISYNC	RJE		SYNC	TAPE		CPU
+				ASY		BSY	RJE		NDM	TPCRTG		CPU
+				ASY003	BSY024	RJE024		TP0800
+				ASY012	BSY048	RJE048		TP1600
+				ASY024	BSY096	RJE096		TP6250
+				ASY048	BSY192	RJE192
+				ASY096
+
+				Diskette                                              	SCANNER
+				DSK8SS	DSK5SS	DSK3SS	SCN
+				DSK8SD	DSK5SD	DSK3SD	SCNOCR
+				DSK8DD	DSK5DD	DSK3DD	SCNICR
+						DSK5HD	DSK3HD
+				
+05.0	35	40	X(06)	R	Submission Number
+					The inventory file number assigned by the submitter. Must be unique for every new file submitted.
+
+06.0	41	73	X(33)	O	Submitter Name
+					Vendor Name that inquiries regarding this file should be directed to. See "General Instructions" for Name 2 entry. May be blank.
+
+07.0	74	103	X(30)	O	Submitter Street Address 1
+					Mailing address of above Vendor. See "General Instructions" for Address entry. May be blank
+
+08.0	104	133	X(30)	O	Submitter Street Address 2
+					See "General Instructions" for Address entry.  May be blank.
+
+09.0	134	153	X(20)	O	Submitter City
+					See "General Instructions" for Address entry.  May be blank.
+
+10.0	154	155	X(02)	O	Submitter State
+					See "General Instructions" for Address entry.  May be blank.
+
+11.0	156	164	X(09)	O	Submitter Zip Code
+					See "General Instructions" for Address entry.  May be blank.
+
+12.0	165	169	X(05)	N	Submitter Region - Not used. Blank fill.
+
+13.0	170	202	X(33)	O	Submitter Contact
+					Name of person to be contacted for issues concerning this submission.  May be blank.
+Record Type:	AA0	Record Name:	File Header Record - Submitter Data 
+			
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description
+
+14.0	203	212	X(10)	O	Submitter Telephone Number
+					Telephone number for the above contact. See "General Instructions" for Telephone entry. May be blank.
+
+15.0	213	220	X(08)	R	Creation Date
+					Date file was created. Must not be later than date file is received by payer. Must be a valid date. See "General Instructions" for date entry.
+
+16.0	221	226	X(06)	R	Submission Time
+					The time file is submitted. HHMMSS (Military Time). May not be blank
+
+17.0	227	242	X(16)	R	Receiver Identification
+					See "General Instructions" for ID number entry. Must equal Receiver ID in ZA0.04.0. Left justify, blank fill. 87726 = United HealthCare. 	
+
+18.0	243	243	X(01)	R	Receiver Type Code
+					Indicates organization designated to receive this file. F = Insurance Company. Must Be Entered.
+
+19.0	244	248	9(03)V99	R	Version Code - National
+					Specific National version being used. Format: 999V99. Decimal is implied. Must enter 00215. No decimal.
+
+20.0	249	253	9(09)V99	R	Version Code - Local
+					Specific Local version being used. Format: 999V99. Decimal is implied. Must enter 00215. No decimal.
+	
+21.0	254	257	X(04)	R	Test/Production Indicator
+					Code Values:
+						Test = File for test. Test Submitter ID required.
+						Prod = File should be run through production system.  
+
+22.0	258	265	X(08)	N	Password - Not used.  Blank fill
+
+23.0	266	266	X(01)	N	Retransmission Status - Not used. Blank fill.
+
+24.0	267	282	X(16)	N	Original Submitter ID - Blank fill.
+
+25.0		283	283	X(01)	O	Vendor Application Category
+					The application category to identify the category the vendor's software that created this file applies to. For example, Medicare Part B, Medicare Durable Medical Equipment Regional Center, Medicaid, commercial, etc. Commercial = "C". May be blank.
+
+26.0	284	288	X(05)	O	Vendor Software Version
+					The version of the software package that was used to create this file. May be blank.	
+
+27.0	289	290	X(02)	O	Vendor Software Update
+					The update number of the version of software used to create this file. May be blank.	
+
+28.0	291	292	X(02)	N	Filler - National - Unused record space. Blank fill.
+
+29.0	293	320	X(28)	N	Filler - Local - Unused record space. Blank fill.
+Record Type: 	BA0   	Record Name: Batch Header Record "Provider Data 1"
+
+This record is required for every submission. Only one BA0 record is allowed for each batch.
+			
+Field	Positions	Req
+No.	From  To	Picture	Field	Field Name/Description
+
+01.0	1	3	X(03)	R	Record ID - Must be "BA0"
+
+02.0	4	18	X(15)	R	EMC Provider Identifier
+					The federally assigned Tax ID of the billing provider. May be the Employee Identification (EIN) or the Social Security number (SSN). Must equal value in BA0-06.0.  Must also be same as EMC Provider ID in YA0-02.0. See "General Instructions" for ID number entry. Left justify. May not be Blank.
+												
+03.0	19	21	X(03)	N	Batch Type - Not used. Blank fill.
+							
+04.0	22	25	9(04)	R	Batch Number
+					Sequential number assigned by the submitter to each batch of claims. Must be 0001 through 9999. Increment by 1 for each BA0 record.
+
+05.0	26	31	X(06)	O	Batch Identification
+					The ID assigned by the submitter to identify a batch within his own system. If entered, must equal BA1-05 & YA0-05. See "General Instructions" for ID number entry. May be blank.
+
+06.0	32	40	X(09)	R	Provider Tax ID
+					The federally assigned Tax Identification of the billing provider. May be the Employee Identification (EIN) or the Social Security number (SSN). May not be blank. Must equal the Provider Tax ID entered in YA0-06.0. See general instructions for ID number entry.
+
+07.0	41	46	X(06)	N	Reserved - Unused Space - May be blank.
+
+08.0	47	47	X(01)	R	Provider Tax ID Type
+					Code values:
+					E = Employer identification number
+					S = Social security number
+					X = Corporate name but social security number
+					If equals "E" or "X", then provider organization name (BA0-18) must not be blank.
+
+09.0	48	62	X(15)	O	Provider Medicare Number
+					Billing provider's National Provider Identification (NPI) number. 
+
+10.0	63	68	X(06)	N	Provider UPIN Number - Not used.  Blank fill.
+
+11.0	69	74	X(06)	N	Reserved - Unused Space.  Blank Fill.
+
+12.0	75	89	X(15)	N	Provider Medicaid Number 
+					Provider Atypical Provider Number (API).
+
+13.0	90	104	X(15)	N	Provider Champus Number - Not used.  Blank fill.
+
+14.0	105	119	X(15)	N	Provider Blue Shield Number - Not used.  Blank fill. 
+
+15.0	120	134	X(15)	N	Provider Commercial Number - Not used.  Blank fill.
+
+16.0	135	149	X(15)	N	Provider Other Number 1 
+					Provider identification number (PIN). May be blank.
+Record Type: 	BA0   	Record Name: 	Batch Header Record "Provider Data 1"
+		
+Field	Positions	Req
+No.	From   To	Picture	Field	Field Name/Description
+
+17.0	150	164	X(15)	N	Provider Other Number 2 - Not used.  Blank fill.
+
+18.0	165	197	X(33)	C	Provider Organization Name
+					Required when BA0-08.0 = "E" or "X". 
+							
+19.0	198	217	X(20)	C	Provider Last Name
+					The last name of the provider who rendered services on this batch of claims. If BA0-22 equals IL and BA0-18 is not equal to space, this field may be blank.
+
+20.0	218	229	X(12)	C	Provider First Name
+					The first name of the provider who rendered services on this batch of claims. If BA0-22 equals IL and BA0-18 is not equal to space, this field may be blank.
+					
+21.0	230	230	X(01)	C	Provider Middle Initial
+					Should be entered on commercial claims. The middle initial of the provider who rendered services on this batch of claims.
+
+22.0	231	233	X(03)	R	Provider Specialty
+					The specialty of the provider who rendered services on this batch of claims. See Appendix A for valid values. 
+
+23.0	234	248	X(15)	N	Specialty License Number 
+					Provider's taxonomy code.
+
+24.0	249	263	X(15)	O	State License Number
+					Should be entered on commercial claims. Left justify, blank fill.
+
+25.0	264	267	X(4)	N	Dentist License Number
+					Provider's credentials
+
+25.0	268	278	X(11)	N	Dentist License Number - Not used.  Blank fill.
+
+26.0	279	293	X(15)	N	Anesthesia License Number - Not used.  Blank fill.
+
+27.0	294	306	X(13)	N	Filler - National - Unused record space.  Blank fill.
+
+28.0	307	320	X(14)	N	Filler - Local - Unused record space.  Blank fill.
+Record Type: 	BA1  	Record Name: 	Batch Header Record "Provider Data 2"
+
+This record is required for all Commercial claim submissions. Only one BA1 record is allowed for each batch.
+			
+Field	Positions	Req
+No.	From	To	Picture	Field	Field Name/Description
+
+01.0	1	3	X(03)	R	Record ID - Must be "BA1"
+
+02.0	4	18	X(15)	R	EMC Provider Identifier
+					The federally assigned Tax ID of the billing provider. Must equal BA0-06.0. Must be equal EMC Provider ID in BA0-02.0 and YA0-02.0. See "General Instructions" for ID number entry. May not be blank.
+
+03.0	19	21	X(03)	N	Batch Type - Not used. Blank fill.
+
+04.0	22	25	9(04)	R	Batch Number
+					Must be identical to BA0-04.0.
+
+05.0	26	31	X(06)	O	Batch Identification
+					Assigned by the submitter. If entered, must equal BA0-05 and YA0-05. See "General Instructions" for ID number entry. May be blank.
+
+06.0	32	34	X(03)	O	Provider Type Organization
+					See NSF for acceptable values. May be blank.
+
+07.0	35	64	X(30)	R	Provider Service Address 1
+					See General Instructions for Address entry.
+
+08.0	65	94	X(30)	N	Provider Service Address 2 - Not used. May be blank.
+
+09.0	95	114	X(20)	R	Provider Service City
+					See General Instructions for Address entry.
+
+10.0	115	116	X(02)	R	Provider Service State
+					See General instructions for address entry. 
+
+11.0	117	125	X(09)	R	Provider Service Zip
+					See General instructions for address entry. 	
+
+12.0	126	135	X(10)	R	Provider Service Telephone Number
+					See General Instructions for telephone number entry.
+
+13.0	136	165	X(30)	O	Provider Pay To Address 1
+					See General Instructions for Address entry.
+
+14.0	166	195	X(30)	N	Provider Pay To Address 2 - Not used. Blank fill. 
+
+15.0	196	215	X(20)	O	Provider Pay To City
+					See General Instructions for Address entry.
+
+16.0	216	217	X(02)	O	Provider Pay To State
+					See General Instructions for Address entry.
+
+17.0	218	226	X(09)	O	Provider Pay To Zip Code
+					See General Instructions for Address entry.
+
+18.0	227	236	X(10)	O	Provider Pay To Telephone Number
+					See General Instructions for Telephone Number entry.
+
+19.0	237	278	X(42)	N	Filler - National - Unused record space. Blank fill.
+
+20.0	279	320	X(42)	N	Filler - Local - Unused record space. Blank fill.
+Record Type: 	CA0	Record Name: 	Patient Data                      
+
+Only one CA0 record is allowed for each claim.
+			
+Field	Positions	Req
+No.	From	To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - must be CA0
+
+02.0	04	05	X(02)	N	Filler - Reserved record space.  Blank fill.
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Required on CA0 through XA0 records. See "General Instructions" for Patient Control Number entry.
+
+					First position must not be blank. May contain only the following characters. No other special characters are allowed.
+						A - Z
+						0 - 9
+						forward slash (/)
+					 	blank ( )
+						period (.)
+						comma (,)
+						hyphen (-)
+						number sign (#)
+							
+04.0	23	42	X(20)	R	Patient Last Name
+					Last name of the person who received services. Truncate if necessary 
+
+05.0	43	54	X(12)	R	Patient First Name
+					First name of person who received services. Truncate if necessary
+
+06.0	55	55	X(01)	C	Patient Middle Initial
+					Middle initial of the person who received services. May be blank.
+
+07.0	56	58	X(03)	N	Patient Generation - Not used.  Blank fill.
+
+08.0	59	66	X(08)	R	Patient Date Of Birth
+					See General Instructions for Date entry. Must be less than or equal to from date of service.  
+
+09.0	67	67	X(01)	R	Patient Sex Code
+					Must be M or F
+
+10.0	68	68	X(01)	N	Patient Type Of Residence - Not used.  May be blank.
+
+11.0	69	98	X(30)	R	Patient Address 1
+					Permanent address of the patient. See General Instructions for Address entry.
+
+12.0	99	128	X(30)	C	Patient Address 2
+					See General Instructions for Address entry.
+
+13.0	129	148	X(20)	R	Patient City
+					See General Instructions for Address entry.  
+
+14.0	149	150	X(02)	R	Patient State
+					See General Instructions. Use U.S. Postal Service abbreviations.
+							
+15.0	151	159	X(09)	R	Patient Zip Code
+					May not be blank, all zeros or nines.
+Record Type:	CA0	Record Name:	Patient Data
+
+Field	Positions	Req
+No.	From	To	Picture	Field 	Name/Description
+
+16.0	160	169	X(10)	N	Patient Telephone Number - Not used. May be blank.
+
+17.0	170	170	X(01)	N	Patient Marital Status - Not Used. May be blank.
+	
+18.0	171	171	X(01)	N	Patient Student Status
+					The student status of the patient if 19 years of age or older, not handicapped and not the insured. May be blank. Values:
+						F = Full-time student
+						P = part-time student
+						N = Not a student
+
+19.0	172	172	X(01)	N	Patient Employment Status
+					Indicates the employment status of the patient. May be blank. Code Values: 
+						1 = Employed full-time
+						2 = Employed part-time
+						3 = Not Employed	
+						4 = Self employed
+						5 = Retired
+						6 = On active military duty
+						9 = Unknown
+						
+20.0	173	173	X(01)	N	Patient Death Indicator - Not used. May be blank
+
+21.0	174	181	X(08)	N	Patient Date Of Death - Not used. May be blank.
+
+22.0	182	182	X(01)	O	Other Insurance Indicator
+					Indicates whether the patient has other insurance. Values:
+						1 = Yes, patient has other insurance
+						2 = Yes, patient has other insurance not reflected on this bill 
+						3 = No, patient does not have other insurance 
+
+					Field may be blank. If equals 1, there must be a DA0 record with DA0-0.02 = 2 and a DA2 record with DA2-0.02 = 2.
+
+23.0	183	183	X(01)	R	Claim Editing Indicator
+					Must equal "F" for commercial claims.
+					
+24.0	184	185	X(02)	N	Type Of Claim Indicator - Not used. May be blank.
+
+25.0	186	186	X(01)	N	Legal Representative Indicator - Not used. May be blank.  
+
+26.0	187	195	X(09)	N	Origin Code - Not used. May be blank.
+
+27.0	196	212	X(17)	N	Payer Claim Control Number - Not used. Must be blank.
+
+28.0	213	227	X(15)	O	Provider Number
+					The number assigned to the provider by the payer/. May be blank.
+
+29.0	228	233	X(06)	O	Claim Identification Number
+					Unique ID number assigned to the claim by the sender. May be blank.
+
+30.0	234	275	X(20)	N	Filler - National - Unused record space. Blank fill.
+
+31.0	276	303	X(28)	N	Property Casualty Claim Number - Not Used. May be blank.
+
+32.0	304	320	X(17)	N	Filler - Local   - Unused record space.  Blank fill.
+Record Type:	CA1	Record Name:	Patient Data           
+
+This record is not used for commercial claims.
+
+
+
+Record Type:	CB0	Record Name:	Legal Representative Data           
+
+This record is not used for commercial claims.
+Record Type:	DA0	Record Name:	Insurance Information - Payer Data1 
+
+At least one DA0 record is required on every commercial claim. May also be used when other insurance applies.  A maximum of three may be provided.
+		
+Field	Positions	Req
+No.	From	To	Picture	Field 	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be DA0.
+
+02.0	04	05	X(02)	R	Sequence Number
+					Code Values:
+						01 = UHG Payer Record
+						02 = Medicare Payer Record or Primary OI Payer Record
+						03 = OI or Secondary OI Payer Record
+
+Note: If CA0-22.0 is equal to 1, there must be a DA0 record with DA0-0.02 = 2 and a DA2 record with DA2-0.02 = 2
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.
+
+04.0	23	23	X(01)	R	Claim Filing Indicator
+					Code Values:
+						P = Payment is being requested of this payer. 
+						I = Payment is not being requested of this payer.    
+			   					
+Note: There must be one and only one DA0 record with DA0-0.04 = P and DA0-0.04 = P must always have Payer ID = 87726.
+
+05.0	24	24	X(01)	R	Source Of Payment For This Claim
+					Code Values:   
+						A = Self Pay 
+						B = Worker's Compensation 
+						C = Medicare 
+						D = Medicaid 
+						E = Other Federal Program 
+						F = Commercial Insurance Company
+						G = Blue Cross / Blue Shield 
+						H = CHAMPUS 
+						I = HMO 
+						J = Federal Employee's Program (FEP) 
+						K = Central Certification 
+						L = Self Administered 
+						M = Family or Friends
+						N = Managed Care - Non-HMO
+						P = Blue Cross
+						Q = Automobile Accident Insurance	
+						T = Title V
+						V = Veteran Administration Plan
+						Z = Other 
+
+06.0	25	26	X(02)	N	Insurance Type Code - Not used. May be blank.
+
+07.0	27	31	X(05)	R	Payer Identification
+					Record sequence 01 must be 87726 for UnitedHealth Group payer; default to 00000 on the 02 Sequence when there is no 03 Sequence
+
+					When there is a Medicare payer and a non Medicare payer - Use 00001 for the non-Medicare payer; default to 00000 for the Medicare payer.
+
+					When there are two non-Medicare payers - Use 00001 for the primary payer; default to 00000 for the secondary payer. 
+
+08.0	32	35	X(04)	O	Payer Claim Office Number			
+					Office number assigned by the payer. May be blank.
+Record Type:	DA0	Record Name:	Insurance Information - Payer Data 1
+			
+Field	Positions	Req
+No.	From	To	Picture	Field	Name/Description
+
+09.0	36	68	X(33)	O	Payer Name
+					Payer's organization name. Left justify, blank fill. May be blank.
+
+10.0	69	88	X(20)	O	Group Number
+					Number assigned by the payer to the group or plan that provides the insurance. Left justify, blank fill. Field may be blank.
+						  
+11.0	89	121	X(33)	O	Group Name
+					The group or plan name that provides the insurance. Left justify, blank fill. May be blank.
+	
+12.0	122	122	X(01)	C	PPO/HMO Indicator
+					Value Y = provider is submitting this claim under a special processing agreement. May be blank.
+
+13.0	123	137	X(15)	N	PPO Identification - Not used. May be blank.
+
+14.0	138	152	X(15)	C	Prior Authorization Number - May be blank.
+
+15.0	153	153	X(01)	C	Assignment Of Benefits Indicator
+					Required when DA0-0.04 = P.  Code Values:
+						Y = Benefits HAVE been assigned to provider
+						N = Benefits HAVE NOT been assigned to provider.
+
+16.0	154	154	X(01)	O	Patient Signature Source
+					May be blank. Code Values:
+						C = Signed -1500 claim form on file. 
+						S = Signed signature authorization form for bx12 on file. 
+						M = Signed signature authorization form for box 13 on file. 
+						B = Signed authorization forms for both box 12 & 13 on file. 
+						P = Patient was not physically present for services. 
+
+17.0	155	156	9(02)	R	Patient Relationship To Insured
+					May not be blank. Code values:
+						01 = Patient is Insured
+						02 = Spouse
+						03 = Natural/Adopted Child - Insured is financially responsible 
+						04 = Natural/Adopted Child - Insured is not financially responsible
+						05 = Step Child
+						06 = Foster Child
+						07 = Ward of the Court
+						08 = Employee
+						09 = Unknown 
+						10 = Handicapped Dependent
+						11 = Organ Donor	
+						12 = Cadaver Donor
+						13 = Grandchild
+						14 = Niece/Nephew
+						15 = Injured Plaintiff
+						16 = Sponsored Dependent
+						17 = Minor Dependent of a Minor Dependent
+						18 = Parent
+						19 = Grandparent 
+Record Type:	DA0	Record Name:	Insurance Information - Payer Data 1 
+
+Field	Positions	Req
+No.	From	To	Picture	Field	Name/Description
+
+18.0	157	181	X(25)	R	Insured Identification Number
+					Enter the insured's SSN or ID number. Left justify. Blank fill.
+
+19.0	182	201	X(20)	R	Insured Last Name
+					See General Instructions for Name 1 entry.
+
+20.0	202	213	X(12)	R	Insured First Name
+					See General Instructions for Name 1 entry.  
+
+21.0	214	214	X(01)	O	Insured Middle Initial
+					See General Instructions for Name 1 entry.
+
+22.0	215	217	X(03)	N	Insured Generation - Not used. Blank fill.
+
+23.0	218	218	X(01)	O	Insured Sex
+					May be blank. Code Values:
+						M = Male
+						F = Female
+						U = Unknown
+							
+24.0	219	226	X(08)	O	Insured Date Of Birth
+					See General Instructions for Date entry. May be blank.
+		  
+25.0	227	227	X(01)	O	Insured Employment Status Code
+					May be blank. Code Values:
+						1 = Employed Full Time 
+						2 = Employed Part Time
+						3 = Not Employed
+						4 = Self Employed
+						5 = Retired
+						6 = On Active Military Duty
+						7- 8 Not Used
+						9 = Unknown
+								
+26.0	228	228	X(01)	N	Supplemental Insurance Indicator - Not used. Blank fill.
+
+27.0	229	235	X(07)	N	Insurance Location Identifier - Not used. Blank fill.
+
+28.0	236	260	X(25)	N	Medicaid ID Number - Not used. Blank fill.  
+	
+29.0	261	273	X(13)	N	Filler - National - Unused reserved space. Blank fill.
+
+30.0	274	287	X(14)	N	Filler - Local - Unused reserved space. Blank fill.
+
+31.0	288	288	X(1)	N	Medicaid Reclamation Indicator
+					R = Medicaid Reclamation Claim. May be blank.
+					
+30.0	289	320	X(32)	N	Filler - Local - Unused reserved space. Blank fill.
+Record Type:	DA1	Record Name:	Insurance Information Payer Data 2 
+
+A DA1 record is required for every payer who has received and/or processed the claim prior to this submission.
+A claim may have up to three DA1 records. Each must have a corresponding DA0 record. Provides the EOB/ remittance information from primary payer to secondary and tertiary payer.
+				
+Field	Positions	Req
+No.	From	To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must equal DA1.
+
+02.0	04	05	X(02)	R	Sequence Number
+					Used to sequence DA1 records and relate DA1 records with DA0 and DA2 records. Must equal:
+						01 = UHG Payer Record
+						02 = Medicare Payer Record or Primary OI Payer Record
+						03 = OI or Secondary OI Payer Record
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.
+
+04.0	23	52	X(30)	O	Payer Address Line 1
+					See General Instructions for address. May be blank.
+
+05.0	53	82	X(30)	O	Payer Address Line 2
+					See General Instructions for address. May be blank
+	
+06.0	83	102	X(20)	O	Payer City
+					See General Instructions for address. May be blank.	
+
+07.0	103	104	X(02)	O	Payer State
+					See General Instructions for address. May be blank.	
+
+08.0	105	113	X(09)	O	Payer Zip Code
+					See General Instructions for address. May be blank.	
+
+09.0	114	120	9(05)V99	C	Disallowed Cost Containment Amount
+					Enter from Explanation of Benefits (EOB). Must be a positive, unsigned number. Right justify. Zero fill. May not be blank. 
+
+10.0	121	127	9(05)V99	C	Disallowed Other Amount 
+					Enter from Explanation of Benefits (EOB). Must be a positive, unsigned number. Right justify. Zero fill. May not be blank. 
+
+11.0	128	134	9(05)V99	C	Allowed Amount
+					Enter from Explanation of Benefits (EOB). Must be a positive, unsigned number. Right justify. Zero fill. May not be blank.
+
+12.0	135	141	9(05)V99	C	Deductible Amount
+					Enter from Explanation of Benefits (EOB). Must be a positive, unsigned number. Right justify. Zero fill. May not be blank. 
+
+13.0	142	148	9(05)V99	C	Coinsurance Amount
+					Enter from Explanation of Benefits (EOB). Must be a positive, unsigned number. Right justify. Zero fill. May not be blank. 
+
+14.0	149	155	9(05)V99	C	Payer Paid Amount
+					Enter from Explanation of Benefits (EOB).  Must be a positive, unsigned number. Right justify. Zero fill. May not be blank. 
+
+15.0	156	156	X(01)	C	Zero Payment Indicator - Not used. May be blank. 
+					If used, values are: Z = Zero payment, N = Payment greater than zero
+Record Type:	DA1	Record Name:	Insurance Information Payer Data 2
+			
+Field	Positions	Req
+No. 	From	To	Picture	Field	Name/Description
+
+16.0	157	158	X(02)	N	Adjudication Indicator 1 - Not used. May be blank.
+
+17.0	159	160	X(02)	N	Adjudication Indicator 2 - Not used. May be blank. 
+
+18.0	161	162	X(02)	N	Adjudication Indicator 3 - Not used. May be blank.  
+
+19.0	163	163	X(01)	N	Champus Sponsor Branch - Not used. May be blank.
+
+20.0	164	165	X(02)	N	Champus Sponsor Grade - Not used. May be blank.
+
+21.0	166	166	X(01)	N	Champus Sponsor Status - Not used. May be blank.
+
+22.0	167	174	X(08)	N	Insurance Card Effective Date - Not used. May be blank.
+
+23.0	175	182	X(08)	N	Insurance Card Termination Date - Not used.  May be blank.
+
+24.0	183	189	9(05)V99	O	Balance Due/Patient Responsibility Amount. 
+					Enter from the Explanation of Benefits (EOB). Must be a positive, unsigned number. May be blank. 
+
+25.0	190	252	X(63)	N	Filler - National - Unused record space. Blank fill.
+
+26.0	253	312	X(60)	N	Filler - Local -  Unused record space.  Blank fill.
+
+26.0	313	319	9(05)V99	N	Filler - Local - Copay Amount
+					Enter the copay amount from the Explanation of Benefits (EOB). Must be a positive, unsigned number. Right justify. Zero fill. 
+
+26.0	320	320	X(01)	N	Filler - Local -  Unused record space.  Blank fill.
+Record Type:	DA2	Record Name:	Insurance Information Payer Data 3
+
+This record is required for all commercial primary and secondary claims. Must have corresponding DA0 and DA1 records.  
+ 				
+Field	Positions	Req
+No.	From	To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record Type - Must equal DA2.
+
+02.0	04	05	X(02)	R	Sequence Number
+						Code Values:
+	01 = Primary Payer Record
+	02 = Secondary Payer Record
+	03 = Tertiary Payer Record
+
+Note: If CA0-22.0 is equal to 1, there must be a DA0 record with DA0-0.02 = 2 & a DA2 record with DA2-0.02 = 2.
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.
+
+04.0	23	52	X(30)	R	Insured Address Line 1
+					See General Instructions for address.
+
+05.0	53	82	X(30)	O	Insured Address Line 2
+					See General Instructions for address.
+
+06.0	83	102	X(20)	R	Insured City
+					See General Instructions for address.
+
+07.0	103	104	X(02)	R	Insured State
+					See General Instructions for address.
+	
+08.0	105	113	X(09)	R	Insured Zip
+					See General Instructions for address.
+
+09.0	114	123	X(10)	O	Insured Telephone Number
+					See General Instructions for telephone number.
+
+10.0	124	131	X(08)	N	Insured Retirement Date - Not used.  Blank fill.
+
+11.0	132	139	X(08)	N	Insured Spouse Retirement Date - Not used. Blank fill.
+
+12.0	140	172	X(33)	O	Insured Employer Name
+					Name of the Insured's Employer. 
+
+13.0	173	202	X(30)	N	Insured Employer Address Line 1 - Not used. May be blank.
+
+14.0	203	232	X(30)	N	Insured Employer Address Line 2 - Not used. May be blank.
+ 
+15.0	233	252	X(20)	N	Insured Employer City - Not used. May be blank.
+
+16.0	253	254	X(02)	N	Insured Employer State -  Not used. May be blank.
+
+17.0	255	263	X(09)	N	Insured Employer Zip - Not used.  May be blank.
+
+18.0	264	275	X(12)	O	Employee Identification Number
+					The ID Number assigned by the employer. Left Justify, blank Fill.
+
+19.0	276	300	X(25)	N	Filler - National - Unused record space. Blank fill.
+
+20.0	301	320	X(20)	N	Filler - Local - Unused record space. Blank fill.
+
+
+Record Type:	EA0	Record Name:	Claim Data
+
+One EA0 record is required, and only one is allowed, for each commercial claim.
+
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be "EA0"
+
+02.0	04	05	X(02)	N	Unused Reserved Record Space.  Blank fill.
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.
+
+04.0	23	23	X(01)	R	Employment Related Indicator
+					Code Values:
+	Y = Employment related
+	N = Not employment related
+	U = Unknown
+
+05.0	24	24	X(01)	R	Accident Indicator
+					Code Values:
+						A = Auto accident
+						N = No accident
+						O = Other, non-auto accident
+
+06.0	25	27	X(03)	N	Symptom Date Indicator - Not used. May be blank.
+					
+07.0	28	35	X(08)	C	Accident/Symptom Date
+					If accident indicator (EA0-05.0) = A or O, give date of accident. If symptom indicator (EA0-06.0) = 1 or 2, 431 or 484 enter date of symptom or LMP. See General Instructions for Date entry. If not used, blank fill.
+
+Note: If a date is entered in this field, then either EA0-05.0 must = A or O, or EA0-06.0 must = 1, 2, 431 or 484
+
+08.0	36	40	X(05)	N	External Cause Of Accident - Not used. Blank fill.
+
+09.0	41	41	X(01)	N	Responsibility Indicator - Not used. May be blank.
+
+10.0	42	43	X(02)	C	Accident State
+					If EA0-05.0 = A, submit 2 character state code indicating where auto accident occurred. Blank fill.
+
+11.0	44	45	X(02)	N	Accident Hour - Not used. May be blank.
+
+12.0	46	46	X(01)	N	Abuse Indicator - Not used. May be blank.
+
+13.0	47	47 	X(01)	N	Release Of Information Indicator - Not used. May be blank. 
+
+14.0	48	55	X(08)	N	Release Of Information Date - Not used. May be blank.
+
+15.0	56	58	X(03)	C	Other Date Qualifier - Not used. May be blank.  
+				
+16.0	59	66	X(08)	C	Other Date - Not used. May be blank.  
+
+17.0	67	67	X(01)	N	Disability Type - Not used. May be blank.
+
+18.0	68	75	X(08)	N	Disability - From Date - Not used. May be blank.
+
+19.0	76	83	X(08)	N	Disability - To Date - Not used. May be blank.
+
+20.0     84	85	X(02)         	C 	Referring/Other Provider Qualifier  - Not used. May be blank. 
+Record Type:	EA0	Record Name:	Claim Data
+			
+Field	Positions		Req
+No.	From   To	Picture	Field	Name/Description
+
+21.0	86	105	X(20)	C	Referring/Other Provider Last Name
+					See General Instruction for Name 1 entry. May be blank.
+	
+22.0	106	117	X(12)	C	Referring/Other Provider First Name
+					See General Instruction for Name 1 entry. May be blank.
+
+23.0	118	118	X(01)	O	Referring/Other Provider Middle Initial	
+					See General Instruction for Name 1 entry. May be blank.
+
+24.0	119	120	X(02)	N	Referring/Other Provider State - Not used. May be blank.
+
+25.0	121	122	X(02)	C	Referring/Other ID Qualifier - Not used. May be blank. 
+										
+26.0	123	139	X(17)	C	Referring/Other ID Number
+					The identification number for the referring/other provider. May be blank.
+
+27.0	140	149	X(10)	C	Referring/Other Provider NPI 
+					The NPI of the referring/other provider. May be blank. 
+
+28.0	150	157	X(08)	C 	Admission Date
+					Use if services submitted were performed while the patient was confined in a health care facility. If entered, must be a valid date. May be blank.
+
+29.0	158	165	X(08)	C	Discharge Date
+					Use if services submitted were performed while the patient was confined in a health care facility. If entered, must be valid date. May be blank.
+
+30.0	166	166	X(01)	R	Laboratory Indicator
+					Refer to NSF for information. Values: Y or N. May not be blank.
+
+31.0	167	173	9(05)V99	O	Laboratory Charges - May be blank.
+
+32.0	174	180	X(07)	R	Diagnosis Code 1
+					ICD code. Do not use decimal point. Alpha characters must be in upper case. May not be blank
+
+33.0	181	187	X(07)	C	Diagnosis Code 2
+					Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+34.0	188	194	X(07)	C	Diagnosis Code 3
+					Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+35.0	195	201	X(07)	C	Diagnosis Code 4
+					Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+36.0	202	202	X(01)	R	Provider Assignment Indicator
+					Indicates whether the provider accepted Medicare's assignment. Code Values:
+						A = Assigned
+						N = Not Assigned
+ 
+
+Record Type:	EA0	Record Name:	Claim Data
+			
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+37.0	203	203	X(01)	O	Provider Signature Indicator
+					May be blank. Code Values:
+							Y = Signature of provider is on file
+						N = Signature of provider is NOT on file
+
+38.0	204	211	X(08)	N	Provider Signature Date - Not used. May be blank.
+
+39.0	212	244	X(33)	C	Facility/Laboratory Name
+					Name of Hospital, Nursing facility, Laboratory or other facility where the services on this claim were rendered. May be blank.
+
+40.0.	245	245	X(01)	N	Documentation Indicator 
+					Accept Assignment indicator (HICF box 27). May be blank 
+					Values: 	Y = Yes    N = No
+
+41.0	246	246	X(01)	N	Type Of Documentation - Not used. May be blank.
+
+42.0	247	248	X(02)	N	Functional Status Code - Not used. May be blank.
+
+43.0	249	250	X(02)	N	Special Program Indicator - Not used. May be blank.
+
+44.0	251	251	X(01)	N	Champus Non-Availability Indicator - Not used. May be blank.
+
+45.0	252	252	X(01)	N	Supervising Provider Indicator - Not used. May be blank.
+
+46.0	253	253	X(01)	N	Resubmission Code 
+					For resubmission of a prior claim. May be blank.
+					
+47.0	254	271	X(18)	N	Resubmission Reference Number - May be blank.
+
+48.0	272	279	X(08)	N	Date Last Seen By Physician - Not Used. May be blank.
+
+49.0	280	287	X(08)	N	Date Documentation Sent - Not used.  May be blank.
+
+50.0	288	288	X(01)	C	Homebound Indicator 
+					Indicates whether an independent lab rendered services to a homebound patient. May be blank. Code Values:
+						Y = Patient is homebound
+						N = Patient is not homebound
+
+51.0	289	298	X(10)	N	Filler - National - Unused reserved space for National use. Blank fill.
+
+52.0	299	315	X(17)	N	Filler - Local - Unused reserved space for Local use. Blank fill.
+
+53.0	316	316	X(01)	C	ICD Version 
+					An indicator which denotes the version of the International
+					Classification of Diseases (ICD).  
+					     0=ICD10
+					     9=ICD9
+                                   		     Space = default value
+		
+54.0	317	320	X(04)	N	Filler - Local - Unused reserved space for Local use. Blank fill.
+
+
+
+
+ 
+Record Type:	EA1	Record Name:	Claim Data
+
+This record is not used for commercial claims.
+
+Record Type:	EA2	Record Name:	Claim Data                   
+
+This record is not used for commercial claims.
+Record Type:	EA4	Record Name:	Additional Claim Data
+
+EA4 record is conditional and is only used when there are more than 4 diagnosis codes on a claim. Condition codes & attachment fields are currently Not Used.  There may be only one (1) EA4 record per claim.
+			
+Field	Positions		Req
+No.	From   To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be "EA4"
+
+02.0	04	05	X(02)	N		Unused Reserved Record Space. Blank fill.
+
+03.0	06	22	X(17)	R		Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.
+
+04.0	23	29	X(07)	C	Diagnosis Code 5
+					ICD code. Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+05.0	30	36	X(07)	C	Diagnosis Code 6
+					ICD code. Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+06.0	37	43	X(07)	C	Diagnosis Code 7
+					ICD code. Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+07.0	44	50	X(07)	C	Diagnosis Code 8
+					ICD code. Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+08.0	51	57	X(07)	C	Diagnosis Code 9
+					ICD code. Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+09.0	58	64	X(07)	C	Diagnosis Code 10	
+				   	ICD code. Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+10.0	65	71	X(07)	C	Diagnosis Code 11					  
+					ICD code. Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+11.0	72	78	X(07)	C	Diagnosis Code 12					   
+					ICD code. Do not use decimal point. Alpha characters must be in upper case. May be blank.
+
+12.0	79	80	X(02)	N	Condition Code-1 - Not used. Blank fill
+    		
+13.0	81	82	X(02)	N	Condition Code-2 - Not used. Blank fill
+    		
+14.0	83	84     X(02)	N	Condition Code-3 - Not used. Blank fill
+
+15.0	85	86     X(02)	N	Condition Code-4 - Not used. Blank fill.
+
+16.0	87	88     X(02)	N	Condition Code-5 - Not used. Blank fill.
+
+17.0	89	90     X(02)	N	Condition Code-6 - Not used. Blank fill.
+
+18.0	91	92     X(02)	N	Condition Code-7 - Not used. Blank fill.
+
+19.0	93	94     X(02)	N	Condition Code-8 - Not used. Blank fill.
+Record Type:	EA4	Record Name:	Additional Claim Data
+
+Field	Positions		Req
+No.	From   To	Picture	Field	Name/Description
+
+20.0	95	96     	X(02)	N	Condition Code-9  - Not used. Blank fill.
+
+21.0	97	98    	X(02)	N	Condition Code-10 - Not used. Blank fill.
+
+22.0	99	100   	X(02)	N	Condition Code-11 - Not used. Blank fill.
+
+23.0	101	102   	X(02	N	Condition Code-12 - Not used. Blank fill.
+
+24.0	103	104   	X(02)	N	Condition Code-13 - Not used. Blank fill.
+
+25.0	105	106	X(02)	N	Condition Code-14 - Not used. Blank fill.
+
+26.0	107	108	X(02)	N	Condition Code-15 - Not used. Blank fill.
+
+27.0	109	110	X(02)	N	Condition Code-16 - Not used. Blank fill.
+
+28.0	111	112	X(02)	N	Condition Code-17 - Not used. Blank fill.
+
+29.0	113	114	X(02)	N	Condition Code-18 - Not used. Blank fill.
+
+30.0	115	116	X(02)	N	Condition Code-19 - Not used. Blank fill.
+
+31.0	117	118	X(02)	N	Condition Code-20 - Not used. Blank fill.
+
+32.0	119	120	X(02)	N	Condition Code-21 - Not used. Blank fill.
+
+33.0	121	122	X(02)	N	Condition Code-22 - Not used. Blank fill.
+
+34.0	123	124	X(02)	N	Condition Code-23 - Not used. Blank fill.
+
+35.0	125	126	X(02)	N	Condition Code-24 - Not used. Blank fill.
+
+36.0	127	128	X(02)	N	Provider Qualifier-1 - Not used. Blank fill.
+
+37.0	129	130	X(02)	N	Report Type Code-1 - Not used. Blank fill.  
+
+38.0	131	132	X(02)	N	Transmission Type Code-1 - Not used. Blank fill.
+
+39.0   	133	162	X(30)	N	Attachment Control Number-1 - Not used. Blank fill.
+			
+40.0	163	164	X(02)	N	Provider Qualifier-2 - Not used. Blank fill.
+
+41.0	165	166	X(02)	N	Report Type Code-2 - Not used. Blank fill.  
+
+42.0	167	168	X(02)	N	Transmission Type Code-2 - Not used. Blank fill.
+
+43.0   	169	198	X(30)	N	Attachment Control Number-2 - Not used. Blank fill.
+
+44.0   	199      320	X(122)	N	Filler - National - Unused reserved space for National use. Blank fill.
+
+
+
+
+Record Type:	EK0	Record Name:	Miscellaneous Claim Data - Keyed Claims
+             
+EK0 record is optional and only one is allowed per claim.  Valid only for keying submitters.
+
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be EK0
+
+02.0	04	05	X(02)	N	Unused Reserved Record Space. Blank Fill 
+								
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0. 
+
+04.0	23	37	X(15)	O	Diagnosis Description - 1
+					The diagnosis description that is linked with diagnosis code 1.
+
+05.0	38	52	X(15)	O	Diagnosis Description - 2
+					The diagnosis description that is linked with diagnosis code 2.
+
+06.0	53	67	X(15)	O	Diagnosis Description - 3		
+					The diagnosis description that is linked with diagnosis code 3. 
+
+07.0	68	82	X(15)	O	Diagnosis Description - 4		
+					The diagnosis description that is linked with diagnosis code 4.
+
+08.0	83	90	9(06)V99	O	Discount Amount		
+					Any discount amount shown on the claim other than prompt payment discount.  Right justify, zero fill. $$$$$$cc. Decimal is implied; do not enter decimal.
+
+09.0	91	98	9(06)V99	O	Tax Amount
+					Any tax amount shown on the claim. Right justify, zero fill.  Decimal is implied; do not enter decimal.
+
+10.0	99	106	9(06)V99	O	NY Surcharge Amount
+					The NY surcharge amount shown on the claim. Right justify, zero fill. Decimal is implied; do not enter the decimal.
+
+11.0	107	320	X(214)	N	Filler - Local - Unused record space for local use. Blank fill.
+
+
+
+
+
+							
+
+
+
+Record Type:	FA0	Record Name:	Claim Root Segment            
+
+This record is required for commercial claims. There may be up to 99 FXX Records per claim.
+			
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be FA0
+
+02.0	04	05	X(02)	R	Sequence Number
+					The record sequence number of the service line detail. Values: 01-99
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.
+
+04.0	23	39	X(17)	O	Line Item Control Numbers
+					Identifier assigned by the submitter to this line item. May be blank.
+
+05.0	40	47	X(08)	R	Service From Date
+					Date service initiated. See General Instruction for Date entry.
+
+06.0	48	55	X(08)	R	Service To Date
+					Must be equal to or greater than service from date. Service dates cannot span years. Separate claims are required for each year
+
+07.0	56	57	X(02)	R	Place Of Services
+					Identifies where service was performed. Code Values:
+11 = Office
+12 = Home
+21 = Inpatient Hospital
+22 = Outpatient Hospital
+23 = Emergency Room Hospital
+24 = Ambulatory Surgical Center
+25 = Birthing Center
+26 = Military Treatment Facility
+31 = Skilled Nursing Facility
+32 = Nursing Facility
+33 = Custodial Care Facility
+34 = Hospice
+41 = Ambulance - Land
+42 = Ambulance - Air or Water
+50 = Federally Qualified Health Center 
+51 = Inpatient Psychiatric Facility
+52 = Psychiatric Facility Partial Hospitalization
+53 = Community Mental Health Center
+54 = Intermediate Care Facility/Mentally Retarded
+55 = Residential Substance Abuse Treatment Center
+56 = Psychiatric Residential Treatment Center
+61 = Comprehensive Inpatient Rehabilitation Facility
+62 = Comprehensive Outpatient Rehabilitation Facility
+65 = End Stage Renal Disease Treatment Facility
+71 = State or Local Public Health Clinic
+72 = Rural Health Clinic
+81 = Independent Laboratory
+90-98 = Unassigned
+99 = Other Unspecified Facility
+
+ 
+
+
+Record Type:	FA0	Record Name:	Claim Root Segment
+			
+Field	Positions		Req
+No.	From   To	Picture	Field	Name/Description
+
+08.0	58	59	X(02)	R	Type Of Service Codes
+					May not be blank. Code values:
+						01 = Medical Care
+						02 = Surgery
+						03 = Consultation
+						04 = Diagnostic X-Ray
+						05 = Diagnostic Lab
+						06 = Radiation Therapy
+						07 = Anesthesia
+						08 = Surgical Assistance
+						09 = Other Medical		
+						10 = Blood Charges
+						11 = Used DME
+						12 = DME Purchase
+						13 = ASC Facility
+						14 = Renal Supplies in the Home
+						15 = Alternate Method Dialysis Payment
+						16 = CRD Equipment
+						17 = Pre-Admission Testing
+						18 = DME Rental
+						19 = Pneumonia Vaccine
+						20 = Second Surgical Opinion
+						21 = Third Surgical Opinion	
+		
+09.0	60	64	X(05)	R	Procedure Code
+					May be CPT-4 or HCPCS code. May not be blank.
+
+10.0	65	66	X(02)	C	Procedure Code  MODIFIER 1
+					Must be entered if applicable to procedure. Do not use dashes or periods. May be blank.
+
+11.0	67	68	X(02)	C	Procedure Code  MODIFIER 2
+					Must be entered if applicable to procedure.
+
+12.0	69	70	X(02)	C	Procedure Code MODIFIER 3
+					Must be entered if applicable to procedure.  
+
+13.0	71	77	9(05)V99	R	Line Charges
+					Charge submitted for this service line. Sum of the line charges must equal claim charges in XA0-12.0. Must be positive unsigned number. Right justify, zero fill. Decimal is implied; do not enter decimal.
+
+
+
+Record Type:	FA0	Record Name:	Claim Root Segment             
+			
+Field	Positions		Req
+No.	From   To	Picture	Field	Name/Description
+
+14.0	78	78	X(01)	R	Diagnosis Code Pointer 1
+					Order of importance of diagnosis codes to the specific procedure. Can not point to a blank diagnosis field. If numbers are used (old HICF), all pointers must be numeric and up to 4 diagnosis codes may be referenced. If alphas are used (new HICF), all pointers must be alphabetic and up to 12 diagnosis codes may be referenced. Valid values:
+						1 = Indicates 1st header diagnosis.
+						2 = Indicates 2nd header diagnosis.
+						3 = Indicates 3rd header diagnosis.
+						4 = Indicates 4th header diagnosis.
+						A = Indicates 1st header diagnosis
+					  	B = Indicates 2nd header diagnosis
+					   	C = Indicates 3st header diagnosis
+					   	D = Indicates 4th header diagnosis
+					   	E = Indicates 5th header diagnosis
+					   	F = Indicates 6th header diagnosis
+					   	G = Indicates 7th header diagnosis
+					   	H = Indicates 8th header diagnosis
+					   	 I = Indicates 9th header diagnosis
+					   	J = Indicates 10th header diagnosis
+					 	K = Indicates 11th header diagnosis
+					 	L = Indicates 12th header diagnosis
+
+15.0	79	79	X(01)	C	Diagnosis Code Pointer 2
+
+16.0	80	80	X(01)	C	Diagnosis Code Pointer 3
+
+17.0	81	81	X(01)	C	Diagnosis Code Pointer 4
+
+18.0	82	85	9(03)V9	R	Units Of Services
+					Number of services in days or units. Must be positive, unsigned number. Right justify, zero fill. Fractional services not accepted. Max value is 999. Should be entered as 9990 - Field Layout 999V9.
+
+19.0	86	89	9(04)	C	Anesthesia/Oxygen Minutes
+					If FA0-08 Type of Service is equal to 07, this field must be greater than zero. Maximum value is 999. Zero fill.
+								
+20.0	90	90	X(01)	R	Emergency Indicator
+					May be blank. Code Values: 
+						Y = Yes, emergency related
+						N = No, emergency not related			
+								
+21.0	91	91	X(01)	N	COB Indicator - Not used. May be blank.
+
+22.0	92	92	X(01)	N	HPSA Indicator - Not used. May be blank.
+
+23.0	93	107	X(15)	N 	Rendering Provider Identification - Not used. May be blank. 
+
+24.0	108	122	X(15)	N	Referring Provider Identification - Not used.  May be blank.
+
+25.0	123	124	X(02)	N	Referring Provider State - Not used. May be blank.
+
+26.0	125	125	X(01)	N	Purchase Service Indicator - Not used. May be blank.
+
+
+Record Type:	FA0	Record Name:	Claim Root Segment             
+			
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+27.0	126	132	9(05)V99	N	Disallowed Cost Containment
+					The provider write-off amount for this line item. Derived from the prior payer's EOB.
+
+28.0	133	139	9(05)V99	N	Disallowed Other - Not used. Zero fill.
+
+29.0	140	140	X(01)	N	Review By Code Indicator - Not used. May be blank.
+
+30.0	141	141	X(01)	N	Multiple Procedure Indicator - Not used. May be blank.
+
+31.0	142	151	X(10)	N	Mammography Certification Number - Not used. May be blank.
+
+32.0	152	160	X(09)	N	Class Findings - Not used.  May be blank.
+
+33.0	161	163	X(03)	N	Podiatry Service Condition - Not used. May be blank.
+
+34.0	164	178	X(15)	N	Clinical Laboratory Improvement Amendments (CLIA ID No.) - Not used. May be blank.
+
+35.0	179	185	9(05)V99	C	Primary Paid Amount
+					Amount paid by the primary carrier. Zero fill.
+
+36.0	186	187	X(02)	O	HCPCS Modifier 4
+					Must be entered if applicable to procedure. May be blank.
+
+37.0	188	190	X(03)	N	Provider Specialty - Not used. May be blank.
+
+38.0	191	191	X(01)	N	Podiatry Therapy Indicator - Not used. May be blank.
+
+39.0	192	192	X(01)	N	Podiatry Therapy Type - Not used. May be blank.
+
+40.0	193	193	X(01)	N	Hospice Employed Provider Indicator - Not used. May be blank.
+
+41.0	194	201	X(08)	N	HGB / HCT Date - Not used. May be blank.
+
+42.0	202	204	9(03)	N	HGB Result - Not used. May be blank.
+
+43.0	205	206	9(02)	N	Hematocrit Result 
+					Hematocrit (HCT) level. Must be positive, unsigned number. Fractional services not accepted. May be blank.
+
+44.0	207	209	9(03)	N	Patient Weight - Not used. May be blank.
+
+45.0	210	212	9(03)	N	Epoetin Dosage - Not used. May be blank.
+
+46.0	213	220	X(08)	N	Serum Create Date - Not used. May be blank.
+
+47.0	221	223	9(03)	N	Creatine Result - Not used. May be blank.
+	
+48.0	224	230	9(05)V99	C	Obligated To Accept Amount
+					Amount the provider agreed to accept as payment in full under the provisions of the contract. Zero fill. May not be blank.
+
+49.0	231	237	9(05)V99	N	Drug Discount Amount - Not used. Zero fill.
+
+50.0	238	245	X(1)	N	Filler - National - Unused reserved space for National use. Blank fill.
+
+51.0	239	245	X(7)	N	Approved Amount - Not used. May be blank.
+Record Type:	FA0	Record Name:	Claim Root Segment 
+	
+Field	Positions	Req
+No.	From   To	Picture	Field 	Name/Description
+
+52.0	246	252	9(05)V99	N	Secondary Paid Amount (Filler - National)
+					Enter the amount paid by the secondary payer for this charge 
+
+53.0	253	259	9(05)V99	O	Patient Responsibility Amount
+					The amount determined to be the patient's liability.  May be blank.
+	
+54.0	260	266	9(05)V99	N	Copay Amount (Filler - National )
+					The copay amount for this line. Derived from the prior payer's EOB. 
+
+55.0	267	273	X(07)	N	Filler - National - Unused reserved space for National use. Blank fill.
+
+56.0 	274	283	X(10)	N	Rendering Provider NPI (Filler - National)
+					The provider's NPI who rendered this service.
+
+57.0	284	320	X(37)	N	Filler - National
+Record Type:	FB0	Record Name:	Medical Segment                 
+
+Required for Secondary Payer claims.  Used to show amounts derived from the primary payer EOB at the line item level. Fields FB0-06.0 through FB0-08.0 must be completed. There may be up to 99 FXX (ALL 'F' Records) per claim.
+
+Field	Positions	Req
+No.	From  To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be FB0
+
+02.0	04	05	X(02)	R	Sequence Number
+					Sequence number of line detail record. Must have a matching FA0 record segment.
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.		
+04.0	23	39	X(17)	O	Line Item Control Number
+					Assigned by the submitter to this line item. May be blank. Must equal the Line Item Control Number in preceding FA0 Record (FA0-04.0).
+
+05.0	40	46	9(05)V99	N	Purchase Service Charge - Not applicable. May be blank.
+
+06.0	47	53	9(05)V99	R	Allowed Amount
+					Amount allowed by a prior payer for this line item. Derived from the EOB. Right justify, zero fill.
+
+07.0	54	60	9(05)V99	R	Deductible Amount
+					The amount applied to the deductible by a prior payer for this line item. Derived from the EOB. Right justify, zero fill.
+
+08.0	61	67	9(05)V99	R	Coinsurance Amount
+					The amount applied to the coinsurance by a prior payer for this line item. Derived from the EOB. Right justify, zero fill.
+
+09.0	68	82	X(15)	N	Ordering Provider Identification - Not used. May be blank.
+	
+10.0	83	84	X(02)	N	Ordering Provider State - Not used. May be blank.
+
+11.0	85	99	X(15)	N	Purchase Service Provider ID - Not used. May be blank.
+	
+12.0	100	101	X(02)	N	Purchase Service State - Not used. May be blank.
+
+13.0	102	105	9(04)	N	PEN Grams Of Protein - Not used. May be blank.
+
+14.0	106	109	9(04)	N	PEN Calories - Not used. May be blank.
+
+15.0	110	120	X(11)	N	National Drug Code 
+					When applicable for the procedure, enter the National Drug Code. 
+
+16.0	121	127	9(07)	N	National Drug Units - Not used. May be blank.
+
+17.0	128	142	X(15)	N	Prescription Number
+					Indicates the type of drug. May be blank. Code Values:
+						Y = Prescription Drug
+						N = Over the Counter Drug
+						D = Diabetic Supply
+						S = Shipping Charge
+					
+18.0	143	150	X(08)	N	Prescription Date - Not used. May be blank.
+
+19.0	151	152	9(02)	N	Prescription Number Of Months - Not used. May be blank.
+Record Type:	FB0	Record Name:	Medical Segment                 
+
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+
+20.0	153	153	X(01)	N	Special Pricing Indicator
+					Enter 'G' if the drug is a generic. 
+
+21.0	154	154	X(01)	N	Copay Status Indicator
+					Code to indicate if the Allowed Amount (FB0-06.0) is due to a negotiated rate. Values:
+						Y = The allowed amount is a negotiated rate
+						N = The allowed amount is not a negotiated rate
+						Blank = Unknown if the allowed amount is a negotiated rate or not.
+
+22.0	155	155	X(01)	N	EPSDT Indicator (Medicaid) 
+					Refer to NSF for information regarding this field.
+
+23.0	156	156	X(01)	N	Family Planning Indicator (Medicaid) - Not used. May be blank.
+
+24.0	157	157	X(01)	N	DME Charge Indicator - Not used. May be blank.
+
+25.0	158	172	X(15)	N	HPSA Facility Identification - Not used. May be blank.
+
+26.0	173	181	X(09)	N	HPSA Facility Zip Code - Not used. May be blank.
+
+27.0	182	214	X(33)	N	Purchase Service Name - Not used. May be blank.
+
+28.0	215	244	X(30)	N	Purchase Service Address 1 - Not used. May be blank.
+
+29.0	245	274	X(30)	N	Purchase Service Address 2 - Not used. May be blank.
+
+30.0	275	294	X(20)	N	Purchase Service City - Not used. May be blank.
+
+31.0	295	303	X(09)	N	Purchase Service Zip - Not used. May be blank.
+
+32.0	304	313	X(10)	N	Purchase Service Phone - Not used. May be blank.
+	
+33.0	314	316	9(03)	N	Drug Days Supply - Not used. May be blank.
+
+34.0	317	318	X(02)	N	Filler - National - Unused reserved space for National use. Blank fill.
+
+35.0	319	320	X(02)	N	Filler - Local - Unused reserved space for Local use. Blank fill.
+Record Type:	FB1	Record Name:	Service Line Detail              
+ 
+This record is not used for commercial claims.
+
+
+Record Type:	FB2	Record Name:	Service Line Detail Medical Segment
+
+This record is not used for commercial claims. 
+Record Type:	FD0	Record Name:	Service Line Detail Dental Segment
+
+This record is not used for commercial claims. 
+Record Type:	FE0	Record Name:	Third Party Organization Segment
+
+This record is conditional and is used to provide information related to Third Party Organization  (TPO) claims.  There may be up to 99 FXX (ALL 'F' Records) per claim.
+
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be FE0
+
+02.0	04	05	X(02)	R	Sequence Number
+					Sequence number of line detail record. Must have matching FA0 record segment.
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.		
+04.0	23	39	X(17)	O	Line Item Control Number
+					Identifier assigned by the submitter to this line. May be blank. The value must equal the Line Item Control Number from the preceding FA0 Record (FA0-04.0).
+
+05.0	40	48	X(09)	R	TPO ID Number
+					The EIN of the Third Party Organization (TPO) from which the claim is being returned after pricing and/or review.   
+	
+06.0	49	63	X(15)	O	TPO Reference Number
+					Control number assigned by TPO for tracking purposes. May be blank
+
+07.0	64	65	X(02)	C	Pricing Methodology
+					Code specifying the pricing methodology used to price or reprice this line item has been. Code Values:
+						00 = Zero Pricing (Not Covered Under Contract)
+						01 = Priced as Billed at 100%
+						02 = Priced at the Standard Fee Schedule
+						04 = Bundled Pricing
+						05 = Peer Review Pricing
+		 				10 = Other Pricing
+						14 = Adjustment Pricing
+								 
+					If FE0-12 Rejection Message equals T1, T2 or T3, this field must be equal to space. If FE0-07 Pricing Methodology equals 00, 04, 05 or 10, an explanation must be entered in HA0-05.0.
+
+08.0	66	72	9(05)V99	C	Allowed Amount
+					The amount allowed by the payer. Right justify, zero fill. May be blank. Field is required if FE0-07.0 Pricing Methodology equals 01, 02 or 05. 
+		
+09.0	73	79	9(05)V99	N	Savings  Amount - Not used.  Blank fill.
+
+10.0	80	84	X(05)	C	Approved HCPCS Procedure Code
+					The procedure code the TPO approved for payment, if different than the preceding FA0-09 Procedure Code. This field must be blank if preceding FA0-09 Procedure Code has been approved for payment.	
+11.0	85	88	9(03)V9	C	Approved Units Of Service
+					Units of service the TPO approved for payment, if different than the preceding FA0-18 Units of Service. This field must be blank if preceding FA0-18 Units of Service has been approved for payment. Note: Fractional services not accepted. Maximum value is 999. Should be entered as 9990. Field layout 999V9.
+Record Type:	FE0	Record Name:	Third Party Organization Segment
+
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+12.0	89	90	X(02)	C	Rejection Message
+					Code used to identify reasons a TPO may not be able to provide pricing information. Field may be blank. Code Values:
+						T1 = Cannot identify Provider as TPO Participant.
+						T2 = Cannot identify Payer as TPO Participant.
+						T3 = Cannot identify Insured as TPO Participant.
+
+13.0	91	110	X(20)	O	Authorization Number
+					Assigned by the TPO to indicate that the treatment in the line item has been authorized. May be blank.
+
+14.0	111	112	X(02)	N	Policy Compliance Code - Not used.  Blank fill. 
+
+15.0	113	114	X(02)	N	Exception Code - Not used.  Blank fill.
+	
+16.0	115	320	X(206)	N	Filler - National - Unused reserved space for National use. Blank fill.
+
+
+
+
+		
+		
+
+	
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Record Type:	GA0	Record Name:	Ambulance Certification Record
+
+This record is not used for commercial claims.
+Record Type:	GC0	Record Name:	Chiropractic Certification Record 
+
+This record is not used for commercial claims.
+Record Type:	GD0	Record Name:	Durable Medical Equipment Certification Record 
+
+This record is not used for commercial claims.
+			
+Record Type:	GD1	Record Name:	Narrative Information for DME    
+
+This record is not used for commercial claims.
+Record Type:	GE0	Record Name:	Certification Record -- Enteral Nutrition Therapy 
+
+This record is not used for commercial claims.
+Record Type:	GP0	Record Name:	Certification Record -- Parenteral Nutrition Therapy 
+
+This record is not used for commercial claims.
+Record Type:	GU0	Record Name:	Certification Record -- DMEPOS Items 
+
+This record is not used for commercial claims.
+
+
+		
+Record Type:	GX0	Record Name:	Oxygen Certification Record -- Medical Necessity  for Oxygen 
+
+This record is not used for commercial claims.
+
+					
+Record Type:	GX1	Record Name:	Oxygen Certification Record - Narrative Information for Oxygen 
+
+This record is not used for commercial claims.
+
+
+
+
+Record Type:	GX2	Record Name:	Oxygen Certification Record -- Facility Information for Oxygen 
+
+This record is not used for commercial claims.
+
+
+
+Record Type:	HA0	Record Name:	Extra Narrative Record          
+
+This record is used for Third Party Organization (TPO) claims only and is conditional based on the Pricing Methodology (FE0-07.0) value.There may be up to 99 FXX (ALL 'F' Records) records per claim.
+
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+
+01.0	01	03	X(03)	R	Record ID - Must be HA0
+
+02.0	04	05	X(02)	R	Sequence Number
+					This is the record sequence number of the Narrative Record.  Values:  01-99. This field is required. Must be the same as Sequence Number in proceeding FA0-02.
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.
+		
+04.0	23	39	X(17)	O	Line Item Control Number
+					An identifier assigned by the submitter/provider to this line item.  May be blank. The value must be equal to the Line Item Control Number from the preceding FA0 Record (FA0-04.0).
+
+05.0	40	320	X(281)	R	Extra Narrative Data
+					This field is required. This field is used to provide additional data and also pricing information when the Pricing Methodology (FE0-07.0) equals 00, 04, 05, or 10 on the preceding FE0 record.
+
+
+	
+Record Type:	XA0	Record Name:	Claim Trailer Record           
+
+This record is required for every submission.
+						
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be XA0.
+					This is the last record of every electronically submitted claim. It contains information pertinent to the balancing of each claim (i.e., claim record counts and claim charges).
+
+02.0	04	05	X(02)	N	Filler - Reserved for National use.  Blank fill.
+
+03.0	06	22	X(17)	R	Patient Control Number
+					Patient account number assigned by provider. Refer to CA0-03.0.
+
+04.0	23	24	9(02)	R	Record CXX Count
+					Count of all records beginning with "C" in this claim. Right justify, zero fill. May not be blank.
+
+05.0	25	26	9(02)	R	Record DXX Count
+					Count of all records beginning with "D" in this claim. Right justify, zero fill. May not be blank.
+
+06.0	27	28	9(02)	R	Record EXX Count
+					Count of all records beginning with "E" in this claim. Right justify, zero fill. May not be blank.
+	
+07.0	29	30	9(02)	R	Record FXX Count
+					Count of all records beginning with "F" in this claim. Right justify, zero fill. May not be blank.
+
+08.0	31	32	9(02)	R	Record GXX Count
+					Count of all records beginning with "G" in this claim. Right justify, zero fill. May not be blank.
+
+09.0	33	34	9(02)	R	Record HXX Count
+					Count of all records beginning with "H" in this claim. Right justify, zero fill. May not be blank.
+
+10.0	35	37	9(03)	R	Claim Record Count
+					Computed sum of all records in this claim from CA0 record to (but not including) XA0 record. Right justify, zero fill. May not be blank.
+
+11.0	38	77	X(40)	N	Reserved - Unused reserved record space.  Blank fill.
+
+12.0	78	84	9(05)V99	R	Total Claim Charges
+					Computed sum of all line charges, (FA0-13.0) in this claim. Must be positive, numeric. Total charges and the cumulative total of individual line charges must be in balance. Right justify, zero fill.  $$$$$¢¢. Do not enter decimal. May not be blank. Maximum value is 9999.99.
+
+13.0	85	91	9(05)V99	N	Total Disallowed Cost Containment Charges
+					Computed sum of all disallowed cost containment charges (FA0-27.0) included in this claim. Right justify. Zero fill.
+
+14.0	92	98	9(05)V99	N	Total Disallowed Other Charges
+					Computed sum of all the disallowed charges (FA0-28.0) included in this claim. Right justify, zero fill.
+Record Type:	XA0	Record Name:	Claim Trailer Record           
+				
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+15.0	99	105	9(05)V99	R	Total Allowed Amount
+					Computed sum of all allowed amount fields (FB0-06.0) included in this claim. Right justify. Zero fill.
+
+16.0	106	112	9(05)V99	R	Total Deductible Amount
+					Computed sum of all the deductible amount fields (FB0-07.0) in this claim. Right justify, zero fill.
+
+17.0	113	119	9(05)V99	R	Total Coinsurance Amounts
+					Computed sum of all the coinsurance amount fields (FB0-08.0) included in this claim.  Right justify, zero fill.
+
+18.0	120	126	9(05)V99	R	Total Payer Amount Paid
+					Computed sum of all payer amount paid fields (DA1-14.0) included in this claim. Right justify, zero fill.
+
+19.0	127	133	9(05)V99	R	Patient Paid Amount
+					The amount provider has received from the patient (or insured) toward payment of this claim.  Right justify, zero fill.  Maximum value is 9999.99. Must not exceed total claim charges (XA0-12).
+
+20.0	134	140	9(05)V99	N	Total Purchase Service Charges - Not used. May be blank.
+
+21.0	141	156	X(16)	N	Provider Discount Information - Not used.  May be blank.
+
+22.0	157	259	X(103)	N	Remarks 
+					See NSF for additional information regarding this field. 
+
+23.0	260	290	X(31)	N	Filler - National - Unused reserved space for National use. Blank fill.
+
+24.0	291	320	X(30)	N	Filler - Local - Unused reserved space for Local use.  Blank fill.
+Record Type:	YA0	Record Name:	Batch Trailer Record           
+
+This record is required for every submission.
+					
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be YA0
+					This is the last record of any electronically submitted batch. It contains information pertinent to the balancing of each batch (i.e., batch record count, batch charges) within a file.
+
+02.0	04	18	X(15)	R	EMC Provider Identifier
+					Must be identical to EMC Provider ID in BA0-02.0. Must equal value in YA0-06.0 entry. See "General Instructions" for ID number entry. Left Justify. Blank Fill. May not be blank.
+
+03.0	19	21	X(03)	N	Batch Type - Not used.  May be blank.
+
+04.0	22	25	9(04)	R	Batch Number 					
+					Sequential number assigned by the submitter to each batch of claims.  Must be "0001" through "9999".  Must be identical to the Batch Header Record BATCH NUMBER (BA0-04.0).  May not be blank.  
+
+05.0	26	31	X(06)	O	Batch Identifier
+					The identifier assigned by the submitter to identify a batch within his own system. If entered, must equal BA0-05 and BA1-05. See "General Instructions" for ID number entry.  May be blank.
+
+06.0	32	40	X(09)	R	Provider Tax ID
+					Must be identical to provider tax ID entered in BA0-06.0. May not be blank. See general instructions for identification number entry.	
+
+07.0	41	46	X(06)	N	Reserved - Unused space.  Blank fill.
+
+08.0	47	53	9(07)	R	Batch Service Line Count
+					May not be blank. Must be computed sum of all Record Types FA0 within batch. Right justify, zero fill.
+
+09.0	54	60	9(07)	R	Batch Record Count
+					May not be blank. Must be computed sum of all Record Types BA0 through YA0. Right justify, blank fill.
+
+10.0	61	67	9(07)	R	Batch Claim Count
+					May not be blank. Must be computed sum of all Record Types CA0 included between this Batch Trailer Record (YA0) and preceding Batch Header Record (BA0). Right justify, zero fill.
+
+11.0	68	76	9(07)V99	R	Batch Total Charges
+					May not be blank. Must be a positive, unsigned number. Must be computed sum of all TOTAL CLAIM CHARGES fields (XA0-12.0) within this batch. Right justify, zero fill.
+
+12.0	77	197	X(121)	N	Filler - National - Unused reserved space for National use. Blank fill.
+
+13.0	198	320	X(123)	N	Filler - Local - Unused reserved space for Local use. Blank fill.
+Record Type:	ZA0	Record Name:	File Trailer Record            
+
+This record is required for every submission. This is the last record of any file submitted. It contains information pertinent to the balancing of the file (i.e., File Record Counts, File Charges) within a file.
+					
+Field	Positions	Req
+No.	From   To	Picture	Field	Name/Description
+
+01.0	01	03	X(03)	R	Record ID - Must be ZA0
+					
+02.0	04	19	X(16)	R	Submitter Identifier
+					Submitter ID assigned by United HealthCare. Must be identical to SUBMITTER ID in AA0-02.0. See General Instructions for ID Number entry. Left justify, blank fill.
+
+03.0	20	28	X(09)	N	Reserved Record Space - Blank fill.
+
+04.0	29	44	X(16)	R	Receiver Identification 
+					Carrier ID. Must be identical to Receiver ID in AA0-17.0 record. See General Instructions for ID Number entry. Left justify, blank fill.
+
+05.0	45	51	9(07)	R	File Service Line Count
+					Must be computed sum of all Batch Service Line Count fields (YA0-08.0) within this file. Right justify. Zero fill. May not be blank.
+
+06.0	52	58	9(07)	R	Record Count
+					The number of records included in this file. Must be computed sum of all Batch Record Count fields (YA0-09.0) within this file. This field does not include any count of the AA0 or the ZA0 records. Right justify. Zero fill. May not be blank.
+
+07.0	59	65	9(07)	R	File Claim Count
+					Must be the computed sum of all Batch Claim Count fields (YA0-10.0) included within this file. Right justify, zero fill. May not be blank.
+
+08.0	66	69	9(04)	R	Batch Count
+					May not be blank. Must be computed sum of all Record Types YA0 within this file. Right justify. Zero fill. 	Note: Only submissions using the same Submitter ID# (AA0-02.0) are able to transmit more than one batch per AA0 through ZA0. 
+
+09.0	70	80	9(09)V99	R	File Total Charges
+					May not be blank. Must be positive, unsigned number. Must be computed sum of all Batch Total Charges fields (YA0-11.0) included within this file. Right justify, zero fill.
+
+10.0	81	200	X(120)	N	Filler - National - Unused reserved space for National use. Blank fill.
+
+11.0	201	320	X(120)	N	Filler - Local - Unused reserved space for Local use. Blank fill.
+Appendix - UnitedHealthCare Commercial Provider Specialty Codes
+
+	CODE			DESCRIPTION
+
+	AD			Adult Day Care
+	AT			Alcoholic Treatment Center
+	AM			Ambulance
+	AS			Ambulatory Surgical Center	
+	AN			Anesthetist (CRNA Only)
+	AU			Audiologist
+	DC			Chiropractors (DC)
+	CS			Christian Science Practitioners	
+	CL			Clinic
+	CF			Convalescent Facility
+	ST			Department Store
+	DR			Drug Rehabilitation Center
+	RX			Drug Store/Pharmacy
+	HS			Hospice
+	IL			Independent Laboratory
+	MD			Medical Doctor
+	MS			Medical Supply Company
+	LN			Nurse, Licensed Practical
+	RN			Nurse, Registered
+	TN			Nurse, Trained
+	OD			Optometrist (OD)
+	DO			Osteopath (DO)
+	OT			Other
+	PC			Pastoral Counselor
+	PT			Physical Therapist
+	DP			Podiatrist (DPM)
+	PX			Portable X-Ray Supplier
+	PS			Psychiatrist
+	PG			Psychologist (PHD)
+	PH			Public Health or Welfare Agency
+	SC			School
+	XR			X-Ray Clinic
+	VH			Voluntary Health or Charitable Agency
+	OP			Optician
+	BC			Free Standing Birthing Center
+	FS			Free Medical Clinic
+	MW			Master of Social Work
+	PW			Psychiatric Social Work
+	DW			Doctor of Social Work
+CO			Counselor
+	CA			Certified Alcohol Counselor
+	AA			Alcohol and Drug Abuse Counselor
+	CP			Licensed Professional Counselor
+	PN			Psychiatric Nurse Practitioner
+	AC			Acupuncturist
+	RC			Respite Center
+	JM			Homemaker Services
+	NM			Nurse Midwife
+	CW			Licensed Clinical Social Worker
+	MN			Clinical Specialist in Mental Health Nursing
+	NU			Nutritionist
+	SE			Speech Therapist
+	OC			Occupational Therapist
+	UC			Urgent Care Center
+	JH			Home Health Care Agency
+	IV			Home IV Therapy Agency
+	DS			Dental/Oral Surgeon
+	SW			Social Worker
