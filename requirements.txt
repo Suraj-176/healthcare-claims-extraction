@@ -10,6 +10,10 @@ tenacity>=8.2.0
 Flask>=3.0.0
 Flask-CORS>=4.0.0
 Werkzeug>=3.0.0
+gunicorn>=21.2.0
+pandas>=2.1.0
+openpyxl>=3.1.0
+markdown>=3.5.0
 
 # LLM providers (install the one you're using)
 openai>=1.0.0              # For Azure OpenAI or OpenAI

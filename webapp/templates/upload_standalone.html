@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload - Healthcare Claims Extraction</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary: #4F6FFF;
+            --primary-dark: #3D5CD7;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --bg-light: #F8FAFC;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --border: #E2E8F0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: white;
+            border-right: 1px solid var(--border);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            padding: 1.5rem 1rem;
+            z-index: 1000;
+        }
+        
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+        
+        .sidebar-brand i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .sidebar-brand-text h6 {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        .sidebar-brand-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-nav a:hover {
+            background: var(--bg-light);
+            color: var(--primary);
+        }
+        
+        .sidebar-nav a.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        
+        .system-status {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 0.75rem;
+        }
+        
+        .system-status h6 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.8rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            margin-top: 0.3rem;
+            flex-shrink: 0;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 200px;
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #4F6FFF 0%, #7C3AED 100%);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            color: white;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1rem;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1.25rem;
+        }
+        
+        .stat-card i {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .stat-card h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin: 0;
+        }
+        
+        .stat-card p {
+            font-size: 0.85rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        /* Upload Area */
+        .upload-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+        
+        .upload-main {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid var(--border);
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 0.875rem 1.5rem;
+            border: 2px solid var(--border);
+            background: white;
+            color: var(--text-secondary);
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .tab-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .dropzone {
+            border: 2px dashed var(--border);
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-light);
+        }
+        
+        .dropzone:hover {
+            border-color: var(--primary);
+            background: rgba(79, 111, 255, 0.05);
+        }
+        
+        .dropzone i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .dropzone h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dropzone p {
+            color: var(--text-secondary);
+        }
+        
+        .browse-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        /* Feature Cards */
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h6 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        /* Pipeline Sidebar */
+        .pipeline-sidebar {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .pipeline-sidebar h5 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .pipeline-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .pipeline-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 50px;
+            width: 2px;
+            height: calc(100% - 20px);
+            background: var(--border);
+        }
+        
+        .step-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 0.75rem;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+        
+        .step-icon i {
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+        
+        .step-content h6 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .step-content p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        /* Recent Uploads Table */
+        .recent-uploads {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+        
+        .recent-uploads h5 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .view-all-link {
+            font-size: 0.9rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .uploads-table {
+            width: 100%;
+        }
+        
+        .uploads-table thead {
+            background: var(--bg-light);
+        }
+        
+        .uploads-table th {
+            padding: 0.875rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            border: none;
+        }
+        
+        .uploads-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        
+        .file-type-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .badge-tiff {
+            background: #EDE9FE;
+            color: #7C3AED;
+        }
+        
+        .badge-png {
+            background: #DBEAFE;
+            color: #2563EB;
+        }
+        
+        .badge-jpg {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-completed {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        
+        .status-processing {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+        
+        .status-failed {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+        
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: var(--bg-light);
+            color: var(--primary);
+        }
+        
+        .security-badge {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .security-badge i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .security-badge-text p {
+            margin: 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="bi bi-hospital-fill"></i>
+            <div class="sidebar-brand-text">
+                <h6>Healthcare Claims</h6>
+                <p>Extraction</p>
+            </div>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li><a href="/"><i class="bi bi-grid-fill"></i> Dashboard</a></li>
+            <li><a href="/upload" class="active"><i class="bi bi-cloud-arrow-up-fill"></i> Upload</a></li>
+            <li><a href="/results"><i class="bi bi-file-earmark-text-fill"></i> Results</a></li>
+            <li><a href="#"><i class="bi bi-gear-fill"></i> Settings</a></li>
+        </ul>
+        
+        <div class="system-status">
+            <h6>System Status</h6>
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <div>
+                    <strong>Pipeline Active</strong><br>
+                    <small>All systems operational</small>
+                </div>
+            </div>
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <div>
+                    <strong>Database Connected</strong><br>
+                    <small>Secure connection</small>
+                </div>
+            </div>
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <div>
+                    <strong>LLM Available</strong><br>
+                    <small>Model ready</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="security-badge">
+            <i class="bi bi-shield-lock-fill"></i>
+            <div class="security-badge-text">
+                <p><strong>Enterprise Grade Security</strong><br>
+                <small>Your files are encrypted and processed securely</small></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="flex: 1;">
+                        <h1 class="hero-title">Healthcare Claims AI Extraction</h1>
+                        <p class="hero-subtitle">Convert healthcare claim documents into structured,<br>validated medical data using OCR + LLM technology.</p>
+                        
+                        <div class="stat-cards">
+                            <div class="stat-card">
+                                <i class="bi bi-bullseye"></i>
+                                <h3>95%</h3>
+                                <p>Extraction Accuracy</p>
+                            </div>
+                            <div class="stat-card">
+                                <i class="bi bi-clock-fill"></i>
+                                <h3>8 sec</h3>
+                                <p>Avg. Processing Time</p>
+                            </div>
+                            <div class="stat-card">
+                                <i class="bi bi-stars"></i>
+                                <h3>OCR + AI</h3>
+                                <p>Hybrid Technology</p>
+                            </div>
+                            <div class="stat-card">
+                                <i class="bi bi-file-earmark-arrow-up-fill"></i>
+                                <h3>50 MB</h3>
+                                <p>Max File Size</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width: 300px; text-align: right;">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect x='20' y='20' width='120' height='160' rx='10' fill='rgba(255,255,255,0.3)'/%3E%3Crect x='160' y='40' width='100' height='120' rx='10' fill='rgba(255,255,255,0.2)'/%3E%3C/svg%3E" alt="Illustration" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upload Container -->
+        <div class="upload-container">
+            <!-- Main Upload Area -->
+            <div class="upload-main">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" id="singleTabBtn">
+                        <i class="bi bi-file-earmark-medical"></i> Single File Upload
+                    </button>
+                    <button class="tab-btn" id="batchTabBtn">
+                        <i class="bi bi-files"></i> Batch Upload
+                    </button>
+                </div>
+                
+                <div id="singleTab">
+                    <div class="dropzone" id="dropzone">
+                        <i class="bi bi-cloud-arrow-up-fill"></i>
+                        <h4>Drag & Drop Your Claim Document Here</h4>
+                        <p>or click the button below to browse files</p>
+                        <input type="file" id="fileInput" style="display: none;" accept=".tif,.tiff,.png,.jpg,.jpeg,.001,.002,.003,.004,.005,.006,.007,.008,.009,.010">
+                        <button class="browse-btn" onclick="document.getElementById('fileInput').click()">
+                            <i class="bi bi-folder2-open"></i> Browse Files
+                        </button>
+                        <p style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+                            Supported Formats: TIFF • PNG • JPG  |  Maximum Size: 50 MB
+                        </p>
+                    </div>
+                    
+                    <div class="feature-cards">
+                        <div class="feature-card">
+                            <i class="bi bi-shield-check"></i>
+                            <h6>Secure Upload</h6>
+                            <p>256-bit encryption</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="bi bi-cpu-fill"></i>
+                            <h6>AI-Powered OCR</h6>
+                            <p>High accuracy extraction</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="bi bi-clipboard-check-fill"></i>
+                            <h6>Data Validation</h6>
+                            <p>Automated verification</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pipeline Sidebar -->
+            <div class="pipeline-sidebar">
+                <h5>AI Processing Pipeline</h5>
+                
+                <div class="pipeline-step">
+                    <div class="step-icon">
+                        <i class="bi bi-cloud-arrow-up-fill"></i>
+                    </div>
+                    <div class="step-content">
+                        <h6>1. Upload</h6>
+                        <p>Secure file upload and validation</p>
+                    </div>
+                </div>
+                
+                <div class="pipeline-step">
+                    <div class="step-icon">
+                        <i class="bi bi-eye-fill"></i>
+                    </div>
+                    <div class="step-content">
+                        <h6>2. OCR Processing</h6>
+                        <p>Extract text using advanced OCR</p>
+                    </div>
+                </div>
+                
+                <div class="pipeline-step">
+                    <div class="step-icon">
+                        <i class="bi bi-stars"></i>
+                    </div>
+                    <div class="step-content">
+                        <h6>3. AI Extraction</h6>
+                        <p>LLM extracts structured data</p>
+                    </div>
+                </div>
+                
+                <div class="pipeline-step">
+                    <div class="step-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="step-content">
+                        <h6>4. Validation</h6>
+                        <p>Data validation and verification</p>
+                    </div>
+                </div>
+                
+                <div class="pipeline-step">
+                    <div class="step-icon">
+                        <i class="bi bi-file-earmark-check-fill"></i>
+                    </div>
+                    <div class="step-content">
+                        <h6>5. Results Ready</h6>
+                        <p>Structured output ready to review</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Uploads -->
+        <div class="recent-uploads">
+            <h5>
+                <span><i class="bi bi-clock-history"></i> Recent Uploads</span>
+                <a href="/results" class="view-all-link">View All Results <i class="bi bi-arrow-right"></i></a>
+            </h5>
+            
+            <table class="uploads-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Pages</th>
+                        <th>Status</th>
+                        <th>Uploaded On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="bi bi-file-earmark-text"></i> Claim_000123.tiff</td>
+                        <td><span class="file-type-badge badge-tiff">TIFF</span></td>
+                        <td>4.8 MB</td>
+                        <td>2</td>
+                        <td><span class="status-badge status-completed"><i class="bi bi-check-circle-fill"></i> Completed</span></td>
+                        <td>May 20, 2026 10:24 AM</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" title="View"><i class="bi bi-eye"></i></button>
+                                <button class="action-btn" title="Download"><i class="bi bi-download"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="bi bi-file-earmark-text"></i> Claim_000124.png</td>
+                        <td><span class="file-type-badge badge-png">PNG</span></td>
+                        <td>3.2 MB</td>
+                        <td>1</td>
+                        <td><span class="status-badge status-processing"><i class="bi bi-hourglass-split"></i> Processing</span></td>
+                        <td>May 20, 2026 10:21 AM</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" title="View"><i class="bi bi-eye"></i></button>
+                                <button class="action-btn" title="Refresh"><i class="bi bi-arrow-clockwise"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="bi bi-file-earmark-text"></i> Claim_000125.jpg</td>
+                        <td><span class="file-type-badge badge-jpg">JPG</span></td>
+                        <td>5.6 MB</td>
+                        <td>3</td>
+                        <td><span class="status-badge status-failed"><i class="bi bi-x-circle-fill"></i> Failed</span></td>
+                        <td>May 20, 2026 10:18 AM</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" title="Retry"><i class="bi bi-arrow-clockwise"></i></button>
+                                <button class="action-btn" title="Delete"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Tab switching
+        document.getElementById('singleTabBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('batchTabBtn').classList.remove('active');
+        });
+        
+        document.getElementById('batchTabBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('singleTabBtn').classList.remove('active');
+        });
+        
+        // Dropzone
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        
+        dropzone.addEventListener('click', () => fileInput.click());
+        
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = 'var(--primary)';
+            dropzone.style.background = 'rgba(79, 111, 255, 0.1)';
+        });
+        
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.style.borderColor = 'var(--border)';
+            dropzone.style.background = 'var(--bg-light)';
+        });
+        
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = 'var(--border)';
+            dropzone.style.background = 'var(--bg-light)';
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileUpload();
+            }
+        });
+        
+        fileInput.addEventListener('change', handleFileUpload);
+        
+        function handleFileUpload() {
+            const file = fileInput.files[0];
+            if (file) {
+                console.log('File selected:', file.name);
+                // Add your upload logic here
+            }
+        }
+    </script>
+</body>
+</html>

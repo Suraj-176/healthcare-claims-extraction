@@ -1,0 +1,188 @@
+version: '3.8'
+
+services:
+  # Main web application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: claims-extraction-web
+    ports:
+      - "5000:5000"
+    environment:
+      # Database configuration
+      - DATABASE_URL=postgresql://claims_user:claims_password@db:5432/claims_db
+      
+      # Azure OpenAI configuration
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_KEY=${AZURE_OPENAI_KEY}
+      - AZURE_OPENAI_DEPLOYMENT=${AZURE_OPENAI_DEPLOYMENT}
+      
+      # Alternative LLM providers (optional)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      
+      # Flask configuration
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-default-secret-key-change-in-production}
+      
+      # Tesseract configuration
+      - TESSERACT_CMD=/usr/bin/tesseract
+      
+      # Cost tracking
+      - COST_TRACKING_ENABLED=true
+      
+      # Redis for caching (optional)
+      - REDIS_URL=redis://redis:6379/0
+    
+    volumes:
+      # Persistent data storage
+      - ./data:/app/data
+      - ./logs:/app/logs
+    
+    depends_on:
+      - db
+      - redis
+    
+    restart: unless-stopped
+    
+    networks:
+      - claims-network
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+  # PostgreSQL database (production)
+  db:
+    image: postgres:14-alpine
+    container_name: claims-extraction-db
+    environment:
+      POSTGRES_DB: claims_db
+      POSTGRES_USER: claims_user
+      POSTGRES_PASSWORD: claims_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    
+    volumes:
+      # Persistent database storage
+      - postgres_data:/var/lib/postgresql/data
+      # Database initialization scripts
+      - ./src/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    
+    ports:
+      - "5432:5432"
+    
+    restart: unless-stopped
+    
+    networks:
+      - claims-network
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Redis for caching and job queue
+  redis:
+    image: redis:7-alpine
+    container_name: claims-extraction-redis
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    
+    volumes:
+      - redis_data:/data
+    
+    ports:
+      - "6379:6379"
+    
+    restart: unless-stopped
+    
+    networks:
+      - claims-network
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # Optional: Background worker for async processing
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: claims-extraction-worker
+    command: python -m src.worker
+    
+    environment:
+      - DATABASE_URL=postgresql://claims_user:claims_password@db:5432/claims_db
+      - REDIS_URL=redis://redis:6379/0
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_KEY=${AZURE_OPENAI_KEY}
+      - AZURE_OPENAI_DEPLOYMENT=${AZURE_OPENAI_DEPLOYMENT}
+    
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    
+    depends_on:
+      - db
+      - redis
+    
+    restart: unless-stopped
+    
+    networks:
+      - claims-network
+    
+    # Scale workers as needed
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: claims-extraction-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    
+    ports:
+      - "5050:80"
+    
+    depends_on:
+      - db
+    
+    restart: unless-stopped
+    
+    networks:
+      - claims-network
+    
+    profiles:
+      - debug  # Only start with --profile debug
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  claims-network:
+    driver: bridge

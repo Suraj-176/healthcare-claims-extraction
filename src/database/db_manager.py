@@ -135,6 +135,22 @@ class DatabaseManager:
             row = cursor.fetchone()
             return dict(row) if row else None
     
+    def check_duplicate_filename(self, filename: str) -> Optional[Dict[str, Any]]:
+        """Check if filename already exists in database.
+        
+        Args:
+            filename: Name of file to check
+            
+        Returns:
+            Extraction record if duplicate found, None otherwise
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM extractions WHERE filename = ? ORDER BY upload_date DESC LIMIT 1", (filename,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
+    
     def get_logs_for_extraction(self, extraction_id: int) -> List[Dict[str, Any]]:
         """Get all logs for an extraction."""
         with sqlite3.connect(self.db_path) as conn:

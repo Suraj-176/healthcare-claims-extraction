@@ -156,20 +156,20 @@ def api_upload():
         return jsonify({'error': 'File type not supported'}), 400
     
     try:
-        # Save file with timestamp if duplicate exists
+        # Check for duplicate filename in database
         filename = secure_filename(file.filename)
+        
+        duplicate = db.check_duplicate_filename(filename)
+        if duplicate:
+            return jsonify({
+                'success': False,
+                'error': f'File "{filename}" has already been processed. Please rename the file or check the results page.',
+                'duplicate': True,
+                'existing_id': duplicate['id'],
+                'upload_date': duplicate['upload_date']
+            }), 409  # 409 Conflict status code
+        
         filepath = app.config['UPLOAD_FOLDER'] / filename
-        
-        # Handle duplicate filenames by adding timestamp
-        if filepath.exists():
-            name_parts = filename.rsplit('.', 1)
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            if len(name_parts) == 2:
-                filename = f"{name_parts[0]}_{timestamp}.{name_parts[1]}"
-            else:
-                filename = f"{filename}_{timestamp}"
-            filepath = app.config['UPLOAD_FOLDER'] / filename
-        
         file.save(str(filepath))
         
         # Process file

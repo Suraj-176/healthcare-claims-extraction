@@ -124,12 +124,14 @@
             </table>
         </div>
         {% else %}
-        <div class="empty-state">
-            <i class="bi bi-inbox"></i>
-            <h4>No Results Found</h4>
-            <p class="text-muted">Try adjusting your filters or upload new files to get started.</p>
-            <a href="{{ url_for('upload_page') }}" class="btn btn-primary mt-3">
-                <i class="bi bi-cloud-upload"></i> Upload Files
+        <div style="text-align: center; padding: 4rem 2rem; background: white; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <div style="font-size: 5rem; color: #E5E7EB; margin-bottom: 1.5rem;">
+                <i class="bi bi-inbox"></i>
+            </div>
+            <h4 style="color: #1F2937; font-weight: 600; margin-bottom: 0.75rem;">No Results Found</h4>
+            <p class="text-muted" style="margin-bottom: 2rem;">Try adjusting your filters or upload new files to get started.</p>
+            <a href="{{ url_for('upload_page') }}" class="btn btn-primary btn-lg" style="padding: 0.75rem 2rem; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);">
+                <i class="bi bi-cloud-upload-fill" style="font-size: 1.2rem; margin-right: 0.5rem;"></i> Upload Files
             </a>
         </div>
         {% endif %}
@@ -495,95 +497,138 @@
             const fieldCount = result.fields ? Object.keys(result.fields).length : 0;
             const highConfFields = result.fields ? Object.values(result.fields).filter(f => (f.confidence || 0) > 80).length : 0;
             
+            // Organize fields by category
+            const categories = {
+                patient: { title: 'Patient Information', icon: 'person-fill', fields: [] },
+                insurance: { title: 'Insurance Information', icon: 'shield-fill-check', fields: [] },
+                provider: { title: 'Provider Information', icon: 'hospital-fill', fields: [] },
+                service: { title: 'Service Details', icon: 'clipboard-pulse', fields: [] },
+                financial: { title: 'Financial Information', icon: 'currency-dollar', fields: [] },
+                other: { title: 'Other Fields', icon: 'file-earmark-text', fields: [] }
+            };
+            
+            // Categorize fields
+            if (result.fields) {
+                Object.entries(result.fields).forEach(([key, value]) => {
+                    const lowerKey = key.toLowerCase();
+                    if (lowerKey.includes('patient') || lowerKey.includes('dob') || lowerKey.includes('sex') || lowerKey.includes('address')) {
+                        categories.patient.fields.push([key, value]);
+                    } else if (lowerKey.includes('insured') || lowerKey.includes('insurance') || lowerKey.includes('carrier') || lowerKey.includes('policy') || lowerKey.includes('group')) {
+                        categories.insurance.fields.push([key, value]);
+                    } else if (lowerKey.includes('provider') || lowerKey.includes('npi') || lowerKey.includes('physician') || lowerKey.includes('facility')) {
+                        categories.provider.fields.push([key, value]);
+                    } else if (lowerKey.includes('service') || lowerKey.includes('diagnosis') || lowerKey.includes('procedure') || lowerKey.includes('cpt')) {
+                        categories.service.fields.push([key, value]);
+                    } else if (lowerKey.includes('charge') || lowerKey.includes('paid') || lowerKey.includes('balance') || lowerKey.includes('amount')) {
+                        categories.financial.fields.push([key, value]);
+                    } else {
+                        categories.other.fields.push([key, value]);
+                    }
+                });
+            }
+            
             // Create redesigned display
             let html = `
-                <!-- Stats Grid -->
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-box-icon">📄</div>
-                        <div class="stat-box-label">Filename</div>
-                        <div class="stat-box-value" style="font-size: 1rem; word-break: break-word;">${data.filename}</div>
+                <!-- Header Stats -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="text-center p-2" style="background: white; border-radius: 0.5rem; border: 1px solid #E5E7EB;">
+                            <div style="color: #0066FF; font-size: 1.5rem;">📄</div>
+                            <small class="text-muted d-block">Filename</small>
+                            <strong style="font-size: 0.9rem; word-break: break-all;">${data.filename}</strong>
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-box-icon">${data.status === 'ok' ? '✅' : '❌'}</div>
-                        <div class="stat-box-label">Status</div>
-                        <div class="stat-box-value" style="color: ${data.status === 'ok' ? '#10B981' : '#EF4444'};">${data.status ? data.status.toUpperCase() : 'UNKNOWN'}</div>
+                    <div class="col-md-2">
+                        <div class="text-center p-2" style="background: ${data.status === 'ok' ? '#ECFDF5' : '#FEF2F2'}; border-radius: 0.5rem; border: 1px solid ${data.status === 'ok' ? '#10B981' : '#EF4444'};">
+                            <div style="font-size: 1.5rem;">${data.status === 'ok' ? '✅' : '❌'}</div>
+                            <small class="text-muted d-block">Status</small>
+                            <strong style="color: ${data.status === 'ok' ? '#10B981' : '#EF4444'};">${data.status ? data.status.toUpperCase() : 'UNKNOWN'}</strong>
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-box-icon">📋</div>
-                        <div class="stat-box-label">Form Type</div>
-                        <div class="stat-box-value">${data.form_type || 'N/A'}</div>
+                    <div class="col-md-2">
+                        <div class="text-center p-2" style="background: white; border-radius: 0.5rem; border: 1px solid #E5E7EB;">
+                            <div style="color: #0066FF; font-size: 1.5rem;">📋</div>
+                            <small class="text-muted d-block">Form Type</small>
+                            <strong>${data.form_type || 'N/A'}</strong>
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-box-icon">🤖</div>
-                        <div class="stat-box-label">Provider</div>
-                        <div class="stat-box-value" style="font-size: 1rem;">${providerDisplay}</div>
+                    <div class="col-md-2">
+                        <div class="text-center p-2" style="background: white; border-radius: 0.5rem; border: 1px solid #E5E7EB;">
+                            <div style="color: #0066FF; font-size: 1.5rem;">🤖</div>
+                            <small class="text-muted d-block">LLM Provider</small>
+                            <strong style="font-size: 0.85rem;">${providerDisplay}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-2" style="background: white; border-radius: 0.5rem; border: 1px solid #E5E7EB;">
+                            <div style="color: #10B981; font-size: 1.5rem;">💵</div>
+                            <small class="text-muted d-block">Cost / Accuracy</small>
+                            <strong>$${data.cost ? data.cost.toFixed(4) : '0.0000'} / ${data.mean_confidence ? data.mean_confidence.toFixed(1) : '0'}%</strong>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Quick Info Badges -->
-                <div style="margin-bottom: 1.5rem;">
-                    <span class="info-badge ${data.status === 'ok' ? 'success' : 'warning'}">
-                        <i class="bi bi-check-circle-fill"></i>
-                        ${fieldCount} Fields Extracted
-                    </span>
-                    <span class="info-badge ${highConfFields > fieldCount/2 ? 'success' : 'warning'}">
-                        <i class="bi bi-star-fill"></i>
-                        ${highConfFields} High Confidence
-                    </span>
-                    <span class="info-badge">
-                        <i class="bi bi-currency-dollar"></i>
-                        Cost: $${data.cost ? data.cost.toFixed(4) : '0.0000'}
-                    </span>
-                    <span class="info-badge">
-                        <i class="bi bi-bullseye"></i>
-                        Accuracy: ${data.mean_confidence ? data.mean_confidence.toFixed(1) : '0'}%
-                    </span>
+                <!-- Quick Stats -->
+                <div style="margin-bottom: 1.5rem; padding: 1rem; background: linear-gradient(135deg, rgba(0,102,255,0.05) 0%, rgba(0,163,255,0.02) 100%); border-radius: 0.5rem; border: 1px solid rgba(0,102,255,0.1);">
+                    <strong style="color: #0066FF;">📊 Extraction Summary:</strong> ${fieldCount} fields extracted • ${highConfFields} high confidence (>80%) • ${fieldCount - highConfFields} need review
                 </div>
-                
-                <!-- Extracted Fields Card -->
-                <div class="detail-card">
-                    <div class="detail-card-header">
-                        <i class="bi bi-file-earmark-text-fill"></i>
-                        <h6>Extracted Fields</h6>
-                    </div>
             `;
             
-            if (result.fields && Object.keys(result.fields).length > 0) {
-                Object.entries(result.fields).forEach(([key, value]) => {
-                    const conf = value.confidence || 0;
-                    const confClass = conf > 80 ? 'confidence-high' : conf > 50 ? 'confidence-medium' : 'confidence-low';
-                    const confIcon = conf > 80 ? '✓' : conf > 50 ? '!' : '✗';
-                    const fieldValue = typeof value.value === 'object' ? JSON.stringify(value.value) : (value.value || 'N/A');
-                    const source = value.source || 'ocr';
-                    
+            // Render each category
+            Object.entries(categories).forEach(([key, category]) => {
+                if (category.fields.length > 0) {
                     html += `
-                        <div class="field-row">
-                            <div class="field-label">${key}</div>
-                            <div class="field-value">${fieldValue}</div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
-                                <span class="confidence-badge ${confClass}">
-                                    ${confIcon} Confidence: ${conf.toFixed(1)}%
-                                </span>
-                                <span style="font-size: 0.8rem; color: #6B7280;">
-                                    <i class="bi bi-gear"></i> Source: ${source.toUpperCase()}
-                                </span>
+                        <div class="detail-card">
+                            <div class="detail-card-header">
+                                <i class="bi bi-${category.icon}"></i>
+                                <h6>${category.title} (${category.fields.length})</h6>
                             </div>
-                        </div>
                     `;
-                });
-            } else {
+                    
+                    category.fields.forEach(([fieldName, value]) => {
+                        const conf = value.confidence || 0;
+                        const confClass = conf > 80 ? 'confidence-high' : conf > 50 ? 'confidence-medium' : 'confidence-low';
+                        const confIcon = conf > 80 ? '✓' : conf > 50 ? '!' : '✗';
+                        const fieldValue = typeof value.value === 'object' ? JSON.stringify(value.value, null, 2) : (value.value || 'N/A');
+                        const source = value.source || 'ocr';
+                        
+                        html += `
+                            <div class="field-row">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                    <div class="field-label" style="flex: 0 0 35%; font-weight: 600; color: #374151;">
+                                        ${fieldName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                    </div>
+                                    <div class="field-value" style="flex: 0 0 63%; text-align: right; word-break: break-word;">
+                                        ${fieldValue}
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                                    <span class="confidence-badge ${confClass}" style="font-size: 0.75rem;">
+                                        ${confIcon} ${conf.toFixed(1)}% confidence
+                                    </span>
+                                    <span style="font-size: 0.75rem; color: #6B7280; background: #F3F4F6; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">
+                                        <i class="bi bi-${source === 'llm' ? 'robot' : 'eye'}"></i> ${source.toUpperCase()}
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`;
+                }
+            });
+            
+            if (fieldCount === 0) {
                 html += `
-                    <div style="text-align: center; padding: 2rem; color: #9CA3AF;">
-                        <i class="bi bi-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <p>No fields extracted</p>
+                    <div class="detail-card">
+                        <div style="text-align: center; padding: 3rem; color: #9CA3AF;">
+                            <i class="bi bi-inbox" style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <h5 style="color: #6B7280;">No Fields Extracted</h5>
+                            <p>This file may have been rejected or failed processing.</p>
+                        </div>
                     </div>
                 `;
             }
-            
-            html += `
-                </div>
-            `;
             
             document.getElementById('detailsContent').innerHTML = html;
         } catch (error) {
