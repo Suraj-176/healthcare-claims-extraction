@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Healthcare Claims Extraction{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4"><i class="bi bi-gear text-primary"></i> Configuration & Settings</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        
+        <!-- LLM Provider Settings -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-cpu"></i> LLM Provider Configuration
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Select which LLM provider to use for field escalation. The system auto-detects available providers based on environment variables.</p>
+                
+                <div class="mb-3">
+                    <label class="form-label">LLM Provider</label>
+                    <select id="llmProvider" class="form-select">
+                        <option value="auto" {% if settings.llm_provider == 'auto' %}selected{% endif %}>Auto (recommended)</option>
+                        <option value="azure_openai" {% if settings.llm_provider == 'azure_openai' %}selected{% endif %}>Azure OpenAI</option>
+                        <option value="openai" {% if settings.llm_provider == 'openai' %}selected{% endif %}>OpenAI</option>
+                        <option value="gemini" {% if settings.llm_provider == 'gemini' %}selected{% endif %}>Google Gemini</option>
+                        <option value="anthropic" {% if settings.llm_provider == 'anthropic' %}selected{% endif %}>Anthropic Claude</option>
+                        <option value="groq" {% if settings.llm_provider == 'groq' %}selected{% endif %}>Groq</option>
+                        <option value="ollama" {% if settings.llm_provider == 'ollama' %}selected{% endif %}>Ollama (Local)</option>
+                    </select>
+                    <div class="form-text">
+                        'Auto' will try providers in priority order: Azure OpenAI → OpenAI → Gemini → Anthropic → Groq → Ollama
+                    </div>
+                </div>
+                
+                <h6 class="mt-4">Provider Status</h6>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-microsoft"></i> Azure OpenAI</span>
+                        {% if env_status.azure_openai %}
+                            <span class="badge bg-success">✓ Configured</span>
+                        {% else %}
+                            <span class="badge bg-secondary">✗ Not configured</span>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-lightning"></i> OpenAI</span>
+                        {% if env_status.openai %}
+                            <span class="badge bg-success">✓ Configured</span>
+                        {% else %}
+                            <span class="badge bg-secondary">✗ Not configured</span>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-google"></i> Google Gemini</span>
+                        {% if env_status.gemini %}
+                            <span class="badge bg-success">✓ Configured</span>
+                        {% else %}
+                            <span class="badge bg-secondary">✗ Not configured</span>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-robot"></i> Anthropic Claude</span>
+                        {% if env_status.anthropic %}
+                            <span class="badge bg-success">✓ Configured</span>
+                        {% else %}
+                            <span class="badge bg-secondary">✗ Not configured</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Extraction Settings -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-sliders"></i> Extraction Configuration
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <label class="form-label">Confidence Threshold for LLM Escalation</label>
+                    <input type="range" class="form-range" id="confidenceThreshold" 
+                           min="0" max="100" step="5" value="{{ settings.confidence_threshold }}">
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">0%</span>
+                        <span id="thresholdValue" class="badge bg-primary">{{ settings.confidence_threshold|int }}%</span>
+                        <span class="text-muted">100%</span>
+                    </div>
+                    <div class="form-text mt-2">
+                        Fields with OCR confidence below this threshold will be escalated to LLM processing.
+                        Lower = more LLM usage (higher accuracy, higher cost).
+                    </div>
+                </div>
+                
+                <h6>Force Escalation Rules</h6>
+                <p class="text-muted small">Force certain fields to always use LLM, regardless of OCR confidence.</p>
+                
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="forceServiceLines" 
+                           {% if settings.force_escalate_service_lines %}checked{% endif %}>
+                    <label class="form-check-label" for="forceServiceLines">
+                        <strong>Service Lines (CPT codes)</strong> - Complex field, ~100% accuracy with LLM
+                    </label>
+                </div>
+                
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="forceRevenueLines"
+                           {% if settings.force_escalate_revenue_lines %}checked{% endif %}>
+                    <label class="form-check-label" for="forceRevenueLines">
+                        <strong>Revenue Codes</strong> - UB-04 revenue lines benefit from LLM
+                    </label>
+                </div>
+                
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="forceTotalCharge"
+                           {% if settings.force_escalate_total_charge %}checked{% endif %}>
+                    <label class="form-check-label" for="forceTotalCharge">
+                        <strong>Total Charge</strong> - Critical field for validation
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Display Settings -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-eye"></i> Display Preferences
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="showCosts"
+                           {% if settings.show_costs %}checked{% endif %}>
+                    <label class="form-check-label" for="showCosts">
+                        Show cost information in results
+                    </label>
+                </div>
+                
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="showSavings"
+                           {% if settings.show_savings %}checked{% endif %}>
+                    <label class="form-check-label" for="showSavings">
+                        Show cost savings percentage
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Save/Reset Buttons -->
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+            <button type="button" class="btn btn-outline-secondary" onclick="resetSettings()">
+                <i class="bi bi-arrow-counterclockwise"></i> Reset to Defaults
+            </button>
+            <button type="button" class="btn btn-primary" onclick="saveSettings()">
+                <i class="bi bi-save"></i> Save Settings
+            </button>
+        </div>
+        
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Info Card -->
+        <div class="card mb-4 border-primary">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-info-circle"></i> Settings Info
+            </div>
+            <div class="card-body">
+                <p class="small mb-3">
+                    <strong>💡 Tip:</strong> Settings are saved to the database and persist across sessions.
+                </p>
+                <p class="small mb-3">
+                    <strong>⚠️ Note:</strong> Confidence threshold and force escalation settings apply to new extractions only.
+                </p>
+                <p class="small mb-0">
+                    <strong>🔧 Configuration:</strong> API keys are configured in the <code>.env</code> file.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Database Maintenance -->
+        <div class="card">
+            <div class="card-header bg-warning">
+                <i class="bi bi-database"></i> Database Maintenance
+            </div>
+            <div class="card-body">
+                <p class="text-danger small">
+                    <i class="bi bi-exclamation-triangle"></i> <strong>Caution:</strong> These actions affect your extraction history.
+                </p>
+                
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-danger btn-sm" onclick="clearOldData()">
+                        <i class="bi bi-trash"></i> Clear Old Results (30+ days)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Update threshold display
+    const thresholdSlider = document.getElementById('confidenceThreshold');
+    const thresholdValue = document.getElementById('thresholdValue');
+    
+    thresholdSlider.addEventListener('input', (e) => {
+        thresholdValue.textContent = e.target.value + '%';
+    });
+    
+    // Save settings
+    async function saveSettings() {
+        const settings = {
+            llm_provider: document.getElementById('llmProvider').value,
+            confidence_threshold: thresholdSlider.value,
+            force_escalate_service_lines: document.getElementById('forceServiceLines').checked,
+            force_escalate_revenue_lines: document.getElementById('forceRevenueLines').checked,
+            force_escalate_total_charge: document.getElementById('forceTotalCharge').checked,
+            show_costs: document.getElementById('showCosts').checked,
+            show_savings: document.getElementById('showSavings').checked
+        };
+        
+        try {
+            const response = await fetch('/api/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showToast('Settings saved successfully!', 'success');
+            } else {
+                showToast('Error: ' + data.error, 'danger');
+            }
+        } catch (error) {
+            showToast('Save failed: ' + error.message, 'danger');
+        }
+    }
+    
+    // Reset settings
+    function resetSettings() {
+        if (!confirm('Reset all settings to defaults?')) return;
+        
+        document.getElementById('llmProvider').value = 'auto';
+        thresholdSlider.value = 50;
+        thresholdValue.textContent = '50%';
+        document.getElementById('forceServiceLines').checked = true;
+        document.getElementById('forceRevenueLines').checked = true;
+        document.getElementById('forceTotalCharge').checked = true;
+        document.getElementById('showCosts').checked = true;
+        document.getElementById('showSavings').checked = true;
+        
+        showToast('Settings reset to defaults', 'info');
+    }
+    
+    // Clear old data
+    function clearOldData() {
+        if (!confirm('Delete all extractions older than 30 days? This cannot be undone.')) return;
+        
+        showToast('Feature coming soon', 'info');
+    }
+</script>
+{% endblock %}

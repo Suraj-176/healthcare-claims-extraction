@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Button Click Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { padding: 2rem; }
+        .test-section { margin: 2rem 0; padding: 1rem; border: 2px solid #0066FF; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Button Click Test Page</h1>
+    <p>This page tests if onclick handlers work in your browser</p>
+
+    <div class="test-section">
+        <h3>Test 1: Simple Button</h3>
+        <button class="btn btn-primary" onclick="alert('✅ Simple onclick works!')">
+            Click Me - Test 1
+        </button>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 2: Button with Function Call</h3>
+        <button class="btn btn-success" onclick="testFunction(123)">
+            <i class="bi bi-eye"></i> Click Me - Test 2
+        </button>
+        <div id="result2" class="mt-2"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 3: Button Group (Like Results Page)</h3>
+        <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-secondary" onclick="viewTest(1)" title="View Details">
+                <i class="bi bi-eye"></i>
+            </button>
+            <button class="btn btn-outline-danger" onclick="deleteTest(1)" title="Delete">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+        <div id="result3" class="mt-2"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 4: Bootstrap Modal</h3>
+        <button class="btn btn-info" onclick="openTestModal()">
+            Open Modal
+        </button>
+    </div>
+
+    <div class="test-section">
+        <h3>Console Output</h3>
+        <div id="console-output" style="background: #f8f9fa; padding: 1rem; border-radius: 4px; font-family: monospace; min-height: 150px;"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="testModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">✅ Modal Works!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>If you see this, Bootstrap modal is working correctly!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const output = document.getElementById('console-output');
+        
+        function log(msg) {
+            console.log(msg);
+            output.innerHTML += msg + '<br>';
+        }
+
+        function testFunction(id) {
+            log('✅ testFunction called with ID: ' + id);
+            document.getElementById('result2').innerHTML = '<div class="alert alert-success">✅ Function executed! ID: ' + id + '</div>';
+        }
+
+        function viewTest(id) {
+            log('👁️ viewTest called with ID: ' + id);
+            document.getElementById('result3').innerHTML = '<div class="alert alert-info">👁️ View clicked! ID: ' + id + '</div>';
+        }
+
+        function deleteTest(id) {
+            log('🗑️ deleteTest called with ID: ' + id);
+            if (confirm('Delete item ' + id + '?')) {
+                document.getElementById('result3').innerHTML = '<div class="alert alert-warning">🗑️ Delete confirmed! ID: ' + id + '</div>';
+            }
+        }
+
+        function openTestModal() {
+            log('📋 Opening modal...');
+            const modal = new bootstrap.Modal(document.getElementById('testModal'));
+            modal.show();
+            log('✅ Modal opened successfully!');
+        }
+
+        // Register functions globally
+        window.testFunction = testFunction;
+        window.viewTest = viewTest;
+        window.deleteTest = deleteTest;
+        window.openTestModal = openTestModal;
+
+        log('✅ Page loaded');
+        log('✅ Bootstrap available: ' + (typeof bootstrap !== 'undefined'));
+        log('✅ Functions registered');
+        log('');
+        log('👆 Click the buttons above to test!');
+    </script>
+</body>
+</html>

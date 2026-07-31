@@ -3,11 +3,13 @@ opencv-python-headless>=4.8.0
 numpy>=1.24.0
 pytesseract>=0.3.10
 pytest>=7.4.0
-streamlit>=1.28.0
-plotly>=5.17.0
 python-dotenv>=1.0.0
+python-docx>=1.0.0
 requests>=2.31.0
 tenacity>=8.2.0
+Flask>=3.0.0
+Flask-CORS>=4.0.0
+Werkzeug>=3.0.0
 
 # LLM providers (install the one you're using)
 openai>=1.0.0              # For Azure OpenAI or OpenAI

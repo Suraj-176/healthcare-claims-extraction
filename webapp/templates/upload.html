@@ -1,0 +1,455 @@
+{% extends "base.html" %}
+
+{% block title %}Upload - Healthcare Claims Extraction{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4"><i class="bi bi-cloud-upload text-primary"></i> Upload & Process Claims</h2>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-4" role="tablist">
+    <li class="nav-item">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#single-upload" type="button">
+            <i class="bi bi-file-earmark"></i> Single File
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#batch-upload" type="button">
+            <i class="bi bi-files"></i> Batch Upload
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content">
+    
+    <!-- Single File Upload Tab -->
+    <div class="tab-pane fade show active" id="single-upload">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-upload"></i> Upload File
+                    </div>
+                    <div class="card-body">
+                        <div id="singleDropzone" class="dropzone">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            <h5>Drop file here or click to browse</h5>
+                            <p class="text-muted mb-0">
+                                Supported: TIFF (.tif, .tiff, .001-.099), PNG, JPG (Max 50MB)
+                            </p>
+                            <input type="file" id="singleFileInput" accept=".tif,.tiff,.png,.jpg,.jpeg,.001,.002,.003,.004,.005,.006,.007,.008,.009,.010" style="display: none;">
+                        </div>
+                        
+                        <div id="singleFileName" class="mt-3 d-none">
+                            <div class="alert alert-info">
+                                <strong><i class="bi bi-file-earmark"></i> Selected:</strong>
+                                <span id="selectedFileName"></span>
+                            </div>
+                        </div>
+                        
+                        <div id="singleProgress" class="mt-3 d-none">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-center mt-2 text-muted">Processing...</p>
+                        </div>
+                        
+                        <button id="uploadBtn" class="btn btn-primary btn-lg w-100 mt-3 d-none">
+                            <i class="bi bi-rocket"></i> Process File
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div id="singleResult" class="d-none">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <i class="bi bi-check-circle"></i> Processing Complete
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <h6 class="text-muted">Status</h6>
+                                    <p class="mb-0"><span id="resultStatus" class="badge"></span></p>
+                                </div>
+                                <div class="col-6">
+                                    <h6 class="text-muted">Form Type</h6>
+                                    <p class="mb-0"><span id="resultFormType" class="badge bg-secondary"></span></p>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <h6 class="text-muted">Confidence</h6>
+                                    <div id="resultConfidence"></div>
+                                </div>
+                                <div class="col-6">
+                                    <h6 class="text-muted">Cost</h6>
+                                    <p class="mb-0"><strong id="resultCost"></strong></p>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i>
+                                <strong>Processing Time:</strong> <span id="resultTime"></span>s
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" onclick="viewDetails()">
+                                    <i class="bi bi-eye"></i> View Full Details
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="downloadResult()">
+                                    <i class="bi bi-download"></i> Download JSON
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="resetUpload()">
+                                    <i class="bi bi-arrow-repeat"></i> Upload Another
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Batch Upload Tab -->
+    <div class="tab-pane fade" id="batch-upload">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-files"></i> Batch File Upload
+            </div>
+            <div class="card-body">
+                <div id="batchDropzone" class="dropzone">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <h5>Drop multiple files here or click to browse</h5>
+                    <p class="text-muted mb-0">
+                        Upload multiple claim files at once
+                    </p>
+                    <input type="file" id="batchFileInput" multiple accept=".tif,.tiff,.png,.jpg,.jpeg,.001,.002,.003,.004,.005,.006,.007,.008,.009,.010" style="display: none;">
+                </div>
+                
+                <div id="batchFileList" class="mt-3 d-none">
+                    <h6>Selected Files (<span id="batchFileCount">0</span>)</h6>
+                    <div id="fileListContainer" class="list-group mb-3"></div>
+                </div>
+                
+                <button id="batchUploadBtn" class="btn btn-primary btn-lg w-100 d-none">
+                    <i class="bi bi-rocket"></i> Process All Files
+                </button>
+                
+                <div id="batchProgress" class="mt-3 d-none">
+                    <h6>Processing Progress</h6>
+                    <div class="progress mb-2">
+                        <div id="batchProgressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <p class="text-center text-muted">
+                        <span id="batchProgressText">Processing files...</span>
+                    </p>
+                </div>
+                
+                <div id="batchResults" class="mt-3 d-none">
+                    <h5 class="mb-3">Batch Results</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="stat-card success">
+                                <h6>Total Files</h6>
+                                <div class="value" id="batchTotal">0</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card success">
+                                <h6>Successful</h6>
+                                <div class="value" id="batchSuccess">0</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card warning">
+                                <h6>Total Cost</h6>
+                                <div class="value" id="batchTotalCost">$0.00</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card info">
+                                <h6>Avg Time</h6>
+                                <div class="value" id="batchAvgTime">0s</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="batchResultsList" class="list-group"></div>
+                            
+                            <button class="btn btn-primary mt-3 w-100" onclick="viewAllResults()">
+                                <i class="bi bi-table"></i> View All Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentExtraction = null;
+    
+    // Single File Upload
+    const singleDropzone = document.getElementById('singleDropzone');
+    const singleFileInput = document.getElementById('singleFileInput');
+    const singleFileName = document.getElementById('singleFileName');
+    const selectedFileName = document.getElementById('selectedFileName');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const singleProgress = document.getElementById('singleProgress');
+    const singleResult = document.getElementById('singleResult');
+    
+    singleDropzone.addEventListener('click', () => singleFileInput.click());
+    
+    singleDropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        singleDropzone.classList.add('drag-over');
+    });
+    
+    singleDropzone.addEventListener('dragleave', () => {
+        singleDropzone.classList.remove('drag-over');
+    });
+    
+    singleDropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        singleDropzone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length) {
+            singleFileInput.files = e.dataTransfer.files;
+            handleSingleFileSelect();
+        }
+    });
+    
+    singleFileInput.addEventListener('change', handleSingleFileSelect);
+    
+    function handleSingleFileSelect() {
+        const file = singleFileInput.files[0];
+        if (file) {
+            selectedFileName.textContent = file.name;
+            singleFileName.classList.remove('d-none');
+            uploadBtn.classList.remove('d-none');
+            singleResult.classList.add('d-none');
+        }
+    }
+    
+    uploadBtn.addEventListener('click', async () => {
+        const file = singleFileInput.files[0];
+        if (!file) return;
+        
+        uploadBtn.disabled = true;
+        singleProgress.classList.remove('d-none');
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        try {
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                currentExtraction = data;
+                displaySingleResult(data);
+                showToast('File processed successfully!', 'success');
+            } else {
+                showToast('Error: ' + data.error, 'danger');
+            }
+        } catch (error) {
+            showToast('Upload failed: ' + error.message, 'danger');
+        } finally {
+            uploadBtn.disabled = false;
+            singleProgress.classList.add('d-none');
+        }
+    });
+    
+    function displaySingleResult(data) {
+        singleResult.classList.remove('d-none');
+        
+        const tierMap = {
+            'tier_a': 'CMS-1500',
+            'tier_b': 'CMS-1500+Attach',
+            'tier_c': 'UB-04',
+            'tier_d': 'Separator',
+            'unknown_layout': 'Unknown'
+        };
+        
+        document.getElementById('resultStatus').textContent = data.status;
+        document.getElementById('resultStatus').className = 'badge ' + (data.status === 'ok' ? 'bg-success' : 'bg-danger');
+        
+        document.getElementById('resultFormType').textContent = tierMap[data.tier] || data.tier;
+        
+        const confidenceHtml = `
+            <div class="progress" style="height: 20px;">
+                <div class="progress-bar ${data.confidence > 60 ? 'bg-success' : data.confidence > 40 ? 'bg-warning' : 'bg-danger'}" 
+                     style="width: ${data.confidence}%">
+                    ${data.confidence.toFixed(1)}%
+                </div>
+            </div>
+        `;
+        document.getElementById('resultConfidence').innerHTML = confidenceHtml;
+        
+        const savings = ((0.050 - data.cost) / 0.050 * 100).toFixed(0);
+        document.getElementById('resultCost').innerHTML = `$${data.cost.toFixed(4)} <span class="text-success small">(-${savings}%)</span>`;
+        
+        document.getElementById('resultTime').textContent = data.processing_time.toFixed(1);
+    }
+    
+    function resetUpload() {
+        singleFileInput.value = '';
+        singleFileName.classList.add('d-none');
+        uploadBtn.classList.add('d-none');
+        singleResult.classList.add('d-none');
+        currentExtraction = null;
+    }
+    
+    function viewDetails() {
+        if (currentExtraction) {
+            window.location.href = `/results?id=${currentExtraction.extraction_id}`;
+        }
+    }
+    
+    function downloadResult() {
+        if (currentExtraction) {
+            window.location.href = `/api/extraction/${currentExtraction.extraction_id}/export`;
+        }
+    }
+    
+    // Batch Upload
+    const batchDropzone = document.getElementById('batchDropzone');
+    const batchFileInput = document.getElementById('batchFileInput');
+    const batchFileList = document.getElementById('batchFileList');
+    const fileListContainer = document.getElementById('fileListContainer');
+    const batchFileCount = document.getElementById('batchFileCount');
+    const batchUploadBtn = document.getElementById('batchUploadBtn');
+    const batchProgress = document.getElementById('batchProgress');
+    const batchResults = document.getElementById('batchResults');
+    
+    batchDropzone.addEventListener('click', () => batchFileInput.click());
+    
+    batchDropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        batchDropzone.classList.add('drag-over');
+    });
+    
+    batchDropzone.addEventListener('dragleave', () => {
+        batchDropzone.classList.remove('drag-over');
+    });
+    
+    batchDropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        batchDropzone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length) {
+            batchFileInput.files = e.dataTransfer.files;
+            handleBatchFileSelect();
+        }
+    });
+    
+    batchFileInput.addEventListener('change', handleBatchFileSelect);
+    
+    function handleBatchFileSelect() {
+        const files = Array.from(batchFileInput.files);
+        if (files.length === 0) return;
+        
+        batchFileCount.textContent = files.length;
+        batchFileList.classList.remove('d-none');
+        batchUploadBtn.classList.remove('d-none');
+        batchResults.classList.add('d-none');
+        
+        fileListContainer.innerHTML = files.map((file, i) => `
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="bi bi-file-earmark"></i> ${file.name}
+                    <small class="text-muted">(${(file.size / 1024).toFixed(1)} KB)</small>
+                </div>
+                <span class="badge bg-secondary">Pending</span>
+            </div>
+        `).join('');
+    }
+    
+    batchUploadBtn.addEventListener('click', async () => {
+        const files = Array.from(batchFileInput.files);
+        if (files.length === 0) return;
+        
+        batchUploadBtn.disabled = true;
+        batchProgress.classList.remove('d-none');
+        
+        const formData = new FormData();
+        files.forEach(file => formData.append('files', file));
+        
+        try {
+            const response = await fetch('/api/batch-upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            displayBatchResults(data.results);
+            showToast('Batch processing complete!', 'success');
+        } catch (error) {
+            showToast('Batch upload failed: ' + error.message, 'danger');
+        } finally {
+            batchUploadBtn.disabled = false;
+            batchProgress.classList.add('d-none');
+        }
+    });
+    
+    function displayBatchResults(results) {
+        batchResults.classList.remove('d-none');
+        
+        const total = results.length;
+        const successful = results.filter(r => r.status === 'success').length;
+        const totalCost = results.reduce((sum, r) => sum + (r.cost || 0), 0);
+        const avgTime = results.reduce((sum, r) => sum + (r.processing_time || 0), 0) / total;
+        
+        document.getElementById('batchTotal').textContent = total;
+        document.getElementById('batchSuccess').textContent = successful;
+        document.getElementById('batchTotalCost').textContent = '$' + totalCost.toFixed(3);
+        document.getElementById('batchAvgTime').textContent = avgTime.toFixed(1) + 's';
+        
+        const tierMap = {
+            'tier_a': 'CMS-1500',
+            'tier_b': 'Attach',
+            'tier_c': 'UB-04',
+            'tier_d': 'Separator'
+        };
+        
+        document.getElementById('batchResultsList').innerHTML = results.map(r => `
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-1">
+                            ${r.status === 'success' ? '<i class="bi bi-check-circle text-success"></i>' : '<i class="bi bi-x-circle text-danger"></i>'}
+                            ${r.filename}
+                        </h6>
+                        ${r.status === 'success' ? `
+                            <small class="text-muted">
+                                ${tierMap[r.tier] || r.tier} | 
+                                Confidence: ${r.confidence.toFixed(1)}% | 
+                                Cost: $${r.cost.toFixed(4)} |
+                                Time: ${r.processing_time.toFixed(1)}s
+                            </small>
+                        ` : `
+                            <small class="text-danger">${r.error}</small>
+                        `}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function viewAllResults() {
+        window.location.href = '/results';
+    }
+</script>
+{% endblock %}

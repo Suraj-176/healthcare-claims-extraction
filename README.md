@@ -28,7 +28,13 @@ All 8 required hackathon deliverables are complete and located in [`docs/`](docs
 
 1. ✅ [**Solution Architecture**](docs/architecture.md) - Hybrid OCR+LLM system design
 2. ✅ [**Technical Design**](docs/technical_design.md) - Data schemas, APIs, decision logic
-3. ✅ **Working Prototype** - [`src/`](src/) + [`ui/streamlit_app.py`](ui/streamlit_app.py) + [`tests/`](tests/)
+3. ✅ **Working Prototype** - [`src/`](src/) pipeline + **Production Web App** ([`ui/`](ui/)) + [`tests/`](tests/)
+   - Multi-page dashboard with stats & charts
+   - Single & batch file upload
+   - Results history with search/export
+   - Processing logs viewer
+   - Configuration settings
+   - SQLite database persistence
 4. ✅ [**Cost Analysis**](docs/cost_analysis.md) - $0.0094/page with 81% savings
 5. ✅ [**Accuracy Analysis**](docs/accuracy_analysis.md) - 90-95% field-level accuracy
 6. ✅ [**Throughput Benchmark**](docs/throughput_benchmark.md) - 450-900 pages/hour
@@ -183,10 +189,21 @@ pytest tests/ -v
 # Add your LLM API key to .env file
 # AZURE_OPENAI_KEY=your_key_here
 
-# Run Streamlit UI
-streamlit run ui/streamlit_app.py
+# Run Production Web Application (Flask + Bootstrap 5)
+python webapp/app.py
 
-# Upload sample images from data/raw/Group A/
+# Then open browser: http://localhost:5000
+
+# Features:
+# - Professional Dashboard with stats and charts
+# - Drag-and-drop file upload (single and batch)
+# - Results history with search/filter
+# - Processing logs viewer
+# - Configuration settings
+# - Database persistence (SQLite)
+# - Responsive Bootstrap 5 UI
+
+# Upload sample images from data/raw/ folders
 ```
 
 ---
@@ -201,10 +218,13 @@ python src/pipeline.py --input "data/raw/Group A/M047FJFL.001"
 python src/pipeline.py --input-dir "data/raw/Group A" --output results_group_a.json
 ```
 
-## Running the demo UI
+## Running the Web Application
 
 ```bash
-streamlit run ui/streamlit_app.py
+# Production-ready Flask application
+python webapp/app.py
+
+# Open browser: http://localhost:5000
 ```
 
 ## Enabling LLM escalation (optional)
@@ -231,8 +251,9 @@ claims-extraction/
 │   ├── validation/       # Business rule checks
 │   ├── cost/             # Cost tracking
 │   └── pipeline.py       # Main orchestrator (CLI entry point)
-├── ui/
-│   └── streamlit_app.py  # Demo UI
+├── webapp/
+│   ├── app.py           # Flask web application
+│   └── templates/       # Bootstrap 5 UI templates
 ├── tests/                 # pytest suite, run against real sample data
 ├── docs/
 │   └── SPEC.md           # Full project specification and depth-pass build plan
