@@ -17,22 +17,22 @@
     <!-- Custom CSS -->
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #0066FF 0%, #00A3FF 100%);
-            --success-gradient: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
-            --warning-gradient: linear-gradient(135deg, #FF9500 0%, #FF6B35 100%);
-            --info-gradient: linear-gradient(135deg, #00A3FF 0%, #0066FF 100%);
-            --danger-gradient: linear-gradient(135deg, #FF3B30 0%, #E63946 100%);
-            --primary-color: #0066FF;
-            --secondary-color: #6B7280;
-            --success-color: #00D4AA;
-            --danger-color: #FF3B30;
-            --warning-color: #FF9500;
-            --info-color: #00A3FF;
-            --bg-color: #F5F7FA;
+            --primary-gradient: linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%); /* Amethyst Orchid (Royal Violet to Deep Purple) */
+            --success-gradient: linear-gradient(135deg, #10B981 0%, #059669 100%); /* Vibrant Emerald Mint */
+            --warning-gradient: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); /* Amber to Gold */
+            --info-gradient: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%); /* Clinical Indigo-Cyan */
+            --danger-gradient: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%); /* Elegant Crimson Red */
+            --primary-color: #6D28D9;
+            --secondary-color: #64748B;
+            --success-color: #10B981;
+            --danger-color: #EF4444;
+            --warning-color: #F59E0B;
+            --info-color: #4F46E5;
+            --bg-color: #F8FAFC;
             --card-bg: #FFFFFF;
-            --text-primary: #1F2937;
-            --text-secondary: #6B7280;
-            --border-color: #E5E7EB;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --border-color: #E2E8F0;
         }
         
         body {
@@ -44,7 +44,7 @@
             color: var(--text-primary);
         }
         
-        /* Clean Background Pattern */
+        /* Premium Background Grid and Subtle Glowing Mesh Pattern */
         body::before {
             content: '';
             position: fixed;
@@ -53,7 +53,9 @@
             width: 100%;
             height: 100%;
             background: 
-                linear-gradient(180deg, rgba(0, 102, 255, 0.02) 0%, transparent 100%);
+                radial-gradient(at 0% 0%, rgba(109, 40, 217, 0.04) 0px, transparent 50%),
+                radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.03) 0px, transparent 50%),
+                linear-gradient(180deg, rgba(248, 250, 252, 0) 0%, rgba(248, 250, 252, 1) 100%);
             pointer-events: none;
             z-index: 0;
         }
@@ -64,16 +66,68 @@
         }
         
         .navbar-brand {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -0.5px;
+        }
+        
+        /* Sidebar independent scrolling and layout overrides */
+        .sidebar {
+            height: calc(100vh - 72px);
+            overflow-y: auto;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 1rem;
+            box-shadow: 4px 0 24px rgba(15, 23, 42, 0.01);
+            position: sticky;
+            top: 72px;
+            z-index: 100;
+            width: 240px;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+        }
+        
+        .main-wrapper {
+            display: flex;
+            min-height: calc(100vh - 72px);
+            position: relative;
+        }
+        
+        main.main-content {
+            flex-grow: 1;
+            padding: 1.5rem;
+            width: calc(100% - 240px);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        /* Collapsed Sidebar overrides */
+        .sidebar-collapsed .sidebar {
+            width: 70px;
+            padding: 1rem 0.5rem;
+        }
+        
+        .sidebar-collapsed main.main-content {
+            width: calc(100% - 70px);
+        }
+        
+        /* Hide nav link text and system status on collapse */
+        .sidebar-collapsed .nav-text, 
+        .sidebar-collapsed .system-status,
+        .sidebar-collapsed .sidebar hr {
+            display: none !important;
+        }
+        
+        /* Align icons centrally on collapse */
+        .sidebar-collapsed .sidebar .nav-link {
+            justify-content: center;
+            padding: 0.75rem 0;
             font-size: 1.25rem;
         }
         
-        .sidebar {
-            min-height: calc(100vh - 56px);
-            background: var(--card-bg);
-            border-right: 1px solid var(--border-color);
-            padding-top: 1rem;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+        .sidebar-collapsed .sidebar .nav-link i {
+            margin: 0 !important;
+            font-size: 1.25rem;
         }
         
         .sidebar .nav-link {
@@ -81,59 +135,56 @@
             padding: 0.75rem 1rem;
             border-radius: 0.5rem;
             margin-bottom: 0.5rem;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            font-weight: 500;
-        }
-        
-        .sidebar .nav-link::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 60%;
-            width: 3px;
-            background: var(--primary-color);
-            border-radius: 0 2px 2px 0;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        
-        .sidebar .nav-link:hover {
-            background: rgba(0, 102, 255, 0.06);
-            color: var(--primary-color);
-        }
-        
-        .sidebar .nav-link:hover::before {
-            opacity: 1;
-        }
-        
-        .sidebar .nav-link.active {
-            background: var(--primary-color);
-            color: white;
-            box-shadow: 0 2px 8px rgba(0, 102, 255, 0.25);
-        }
-        
-        .sidebar .nav-link.active::before {
-            opacity: 0;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
         
         .sidebar .nav-link i {
-            margin-right: 0.5rem;
-            width: 20px;
-            text-align: center;
+            font-size: 1.1rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .sidebar .nav-link::before {
+            display: none; /* Removed the old intrusive line */
+        }
+        
+        .sidebar .nav-link:hover {
+            background: rgba(79, 70, 229, 0.05);
+            color: var(--primary-color);
+        }
+        
+        .sidebar .nav-link:hover i {
+            transform: translateX(2px);
+        }
+        
+        .sidebar .nav-link.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+        
+        .sidebar .nav-link.active i {
+            color: white !important;
         }
         
         .stat-card {
             background: var(--card-bg);
-            border-radius: 1rem;
-            padding: 1.75rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            transition: all 0.2s ease;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.01);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid var(--border-color);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 140px;
         }
         
         .stat-card::before {
@@ -142,7 +193,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 4px;
             background: var(--primary-gradient);
         }
         
@@ -151,119 +202,147 @@
             position: absolute;
             top: 50%;
             right: 1.5rem;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: var(--primary-color);
-            opacity: 0.04;
+            opacity: 0.03;
             transform: translateY(-50%);
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
         
         .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: rgba(0, 102, 255, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+            border-color: rgba(79, 70, 229, 0.2);
         }
         
         .stat-card:hover::after {
             opacity: 0.06;
+            transform: translateY(-50%) scale(1.1);
         }
         
         @keyframes countUp {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
+            from { opacity: 0; transform: translateX(-12px); }
             to { opacity: 1; transform: translateX(0); }
         }
         
         .stat-card .value {
-            animation: countUp 0.6s ease-out;
+            animation: countUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .stat-card h6 {
-            animation: slideIn 0.5s ease-out;
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .stat-card h6 {
-            color: #4B5563;
+            color: var(--text-secondary);
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.75rem;
+            letter-spacing: 0.75px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .stat-card h6 i {
+            font-size: 1rem;
+            color: var(--primary-color);
         }
         
         .stat-card .value {
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0F172A;
+            margin-bottom: 0.25rem;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
         }
         
         .stat-card .delta {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             font-weight: 600;
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
         
         .stat-card.success::before { background: var(--success-gradient); }
         .stat-card.success::after { background: var(--success-color); }
+        .stat-card.success h6 i { color: var(--success-color); }
         
         .stat-card.warning::before { background: var(--warning-gradient); }
         .stat-card.warning::after { background: var(--warning-color); }
+        .stat-card.warning h6 i { color: var(--warning-color); }
         
         .stat-card.danger::before { background: var(--danger-gradient); }
         .stat-card.danger::after { background: var(--danger-color); }
+        .stat-card.danger h6 i { color: var(--danger-color); }
         
         .stat-card.info::before { background: var(--info-gradient); }
         .stat-card.info::after { background: var(--info-color); }
+        .stat-card.info h6 i { color: var(--info-color); }
         
         .card {
-            border: none;
-            border-radius: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.01);
             margin-bottom: 1.5rem;
             overflow: hidden;
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: rgba(0, 102, 255, 0.15);
+            box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.06), 0 4px 12px -2px rgba(15, 23, 42, 0.02);
+            border-color: rgba(79, 70, 229, 0.15);
         }
+        
         .card-header {
-            background: #F9FAFB;
+            background: #F8FAFC;
             border-bottom: 1px solid var(--border-color);
-            font-weight: 600;
-            color: #111827;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #1E293B;
             padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-header i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
         }
         
         .btn-primary {
-            background: var(--primary-color);
+            background: var(--primary-gradient);
             border: none;
             padding: 0.625rem 1.5rem;
-            border-radius: 0.5rem;
+            border-radius: 8px;
             font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(0, 102, 255, 0.25);
+            font-size: 0.9rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+            color: white !important;
         }
         
         .btn-primary:hover {
-            background: #0052CC;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+            opacity: 0.95;
         }
         
         .btn-primary:active {
             transform: translateY(0);
-            box-shadow: 0 2px 6px rgba(0, 102, 255, 0.25);
         }
         
         .dropzone {
@@ -295,6 +374,11 @@
         
         .table-hover tbody tr:hover {
             background: rgba(0, 102, 255, 0.04);
+        }
+        
+        /* Compact clinical row padding override */
+        .table th, .table td {
+            padding: 0.45rem 0.5rem !important;
         }
         
         .badge-status {
@@ -374,14 +458,9 @@
         footer {
             background: var(--card-bg);
             border-top: 1px solid var(--border-color);
-            padding: 2rem 0;
-            margin-top: 4rem;
+            padding: 1.25rem 0;
+            margin-top: 0.75rem; /* Squeezed from 1.5rem to optimize spacing */
             box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
-        }
-            border-top: 1px solid rgba(102, 126, 234, 0.1);
-            padding: 1.5rem 0;
-            margin-top: 3rem;
-            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
         }
         
         .navbar {
@@ -666,53 +745,79 @@
     </nav>
     
     <!-- Main Content -->
-    <div class="container-fluid">
-        <div class="row">
+    <div class="container-fluid px-0">
+        <div class="main-wrapper" id="appWrapper">
             
-            <!-- Sidebar -->
-            <nav class="col-md-2 col-lg-2 d-md-block sidebar">
+            <!-- Sidebar (With independent menu scroll & collapse-toggle feature!) -->
+            <nav class="sidebar" id="sidebarMenu">
                 <div class="position-sticky">
+                    <!-- Collapse Toggle Row (High visibility primary outline icon button!) -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 px-2" style="border-bottom: 1px solid rgba(226, 232, 240, 0.5); padding-bottom: 0.75rem;">
+                        <span class="text-secondary small fw-bold nav-text" style="font-size: 0.7rem; letter-spacing: 0.5px;">MENU OPTIONS</span>
+                        <button type="button" id="sidebarToggleBtn" class="btn btn-xs btn-outline-primary d-flex align-items-center justify-content-center" title="Collapse Menu" style="width: 26px; height: 26px; border-radius: 6px; padding: 0; cursor: pointer;">
+                            <i class="bi bi-list" id="toggleIcon" style="font-size: 1.1rem;"></i>
+                        </button>
+                    </div>
+
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">
                                 <i class="bi bi-speedometer2"></i>
-                                Dashboard
+                                <span class="nav-text">Dashboard</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if request.endpoint == 'upload_page' %}active{% endif %}" href="{{ url_for('upload_page') }}">
                                 <i class="bi bi-cloud-upload"></i>
-                                Upload
+                                <span class="nav-text">Upload</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if request.endpoint == 'results_page' %}active{% endif %}" href="{{ url_for('results_page') }}">
                                 <i class="bi bi-table"></i>
-                                Results
+                                <span class="nav-text">Results</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'claim_data_page' %}active{% endif %}" href="{{ url_for('claim_data_page') }}">
+                                <i class="bi bi-file-earmark-medical"></i>
+                                <span class="nav-text">Claim Data</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'benchmark_page' %}active{% endif %}" href="{{ url_for('benchmark_page') }}">
+                                <i class="bi bi-award"></i>
+                                <span class="nav-text">Benchmark</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'audit_logs_page' %}active{% endif %}" href="{{ url_for('audit_logs_page') }}">
+                                <i class="bi bi-terminal"></i>
+                                <span class="nav-text">Audit Logs</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if request.endpoint == 'settings_page' %}active{% endif %}" href="{{ url_for('settings_page') }}">
                                 <i class="bi bi-gear"></i>
-                                Settings
+                                <span class="nav-text">Settings</span>
                             </a>
                         </li>
                     </ul>
                     
                     <hr class="my-3">
                     
-                    <div class="px-3">
+                    <div class="system-status px-3">
                         <h6 class="text-muted small">System Status</h6>
                         <div class="d-flex align-items-center mb-2">
-                            <span class="badge bg-success me-2">●</span>
+                            <span class="badge bg-success me-2" style="padding: 0.25rem !important;">●</span>
                             <small>Pipeline Active</small>
                         </div>
                         <div class="d-flex align-items-center mb-2">
-                            <span class="badge bg-success me-2">●</span>
+                            <span class="badge bg-success me-2" style="padding: 0.25rem !important;">●</span>
                             <small>Database Connected</small>
                         </div>
                         <div class="d-flex align-items-center">
-                            <span class="badge bg-success me-2">●</span>
+                            <span class="badge bg-success me-2" style="padding: 0.25rem !important;">●</span>
                             <small>LLM Available</small>
                         </div>
                     </div>
@@ -720,7 +825,7 @@
             </nav>
             
             <!-- Main Content Area -->
-            <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <main class="main-content px-md-4 pt-4 pb-1">
                 
                 <!-- Flash Messages -->
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -736,19 +841,18 @@
                 
                 {% block content %}{% endblock %}
                 
+                <!-- Footer (Streamlined for clean clinical SaaS look!) -->
+                <footer class="text-center text-muted py-2 border-top mt-4" style="background: transparent; box-shadow: none; border-top: 1px solid var(--border-color) !important;">
+                    <div class="container">
+                        <p class="mb-0" style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);">
+                            © 2026 Healthcare Claims Extraction Platform | All Rights Reserved
+                        </p>
+                    </div>
+                </footer>
+                
             </main>
         </div>
     </div>
-    
-    <!-- Footer -->
-    <footer class="text-center text-muted py-3 border-top">
-        <div class="container">
-            <p class="mb-0">
-                <strong>AI Engineering Hackathon 2026</strong> | Production-Ready Claims Extraction Platform | 
-                Hybrid OCR + LLM Pipeline | 90-95% Accuracy | $0.0094/page | 81% Cost Savings
-            </p>
-        </div>
-    </footer>
     
     <!-- Toast Container for Notifications -->
     <div class="toast-container"></div>
@@ -818,6 +922,64 @@
             
             toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
         }
+
+        // Sidebar Collapse/Expand & Floating Tooltips Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebarToggleBtn');
+            const wrapper = document.getElementById('appWrapper');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (toggleBtn) {
+                // Read collapsed state from localStorage so browser refresh seamlessly preserves it!
+                const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (isCollapsed) {
+                    wrapper.classList.add('sidebar-collapsed');
+                    toggleBtn.title = "Expand Menu";
+                    enableSidebarTooltips(true);
+                }
+                
+                toggleBtn.addEventListener('click', () => {
+                    const collapsed = wrapper.classList.toggle('sidebar-collapsed');
+                    localStorage.setItem('sidebarCollapsed', collapsed);
+                    
+                    if (collapsed) {
+                        toggleBtn.title = "Expand Menu";
+                        enableSidebarTooltips(true);
+                    } else {
+                        toggleBtn.title = "Collapse Menu";
+                        enableSidebarTooltips(false);
+                    }
+                    
+                    // Hide any active bootstrap tooltips immediately on click to prevent ghosting
+                    document.querySelectorAll('.tooltip').forEach(t => t.remove());
+                });
+            }
+            
+            function enableSidebarTooltips(enable) {
+                const links = document.querySelectorAll('.sidebar .nav-link');
+                links.forEach(link => {
+                    if (enable) {
+                        link.setAttribute('data-bs-toggle', 'tooltip');
+                        link.setAttribute('data-bs-placement', 'right');
+                        const text = link.querySelector('.nav-text')?.textContent.trim() || link.textContent.trim();
+                        link.setAttribute('title', text);
+                        
+                        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                            bootstrap.Tooltip.getOrCreateInstance(link);
+                        }
+                    } else {
+                        link.removeAttribute('data-bs-toggle');
+                        link.removeAttribute('data-bs-placement');
+                        link.removeAttribute('title');
+                        
+                        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                            const t = bootstrap.Tooltip.getInstance(link);
+                            if (t) t.dispose();
+                        }
+                    }
+                });
+            }
+        });
     </script>
     
     {% block extra_js %}{% endblock %}

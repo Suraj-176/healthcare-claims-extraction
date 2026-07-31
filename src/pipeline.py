@@ -19,6 +19,7 @@ import argparse
 import json
 import logging
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -153,6 +154,23 @@ def process_page(path: str, cost_tracker: CostTracker | None = None, min_confide
         result["llm_escalation"] = escalation
         if escalation.get("escalated"):
             path_taken = "llm_escalated"
+            
+            # PARSER & MERGER: Parse values out of LLM text response and merge into extraction fields
+            llm_text = escalation.get("llm_output", "")
+            if llm_text:
+                for word_obj in low_conf:
+                    field_name = word_obj["word"]
+                    # Matches "field_name: value" or "field_name = value"
+                    pattern = re.compile(rf"{field_name}\s*[:=]\s*([^\n\r]+)", re.IGNORECASE)
+                    match = pattern.search(llm_text)
+                    if match:
+                        val = match.group(1).strip().strip('`"\'* ')
+                        if val and val.lower() != 'n/a':
+                            extraction["fields"][field_name] = {
+                                "value": val,
+                                "confidence": 95.0,  # Elevated to high-confidence LLM source
+                                "source": "llm_escalated"
+                            }
 
     validation = validate_extraction(extraction)
     result["validation"] = validation

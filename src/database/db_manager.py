@@ -162,6 +162,21 @@ class DatabaseManager:
             )
             rows = cursor.fetchall()
             return [dict(row) for row in rows]
+            
+    def get_overall_application_logs(self, limit: int = 200) -> List[Dict[str, Any]]:
+        """Get system-wide application logs with associated filenames."""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT l.*, e.filename 
+                FROM logs l 
+                LEFT JOIN extractions e ON l.extraction_id = e.id 
+                ORDER BY l.timestamp DESC 
+                LIMIT ?
+            """, (limit,))
+            rows = cursor.fetchall()
+            return [dict(row) for row in rows]
     
     def get_stats(self, days: int = 7) -> Dict[str, Any]:
         """Get statistics for dashboard.

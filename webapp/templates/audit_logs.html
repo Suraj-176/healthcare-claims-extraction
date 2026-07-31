@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}Audit Logs - Healthcare Claims Extraction{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Truncation CSS styles to prevent table stretching and add beautiful visual eclipses */
+    .truncate-filename {
+        max-width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    .truncate-message {
+        max-width: 320px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Compact Premium Heading Row -->
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <div class="d-flex align-items-center gap-3">
+        <span class="d-inline-flex align-items-center justify-content-center" style="background: var(--primary-gradient); color: white; width: 44px; height: 44px; border-radius: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+            <i class="bi bi-terminal" style="font-size: 1.40rem; color: white !important;"></i>
+        </span>
+        <div>
+            <h4 class="mb-0" style="font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px;">System Audit Logs</h4>
+            <p class="text-muted small mb-0 d-none d-md-block">Browse and monitor system-wide operational transactions, processing stages, and platform event logs.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Highly Compact Horizontal Filter Bar -->
+<div class="card mb-4 shadow-sm" style="border-radius: 12px;">
+    <div class="card-body py-2 px-3">
+        <div class="row g-2 align-items-center">
+            <!-- Search Message -->
+            <div class="col-md-5">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white" style="border-right: none; border-radius: 8px 0 0 8px;"><i class="bi bi-search text-primary"></i></span>
+                    <input type="text" id="logSearch" class="form-control" placeholder="Search audit messages..." autocomplete="off" style="border-left: none; border-radius: 0 8px 8px 0; font-size: 0.85rem;">
+                </div>
+            </div>
+            
+            <!-- Level Filter -->
+            <div class="col-md-3">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="form-label mb-0 small text-nowrap" style="font-weight: 700; color: var(--text-secondary);">Level:</label>
+                    <select id="levelFilter" class="form-select form-select-sm" style="border-radius: 8px; font-size: 0.8rem; padding: 0.3rem 1.5rem 0.3rem 0.5rem; cursor: pointer;">
+                        <option value="">All Levels</option>
+                        <option value="info">INFO (Success)</option>
+                        <option value="warning">WARNING</option>
+                        <option value="error">ERROR</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Stage Filter -->
+            <div class="col-md-4">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="form-label mb-0 small text-nowrap" style="font-weight: 700; color: var(--text-secondary);">Stage:</label>
+                    <select id="stageFilter" class="form-select form-select-sm" style="border-radius: 8px; font-size: 0.8rem; padding: 0.3rem 1.5rem 0.3rem 0.5rem; cursor: pointer;">
+                        <option value="">All Stages</option>
+                        <option value="upload">UPLOAD</option>
+                        <option value="preprocessing">PREPROCESSING</option>
+                        <option value="classification">CLASSIFICATION</option>
+                        <option value="extraction">EXTRACTION</option>
+                        <option value="validation">VALIDATION</option>
+                        <option value="complete">COMPLETE</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logs Ledger Table Card (Header removed as requested!) -->
+<div class="card shadow-sm col-12" style="border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid var(--border-color) !important;">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle" id="logsTable" style="font-size: 0.85rem;">
+                <thead class="table-light">
+                    <tr>
+                        <th class="py-2 px-3" style="width: 15%;">Timestamp</th>
+                        <th class="py-2 px-2" style="width: 10%;">Level</th>
+                        <th class="py-2 px-2" style="width: 15%;">System Stage</th>
+                        <th class="py-2 px-2" style="width: 20%;">Related File</th>
+                        <th class="py-2 px-3" style="width: 40%;">Event Message Log</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if logs %}
+                        {% for log in logs %}
+                        <tr class="log-row" data-level="{{ log.level|lower }}" data-stage="{{ log.stage|lower }}">
+                            <td class="py-2 px-3 font-monospace text-secondary text-nowrap" style="font-family: monospace; white-space: nowrap;">{{ log.timestamp }}</td>
+                            <td class="py-2 px-2">
+                                {% if log.level == 'INFO' %}
+                                    <span class="badge bg-success" style="font-size: 0.65rem; padding: 0.2rem 0.5rem; font-weight: 700;">INFO</span>
+                                {% elif log.level == 'WARNING' %}
+                                    <span class="badge bg-warning text-dark" style="font-size: 0.65rem; padding: 0.2rem 0.5rem; font-weight: 700;">WARN</span>
+                                {% else %}
+                                    <span class="badge bg-danger" style="font-size: 0.65rem; padding: 0.2rem 0.5rem; font-weight: 700;">ERROR</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-2 px-2">
+                                <span class="badge bg-light text-dark border" style="font-size: 0.65rem; padding: 0.2rem 0.5rem; font-weight: 700; text-transform: uppercase;">
+                                    {{ log.stage }}
+                                </span>
+                            </td>
+                            <td class="py-2 px-2">
+                                {% if log.filename %}
+                                    <strong class="text-dark small truncate-filename" title="{{ log.filename }}"><i class="bi bi-file-earmark-medical"></i> {{ log.filename }}</strong>
+                                {% else %}
+                                    <small class="text-muted font-monospace" style="font-family: monospace;">SYSTEM</small>
+                                {% endif %}
+                            </td>
+                            <td class="py-2 px-3 text-dark fw-bold message-cell" style="word-break: break-all;"><span class="truncate-message" title="{{ log.message }}">{{ log.message }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-terminal-dash" style="font-size: 3rem; opacity: 0.3;"></i>
+                                <h6 class="mt-2 mb-0 fw-bold">No Event Log Records Found</h6>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Modern Pagination Controls -->
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top px-3 pb-3" id="logsPaginationControls" style="border-color: rgba(226,232,240,0.6) !important;">
+            <button type="button" class="btn btn-xs btn-outline-secondary" id="logsPrevBtn" disabled style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border-radius: 6px; font-weight: 600;">
+                <i class="bi bi-chevron-left"></i> Prev
+            </button>
+            <small class="text-muted" id="logsPageIndicator" style="font-size: 0.75rem; font-weight: 700;">Page 1 of 1</small>
+            <button type="button" class="btn btn-xs btn-outline-secondary" id="logsNextBtn" disabled style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border-radius: 6px; font-weight: 600;">
+                Next <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    console.log('🔵 audit_logs.html JS loaded successfully');
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('logSearch');
+        const levelSelector = document.getElementById('levelFilter');
+        const stageSelector = document.getElementById('stageFilter');
+        const rows = document.querySelectorAll('#logsTable tbody tr.log-row');
+        
+        let logsPage = 1;
+        const recordsPerPage = 10;
+        
+        function updateLogsPagination() {
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const levelVal = levelSelector ? levelSelector.value.toLowerCase() : '';
+            const stageVal = stageSelector ? stageSelector.value.toLowerCase() : '';
+            
+            let visibleRows = [];
+            
+            rows.forEach(row => {
+                const message = row.querySelector('.message-cell')?.textContent.toLowerCase() || '';
+                const rowLevel = row.getAttribute('data-level') || '';
+                const rowStage = row.getAttribute('data-stage') || '';
+                
+                const matchSearch = message.includes(searchTerm);
+                const matchLevel = levelVal === '' || rowLevel === levelVal;
+                const matchStage = stageVal === '' || rowStage === stageVal;
+                
+                if (matchSearch && matchLevel && matchStage) {
+                    visibleRows.push(row);
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            const filteredTotal = visibleRows.length;
+            const totalPages = Math.max(1, Math.ceil(filteredTotal / recordsPerPage));
+            
+            if (logsPage > totalPages) logsPage = totalPages;
+            if (logsPage < 1) logsPage = 1;
+            
+            visibleRows.forEach((row, idx) => {
+                const start = (logsPage - 1) * recordsPerPage;
+                const end = start + recordsPerPage;
+                
+                if (idx >= start && idx < end) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            const pageIndicator = document.getElementById('logsPageIndicator');
+            const prevBtn = document.getElementById('logsPrevBtn');
+            const nextBtn = document.getElementById('logsNextBtn');
+            
+            if (pageIndicator) {
+                pageIndicator.innerHTML = `Page <strong>${logsPage}</strong> of <strong>${totalPages}</strong> <span class="text-secondary mx-1">|</span> Total: <strong>${filteredTotal}</strong> events`;
+            }
+            if (prevBtn) prevBtn.disabled = logsPage === 1;
+            if (nextBtn) nextBtn.disabled = logsPage === totalPages;
+        }
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                logsPage = 1; // Reset to page 1 on search
+                updateLogsPagination();
+            });
+        }
+        if (levelSelector) {
+            levelSelector.addEventListener('change', () => {
+                logsPage = 1;
+                updateLogsPagination();
+            });
+        }
+        if (stageSelector) {
+            stageSelector.addEventListener('change', () => {
+                logsPage = 1;
+                updateLogsPagination();
+            });
+        }
+        
+        // Setup pagination buttons
+        const prevBtn = document.getElementById('logsPrevBtn');
+        const nextBtn = document.getElementById('logsNextBtn');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (logsPage > 1) {
+                    logsPage--;
+                    updateLogsPagination();
+                }
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+                const levelVal = levelSelector ? levelSelector.value.toLowerCase() : '';
+                const stageVal = stageSelector ? stageSelector.value.toLowerCase() : '';
+                
+                const filteredRows = Array.from(rows).filter(row => {
+                    const message = row.querySelector('.message-cell')?.textContent.toLowerCase() || '';
+                    const rowLevel = row.getAttribute('data-level') || '';
+                    const rowStage = row.getAttribute('data-stage') || '';
+                    return message.includes(searchTerm) && (levelVal === '' || rowLevel === levelVal) && (stageVal === '' || rowStage === stageVal);
+                });
+                
+                const totalPages = Math.max(1, Math.ceil(filteredRows.length / recordsPerPage));
+                if (logsPage < totalPages) {
+                    logsPage++;
+                    updateLogsPagination();
+                }
+            });
+        }
+        
+        // Run initial pagination
+        updateLogsPagination();
+        
+        // Initialize tooltips
+        document.querySelectorAll('[title]').forEach(el => {
+            el.setAttribute('data-bs-toggle', 'tooltip');
+        });
+        
+        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+    });
+</script>
+{% endblock %}

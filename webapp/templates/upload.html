@@ -8,122 +8,36 @@
         background: #F8FAFC;
     }
     
-    /* Modern Hero with Glass Effect */
-    .modern-hero {
-        position: relative;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 16px;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
-    }
-    
-    .modern-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-        opacity: 0.5;
-    }
-    
-    .modern-hero-content {
-        position: relative;
-        z-index: 1;
+    /* Compact Page Title and Icon */
+    .console-title-icon {
+        background: var(--primary-gradient);
         color: white;
-    }
-    
-    .modern-hero h1 {
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.5px;
-    }
-    
-    .modern-hero p {
-        font-size: 0.95rem;
-        opacity: 0.95;
-        margin-bottom: 0;
-    }
-    
-    .feature-badge {
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        width: 44px;
+        height: 44px;
         border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
     }
     
-    .feature-badge-label {
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        opacity: 0.9;
-        margin-bottom: 0.25rem;
-    }
-    
-    .feature-badge-value {
-        font-size: 1rem;
-        font-weight: 700;
-    }
-    
-    /* Minimal Tabs */
-    .minimal-tabs {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .minimal-tabs .nav-link {
-        border: none;
-        background: white;
-        color: #64748B;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        border-radius: 10px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    }
-    
-    .minimal-tabs .nav-link:hover {
-        color: #667eea;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(102, 126, 234, 0.15);
-    }
-    
-    .minimal-tabs .nav-link.active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
-    }
-    
-    /* Glass Card */
+    /* Solid Outline Glass Card */
     .glass-card {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: #FFFFFF;
+        border: 1px solid var(--border-color) !important; /* Fixed right/all border visibility */
         border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
         overflow: hidden;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .glass-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
     }
     
     /* Modern Dropzone */
     .modern-dropzone {
         border: 2px dashed #CBD5E1;
-        border-radius: 16px;
-        padding: 2.5rem 2rem;
+        border-radius: 12px;
+        padding: 1.5rem 1.5rem; /* Reduced padding from 2.5rem to 1.5rem */
         text-align: center;
         cursor: pointer;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -136,9 +50,9 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 200px;
-        height: 200px;
-        background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+        width: 140px; /* Reduced background radial pulse size */
+        height: 140px;
+        background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%);
         transform: translate(-50%, -50%);
         border-radius: 50%;
         transition: all 0.4s ease;
@@ -147,29 +61,16 @@
     .modern-dropzone:hover {
         border-color: #667eea;
         background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.05) 100%);
-        transform: scale(1.02);
-    }
-    
-    .modern-dropzone:hover::before {
-        width: 250px;
-        height: 250px;
-        opacity: 0.5;
-    }
-    
-    .modern-dropzone.dragover {
-        border-color: #667eea;
-        border-width: 3px;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.12) 0%, rgba(118, 75, 162, 0.08) 100%);
-        transform: scale(1.05);
+        transform: scale(1.01);
     }
     
     .dropzone-icon {
-        font-size: 3rem;
+        font-size: 1.85rem; /* Reduced font size from 3rem to 1.85rem */
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem; /* Reduced margin */
         display: block;
         position: relative;
         z-index: 1;
@@ -193,7 +94,7 @@
     
     /* Modern Button */
     .modern-btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--primary-gradient);
         border: none;
         border-radius: 10px;
         padding: 0.875rem 1.5rem;
@@ -201,33 +102,14 @@
         font-weight: 600;
         color: white;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.2);
         position: relative;
         overflow: hidden;
     }
     
-    .modern-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-        transition: left 0.5s;
-    }
-    
     .modern-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 16px 32px rgba(102, 126, 234, 0.45);
-    }
-    
-    .modern-btn:hover::before {
-        left: 100%;
-    }
-    
-    .modern-btn:active {
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(79, 70, 229, 0.3);
     }
     
     /* Stat Card */
@@ -238,12 +120,6 @@
         text-align: center;
         border: 1px solid #F1F5F9;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .stat-card-modern:hover {
-        border-color: #667eea;
-        transform: translateY(-4px);
-        box-shadow: 0 12px 32px rgba(102, 126, 234, 0.15);
     }
     
     .stat-label {
@@ -258,7 +134,7 @@
     .stat-value {
         font-size: 1.5rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--primary-gradient);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -270,129 +146,168 @@
         border-radius: 10px;
         background: #F1F5F9;
         overflow: hidden;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
     }
     
     .modern-progress-bar {
         height: 100%;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: var(--primary-gradient);
         border-radius: 10px;
         transition: width 0.3s ease;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
-    }
-    
-    /* Animations */
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-    }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.6; }
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    .float-animation {
-        animation: float 3s ease-in-out infinite;
-    }
-    
-    .pulse-animation {
-        animation: pulse 2s ease-in-out infinite;
-    }
-    
-    .spin-animation {
-        animation: spin 2s linear infinite;
-        display: inline-block;
     }
     
     /* Alert Box */
     .modern-alert {
-        background: rgba(102, 126, 234, 0.08);
-        border: 1px solid rgba(102, 126, 234, 0.2);
+        background: rgba(79, 70, 229, 0.05);
+        border: 1px solid rgba(79, 70, 229, 0.15);
         border-radius: 12px;
         padding: 1.25rem;
-        border-left: 4px solid #667eea;
+        border-left: 4px solid var(--primary-color);
     }
     
     /* Success Card */
     .success-header {
-        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        background: var(--success-gradient);
         color: white;
         padding: 1rem;
         border-radius: 16px 16px 0 0;
         font-size: 1.1rem;
         font-weight: 600;
     }
+    
+    /* Recent Uploads Table hover highlight transitions */
+    .recent-upload-link {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    
+    .recent-upload-link:hover {
+        background-color: rgba(79, 70, 229, 0.04) !important;
+    }
+    
+    .recent-upload-link:hover .filename-text {
+        color: var(--primary-color) !important;
+    }
+    
+    .recent-upload-link .chevron-icon {
+        opacity: 0.5;
+        transition: all 0.2s;
+        transform: translateX(-4px);
+    }
+    
+    .recent-upload-link:hover .chevron-icon {
+        opacity: 1;
+        transform: translateX(0);
+        color: var(--primary-color) !important;
+    }
+    
+    /* Flowchart Stage Connector Timeline (Matched to Option 2: Purple-Violet!) */
+    .pipeline-flow {
+        position: relative;
+        padding-left: 0.5rem;
+    }
+    
+    .pipeline-step {
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Dynamic connector line between flowchart nodes */
+    .pipeline-step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 16px; /* Centered with the 32px step-icon */
+        top: 32px;
+        bottom: -22px; /* Connects down to the next step */
+        width: 2px;
+        background: #E2E8F0;
+        z-index: 1;
+        transition: background 0.3s ease;
+    }
+    
+    /* Successful Step Connector Line glows solid purple-violet! */
+    .pipeline-step.step-success:not(:last-child)::after {
+        background: var(--primary-color) !important;
+        box-shadow: 0 0 8px rgba(109, 40, 217, 0.4);
+    }
+    
+    /* Active Step Connector Line is half-glowing */
+    .pipeline-step.step-active:not(:last-child)::after {
+        background: linear-gradient(180deg, var(--primary-color) 0%, #E2E8F0 100%);
+    }
+
+    /* Keyframes for spinning gears */
+    @keyframes spin-gear {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .spin-animation {
+        animation: spin-gear 2s linear infinite !important;
+    }
+    
+    /* Keyframes for active pulsing glow */
+    @keyframes pulse-node {
+        0% { box-shadow: 0 0 0 0 rgba(109, 40, 217, 0.4); }
+        70% { box-shadow: 0 0 0 8px rgba(109, 40, 217, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(109, 40, 217, 0); }
+    }
+    .pulse-animation {
+        animation: pulse-node 1.5s infinite;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- Modern Hero Section -->
-<div class="modern-hero">
-    <div class="modern-hero-content">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1>
-                    <i class="bi bi-cloud-upload-fill"></i> Upload & Process Claims
-                </h1>
-                <p>
-                    Intelligent healthcare claim extraction powered by hybrid OCR + AI technology.
-                </p>
-            </div>
-            <div class="col-lg-4">
-                <div class="feature-badge">
-                    <div class="feature-badge-label">Supported Formats</div>
-                    <div class="feature-badge-value">TIFF • PNG • JPG</div>
-                    <div style="font-size: 0.8rem; margin-top: 0.25rem; opacity: 0.9;">
-                        Max 50MB
-                    </div>
-                </div>
-            </div>
+<!-- Compact Premium Heading Row -->
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <div class="d-flex align-items-center gap-3">
+        <span class="d-inline-flex align-items-center justify-content-center console-title-icon">
+            <i class="bi bi-cloud-arrow-up" style="font-size: 1.40rem; color: white !important;"></i>
+        </span>
+        <div>
+            <h4 class="mb-0" style="font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px;">Claim Upload Console</h4>
+            <p class="text-muted small mb-0 d-none d-md-block">Intelligent healthcare claim extraction powered by hybrid OCR + AI technology.</p>
         </div>
     </div>
 </div>
 
-<!-- Minimal Tabs -->
-<ul class="nav minimal-tabs" role="tablist">
-    <li class="nav-item">
-        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#single-upload" type="button">
-            <i class="bi bi-file-earmark-medical"></i> Single File
-        </button>
-    </li>
-    <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#batch-upload" type="button">
-            <i class="bi bi-files"></i> Batch Upload
-        </button>
-    </li>
-</ul>
+<!-- Main Split-Screen Layout Grid -->
+<div class="row g-4 mb-4">
+    <!-- Left Column: Upload Panels -->
+    <div class="col-lg-7">
+        <!-- Compact Dropdown Type Selector -->
+        <div class="d-flex align-items-center gap-2 mb-4 p-2 shadow-sm bg-white" style="border-radius: 12px; border: 1px solid var(--border-color);">
+            <span class="d-inline-flex align-items-center justify-content-center ms-1" style="background: rgba(79, 70, 229, 0.08); color: var(--primary-color); width: 30px; height: 30px; border-radius: 6px;">
+                <i class="bi bi-gear-wide-connected" style="font-size: 1rem;"></i>
+            </span>
+            <label class="form-label mb-0 fw-bold text-dark" style="font-size: 0.85rem;">Upload Mode:</label>
+            <select class="form-select form-select-sm ms-auto" id="uploadTypeSelector" style="width: 180px; font-weight: 700; border-radius: 8px; border-color: #CBD5E1; cursor: pointer; font-size: 0.8rem; padding: 0.4rem 1rem;">
+                <option value="batch" selected>Batch Upload Files</option>
+                <option value="single">Single Claim File</option>
+            </select>
+        </div>
 
-<div class="tab-content">
-    
-    <!-- Single File Upload Tab -->
-    <div class="tab-pane fade show active" id="single-upload">
-        <div class="row g-4">
-            <div class="col-lg-7">
+        <div class="tab-content">
+            
+            <!-- Single File Upload Tab -->
+            <div class="tab-pane fade" id="single-upload">
                 <div class="glass-card" style="padding: 2rem;">
                     <div id="singleDropzone" class="modern-dropzone">
-                        <i class="bi bi-cloud-arrow-up-fill dropzone-icon"></i>
-                        <h3 class="dropzone-title">Drop your file here</h3>
-                        <p class="dropzone-subtitle">
-                            or click to browse<br>
-                            <strong>TIFF • PNG • JPG</strong> (Max 50MB)
-                        </p>
+                        <div class="d-flex flex-column align-items-center justify-content-center">
+                            <i class="bi bi-cloud-arrow-up-fill dropzone-icon" style="font-size: 1.5rem; margin-bottom: 0.25rem;"></i>
+                            <div style="font-size: 0.85rem; font-weight: 700; color: #1E293B;">Drag & Drop Claim File here</div>
+                            <small class="text-muted" style="font-size: 0.75rem; margin-top: 0.15rem;">or click to browse (TIFF • PNG • JPG, Max 50MB)</small>
+                        </div>
                         <input type="file" id="singleFileInput" accept=".tif,.tiff,.png,.jpg,.jpeg,.001,.002,.003,.004,.005,.006,.007,.008,.009,.010" style="display: none;">
                     </div>
                     
-                    <div id="singleFileName" class="mt-3 d-none">
-                        <div class="modern-alert">
-                            <strong><i class="bi bi-file-earmark-check-fill"></i> File Ready:</strong>
-                            <span id="selectedFileName" style="font-weight: 600; margin-left: 0.5rem;"></span>
+                    <div id="singleFileName" class="mt-2 d-none">
+                        <div class="d-flex justify-content-between align-items-center p-2" style="background: rgba(79, 70, 229, 0.04); border: 1px solid rgba(79, 70, 229, 0.15); border-radius: 8px; font-size: 0.75rem;">
+                            <div class="d-flex align-items-center gap-2" style="max-width: 80%;">
+                                <i class="bi bi-file-earmark-check text-primary" style="font-size: 0.85rem;"></i>
+                                <span class="text-dark text-truncate" style="font-weight: 600;" id="selectedFileName"></span>
+                            </div>
+                            <span class="badge" style="background: rgba(16, 185, 129, 0.08); color: #059669; border: 1px solid rgba(16, 185, 129, 0.15); font-size: 0.65rem; padding: 0.15rem 0.35rem; font-weight: 700;">Ready</span>
                         </div>
                     </div>
                     
@@ -401,7 +316,7 @@
                             <div class="modern-progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
                         </div>
                         <p class="text-center mt-3" style="color: #64748B;">
-                            <i class="bi bi-gear-fill spin-animation" style="color: #667eea;"></i> 
+                            <i class="bi bi-gear-fill spin-animation" style="color: var(--primary-color);"></i> 
                             <span style="font-weight: 600; margin-left: 0.5rem;">Processing with AI technology...</span>
                         </p>
                     </div>
@@ -410,13 +325,12 @@
                         <i class="bi bi-rocket-takeoff-fill"></i> Process File
                     </button>
                 </div>
-            </div>
-            
-            <div class="col-lg-5">
-                <div id="singleResult" class="d-none">
+
+                <!-- Single Result Card (rendered below uploader upon completion) -->
+                <div id="singleResult" class="d-none mt-4">
                     <div class="glass-card">
-                        <div class="success-header">
-                            <i class="bi bi-check-circle-fill"></i> Complete
+                        <div class="success-header" style="background: var(--success-gradient);">
+                            <i class="bi bi-check-circle-fill"></i> Processing Complete
                         </div>
                         <div style="padding: 1.5rem;">
                             <div class="row g-3 mb-3">
@@ -429,7 +343,7 @@
                                 <div class="col-6">
                                     <div class="stat-card-modern">
                                         <div class="stat-label">Form Type</div>
-                                        <div class="stat-value"><span id="resultFormType" class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 1rem;"></span></div>
+                                        <div class="stat-value"><span id="resultFormType" class="badge text-white" style="background: var(--primary-gradient); font-size: 1rem;"></span></div>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -440,22 +354,22 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="stat-card-modern">
-                                        <div class="stat-label">Cost</div>
-                                        <div class="stat-value" id="resultCost" style="font-size: 1.75rem;"></div>
+                                        <div class="stat-label">Blended Cost</div>
+                                        <div class="stat-value" id="resultCost" style="font-size: 1.75rem; color: var(--success-color);"></div>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="modern-alert" style="margin-bottom: 1rem;">
-                                <i class="bi bi-clock-fill" style="color: #667eea;"></i>
-                                <strong style="margin-left: 0.5rem;">Time:</strong> <span id="resultTime"></span>s
+                                <i class="bi bi-clock-fill" style="color: var(--primary-color);"></i>
+                                <strong style="margin-left: 0.5rem;">Processing Time:</strong> <span id="resultTime"></span>s
                             </div>
                             
                             <div class="d-grid gap-2">
                                 <button class="btn modern-btn" onclick="viewDetails()">
                                     <i class="bi bi-eye-fill"></i> View Details
                                 </button>
-                                <button class="btn btn-outline-primary" onclick="downloadResult()" style="border-width: 2px; border-color: #667eea; color: #667eea; font-weight: 600; padding: 0.75rem; border-radius: 12px; transition: all 0.3s;">
+                                <button class="btn btn-outline-primary" onclick="downloadResult()" style="border-width: 2px; border-color: var(--primary-color); color: var(--primary-color); font-weight: 600; padding: 0.75rem; border-radius: 12px; transition: all 0.3s;">
                                     <i class="bi bi-download"></i> Download JSON
                                 </button>
                                 <button class="btn btn-outline-secondary" onclick="resetUpload()" style="border-width: 2px; color: #64748B; font-weight: 600; padding: 0.75rem; border-radius: 12px; transition: all 0.3s;">
@@ -466,87 +380,244 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Batch Upload Tab -->
-    <div class="tab-pane fade" id="batch-upload">
-        <div class="glass-card" style="padding: 2rem;">
-            <div id="batchDropzone" class="modern-dropzone">
-                <i class="bi bi-cloud-arrow-up-fill dropzone-icon"></i>
-                <h3 class="dropzone-title">Drop your files here</h3>
-                <p class="dropzone-subtitle">
-                    or click to browse<br>
-                    <strong>TIFF • PNG • JPG</strong> (Max 50MB each)
-                </p>
-                <input type="file" id="batchFileInput" multiple accept=".tif,.tiff,.png,.jpg,.jpeg,.001,.002,.003,.004,.005,.006,.007,.008,.009,.010" style="display: none;">
-            </div>
-                
-                <div id="batchFileList" class="mt-3 d-none">
-                <div class="modern-alert" style="margin-bottom: 1rem;">
-                    <strong style="color: #667eea;"><i class="bi bi-files"></i> Files Selected: <span id="batchFileCount">0</span></strong>
-                </div>
-                <div id="fileListContainer" class="list-group mb-3"></div>
-            </div>
             
-            <button id="batchUploadBtn" class="btn w-100 d-none modern-btn" style="margin-top: 1rem;">
-                <i class="bi bi-rocket-takeoff-fill"></i> Process All Files
-            </button>
-            
-            <div id="batchProgress" class="mt-3 d-none">
-                <h6 style="color: #667eea; font-weight: 700; margin-bottom: 1rem;">
-                    <i class="bi bi-gear-fill spin-animation"></i> Processing Batch
-                </h6>
-                <div class="modern-progress mb-3">
-                    <div id="batchProgressBar" class="modern-progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
-                </div>
-                <p class="text-center" style="color: #64748B; font-weight: 600;">
-                    <span id="batchProgressText">Processing files...</span>
-                </p>
-                </div>
-                
-<div id="batchResults" class="mt-3 d-none">
-                <h5 class="mb-3" style="color: #1E293B; font-weight: 700;">
-                    <i class="bi bi-clipboard-check-fill" style="color: #667eea;"></i> Batch Results
-                </h5>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-3">
-                        <div class="stat-card-modern">
-                            <div class="stat-label">Total Files</div>
-                            <div class="stat-value" id="batchTotal">0</div>
+            <!-- Batch Upload Tab -->
+            <div class="tab-pane fade" id="batch-upload">
+                <div class="glass-card" style="padding: 2rem;">
+                    <div id="batchDropzone" class="modern-dropzone">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
+                            <i class="bi bi-cloud-arrow-up-fill dropzone-icon" style="font-size: 1.5rem; margin-bottom: 0.25rem;"></i>
+                            <div style="font-size: 0.85rem; font-weight: 700; color: #1E293B;">Drag & Drop Claim Files here</div>
+                            <small class="text-muted" style="font-size: 0.75rem; margin-top: 0.15rem;">or click to browse (TIFF • PNG • JPG, Max 50MB each)</small>
                         </div>
+                        <input type="file" id="batchFileInput" multiple accept=".tif,.tiff,.png,.jpg,.jpeg,.001,.002,.003,.004,.005,.006,.007,.008,.009,.010" style="display: none;">
                     </div>
-                    <div class="col-md-3">
-                        <div class="stat-card-modern">
-                            <div class="stat-label">Successful</div>
-                            <div class="stat-value" id="batchSuccess" style="color: #10B981;">0</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card-modern">
-                            <div class="stat-label">Total Cost</div>
-                            <div class="stat-value" id="batchTotalCost" style="color: #F59E0B;">$0.00</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card-modern">
-                            <div class="stat-label">Avg Time</div>
-                            <div class="stat-value" id="batchAvgTime" style="color: #3B82F6;">0s</div>
+                        
+                    <div id="batchFileList" class="mt-3 d-none">
+                        <!-- Compact Status Row placing the Process button beside the File Selected indicator -->
+                        <div class="d-flex justify-content-between align-items-center mb-3 p-2 bg-light shadow-sm" style="border-radius: 10px; border: 1px solid var(--border-color);">
+                            <div class="ms-2">
+                                <strong style="color: var(--text-primary); font-size: 0.85rem;">
+                                    <i class="bi bi-files text-primary"></i> Files Selected: 
+                                    <span id="batchFileCount" class="badge bg-primary ms-1" style="font-size: 0.8rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 6px;">0</span>
+                                </strong>
+                            </div>
+                            <div>
+                                <button id="batchUploadBtn" class="btn btn-primary btn-sm fw-bold" style="border-radius: 8px; font-size: 0.8rem; padding: 0.4rem 1.25rem; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);">
+                                    <i class="bi bi-rocket-takeoff-fill"></i> Process All Files
+                                </button>
                             </div>
                         </div>
+                        <div id="fileListContainer" class="list-group mb-3" style="max-height: 220px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding-right: 4px;"></div>
                     </div>
                     
-                <div class="glass-card" style="padding: 1.5rem;">
-                    <div id="batchResultsList" class="list-group"></div>
-                    
-                    <button class="btn w-100 mt-3 modern-btn" onclick="viewAllResults()">
-                        <i class="bi bi-table"></i> View All Results
-                    </button>
+                    <div id="batchProgress" class="mt-3 d-none">
+                        <h6 style="color: var(--primary-color); font-weight: 700; margin-bottom: 1rem;">
+                            <i class="bi bi-gear-fill spin-animation"></i> Processing Batch
+                        </h6>
+                        <div class="modern-progress mb-3">
+                            <div id="batchProgressBar" class="modern-progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <p class="text-center" style="color: #64748B; font-weight: 600;">
+                            <span id="batchProgressText">Processing files...</span>
+                        </p>
+                    </div>
+                        
+                    <div id="batchResults" class="mt-3 d-none">
+                        <h5 class="mb-3" style="color: #1E293B; font-weight: 700;">
+                            <i class="bi bi-clipboard-check-fill" style="color: var(--primary-color);"></i> Batch Results
+                        </h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-3">
+                                <div class="stat-card-modern">
+                                    <div class="stat-label">Total Files</div>
+                                    <div class="stat-value" id="batchTotal">0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card-modern">
+                                    <div class="stat-label">Successful</div>
+                                    <div class="stat-value" id="batchSuccess" style="color: #10B981;">0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card-modern">
+                                    <div class="stat-label">Total Cost</div>
+                                    <div class="stat-value" id="batchTotalCost" style="color: #F59E0B;">$0.00</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card-modern">
+                                    <div class="stat-label">Avg Time</div>
+                                    <div class="stat-value" id="batchAvgTime" style="color: #3B82F6;">0s</div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <div class="glass-card" style="padding: 1.5rem;">
+                            <div id="batchResultsList" class="list-group" style="max-height: 240px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding-right: 4px; margin-bottom: 1rem;"></div>
+                            
+                            <button class="btn w-100 modern-btn" onclick="viewAllResults()">
+                                <i class="bi bi-table"></i> View All Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Right Column: AI Extraction Steps Pipeline -->
+    <div class="col-lg-5">
+        <!-- AI Pipeline Status Monitor -->
+        <div class="glass-card h-100" style="padding: 1.5rem; border-left: 4px solid var(--primary-color);">
+            <h5 class="mb-3" style="font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px;">
+                <i class="bi bi-cpu" style="color: var(--primary-color);"></i> AI Extraction Pipeline
+            </h5>
+            <div class="pipeline-flow">
+                <div class="pipeline-step mb-3 d-flex align-items-center gap-3" id="step-prep" style="transition: all 0.3s;">
+                    <span class="step-icon d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; color: #64748B; font-weight: 700; font-size: 0.85rem; border: 1px solid #E2E8F0; transition: all 0.3s;">
+                        1
+                    </span>
+                    <div>
+                        <strong class="step-title d-block" style="font-size: 0.85rem; color: #475569; transition: all 0.2s;">Image Preprocessing</strong>
+                        <small class="step-desc text-muted" style="font-size: 0.75rem;">Deskew, denoise, and binarize scanned file</small>
+                    </div>
+                </div>
+                <div class="pipeline-step mb-3 d-flex align-items-center gap-3" id="step-class" style="transition: all 0.3s;">
+                    <span class="step-icon d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; color: #64748B; font-weight: 700; font-size: 0.85rem; border: 1px solid #E2E8F0; transition: all 0.3s;">
+                        2
+                    </span>
+                    <div>
+                        <strong class="step-title d-block" style="font-size: 0.85rem; color: #475569; transition: all 0.2s;">Form Classification</strong>
+                        <small class="step-desc text-muted" style="font-size: 0.75rem;">Identify form layout (CMS-1500, UB-04, etc.)</small>
+                    </div>
+                </div>
+                <div class="pipeline-step mb-3 d-flex align-items-center gap-3" id="step-ocr" style="transition: all 0.3s;">
+                    <span class="step-icon d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; color: #64748B; font-weight: 700; font-size: 0.85rem; border: 1px solid #E2E8F0; transition: all 0.3s;">
+                        3
+                    </span>
+                    <div>
+                        <strong class="step-title d-block" style="font-size: 0.85rem; color: #475569; transition: all 0.2s;">Spatial Anchor OCR</strong>
+                        <small class="step-desc text-muted" style="font-size: 0.75rem;">Locate anchors and extract basic text coordinates</small>
+                    </div>
+                </div>
+                <div class="pipeline-step mb-3 d-flex align-items-center gap-3" id="step-llm" style="transition: all 0.3s;">
+                    <span class="step-icon d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; color: #64748B; font-weight: 700; font-size: 0.85rem; border: 1px solid #E2E8F0; transition: all 0.3s;">
+                        4
+                    </span>
+                    <div>
+                        <strong class="step-title d-block" style="font-size: 0.85rem; color: #475569; transition: all 0.2s;">AI Force-Escalation</strong>
+                        <small class="step-desc text-muted" style="font-size: 0.75rem;">Route noisy, numeric, or tabular fields to Vision LLM</small>
+                    </div>
+                </div>
+                <div class="pipeline-step mb-3 d-flex align-items-center gap-3" id="step-rules" style="transition: all 0.3s;">
+                    <span class="step-icon d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; color: #64748B; font-weight: 700; font-size: 0.85rem; border: 1px solid #E2E8F0; transition: all 0.3s;">
+                        5
+                    </span>
+                    <div>
+                        <strong class="step-title d-block" style="font-size: 0.85rem; color: #475569; transition: all 0.2s;">Business Rule Validation</strong>
+                        <small class="step-desc text-muted" style="font-size: 0.75rem;">Format checking and charge total sum validation</small>
+                    </div>
+                </div>
+                <div class="pipeline-step d-flex align-items-center gap-3" id="step-db" style="transition: all 0.3s;">
+                    <span class="step-icon d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; color: #64748B; font-weight: 700; font-size: 0.85rem; border: 1px solid #E2E8F0; transition: all 0.3s;">
+                        6
+                    </span>
+                    <div>
+                        <strong class="step-title d-block" style="font-size: 0.85rem; color: #475569; transition: all 0.2s;">SQLite Storage & Log</strong>
+                        <small class="step-desc text-muted" style="font-size: 0.75rem;">Persist structured record & step audit logs to DB</small>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
+</div>
+
+<!-- Bottom Section: Full-Width Recent Cases Table Dashboard (using full space of below!) -->
+<div class="row">
+    <div class="col-12">
+        <div class="glass-card p-4" style="box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0" style="font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px;">
+                    <i class="bi bi-clock-history" style="color: var(--primary-color);"></i> Recent Upload Cases Log
+                </h5>
+                <span class="badge" style="background: rgba(79, 70, 229, 0.1) !important; color: var(--primary-color) !important; border: 1px solid rgba(79, 70, 229, 0.15) !important; font-weight: 700;">All Historical Sessions</span>
+            </div>
+            
+            <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Claim Filename</th>
+                            <th>Upload Date / Time</th>
+                            <th>Form Type</th>
+                            <th>Confidence</th>
+                            <th>Cost</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentUploadsList">
+                        {% if recent %}
+                            {% for ext in recent %}
+                                {% set tier_map = {
+                                    'tier_a': 'CMS-1500',
+                                    'tier_b': 'CMS-1500+Attach',
+                                    'tier_c': 'UB-04',
+                                    'tier_d': 'Separator',
+                                    'unknown_layout': 'Unknown'
+                                } %}
+                                <tr class="recent-upload-link" onclick="window.location.href='/results?id={{ ext.id }}'" style="cursor: pointer;">
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="bi bi-file-earmark-text text-primary" style="font-size: 1.15rem;"></i>
+                                            <strong class="filename-text text-dark" style="font-size: 0.85rem;">{{ ext.filename }}</strong>
+                                        </div>
+                                    </td>
+                                    <td><small class="text-secondary">{{ ext.upload_date }}</small></td>
+                                    <td>
+                                        <span class="badge" style="background: rgba(79, 70, 229, 0.08); color: var(--primary-color); border: 1px solid rgba(79, 70, 229, 0.1); font-weight: 700;">{{ tier_map[ext.form_type] or ext.form_type }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2" style="width: 140px;">
+                                            <div class="progress flex-grow-1" style="height: 6px; background-color: #E2E8F0;">
+                                                <div class="progress-bar {% if ext.mean_confidence > 75 %}bg-success{% elif ext.mean_confidence > 50 %}bg-warning{% else %}bg-danger{% endif %}" style="width: {{ ext.mean_confidence }}%"></div>
+                                            </div>
+                                            <small class="fw-bold">{{ "%.1f"|format(ext.mean_confidence) }}%</small>
+                                        </div>
+                                    </td>
+                                    <td><strong style="color: var(--success-color); font-size: 0.85rem;">${{ "%.4f"|format(ext.cost) }}</strong></td>
+                                    <td>
+                                        <a href="/results?id={{ ext.id }}" class="btn btn-xs btn-outline-primary py-1 px-2 fw-bold" style="font-size: 0.75rem; border-radius: 6px;">
+                                            Explore <i class="bi bi-chevron-right chevron-icon" style="font-size: 0.7rem;"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr id="emptyStateRow">
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    <small>No recent extractions found</small>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Modern Pagination Controls -->
+            <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top" id="paginationControls" style="border-color: rgba(226,232,240,0.6) !important;">
+                <button type="button" class="btn btn-xs btn-outline-secondary" id="prevPageBtn" disabled style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border-radius: 6px; font-weight: 600;">
+                    <i class="bi bi-chevron-left"></i> Prev
+                </button>
+                <small class="text-muted" id="pageIndicator" style="font-size: 0.75rem; font-weight: 700;">Page 1 of 1</small>
+                <button type="button" class="btn btn-xs btn-outline-secondary" id="nextPageBtn" disabled style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border-radius: 6px; font-weight: 600;">
+                    Next <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
@@ -554,8 +625,280 @@
 {% block extra_js %}
 <script>
     let currentExtraction = null;
+    let selectedBatchFiles = []; // Track selected batch files for removal support
+
+    function removeBatchFile(index) {
+        selectedBatchFiles.splice(index, 1);
+        renderBatchFiles();
+    }
+    let pipelineIntervals = [];
+
+    // Pipeline Step Handlers (Updated for high-fidelity Purple Flowchart!)
+    function resetPipelineSteps() {
+        pipelineIntervals.forEach(id => clearInterval(id));
+        pipelineIntervals = [];
+        
+        const steps = ['step-prep', 'step-class', 'step-ocr', 'step-llm', 'step-rules', 'step-db'];
+        steps.forEach((id, idx) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.remove('step-active', 'step-success', 'step-error');
+                const icon = el.querySelector('.step-icon');
+                if (icon) {
+                    icon.classList.remove('pulse-animation');
+                    icon.style.background = '#F1F5F9';
+                    icon.style.color = '#64748B';
+                    icon.innerHTML = idx + 1;
+                    icon.style.boxShadow = 'none';
+                }
+                const title = el.querySelector('.step-title');
+                if (title) {
+                    title.style.color = '#475569';
+                    title.style.fontWeight = 'normal';
+                }
+            }
+        });
+    }
+
+    function setStepStatus(id, status) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const icon = el.querySelector('.step-icon');
+        const title = el.querySelector('.step-title');
+        
+        // Reset classes first
+        el.classList.remove('step-active', 'step-success', 'step-error');
+        if (icon) icon.classList.remove('pulse-animation');
+        
+        if (status === 'active') {
+            el.classList.add('step-active');
+            if (icon) {
+                icon.classList.add('pulse-animation');
+                icon.style.background = 'var(--primary-gradient)';
+                icon.style.color = 'white';
+                icon.innerHTML = '<i class="bi bi-gear-fill spin-animation" style="color: white !important;"></i>';
+                icon.style.boxShadow = '0 0 12px rgba(109, 40, 217, 0.4)';
+            }
+            if (title) {
+                title.style.color = 'var(--primary-color)';
+                title.style.fontWeight = '700';
+            }
+        } else if (status === 'success') {
+            el.classList.add('step-success');
+            if (icon) {
+                icon.style.background = 'var(--success-gradient)';
+                icon.style.color = 'white';
+                icon.innerHTML = '<i class="bi bi-check-lg" style="color: white !important;"></i>';
+                icon.style.boxShadow = 'none';
+            }
+            if (title) {
+                title.style.color = 'var(--success-color)';
+                title.style.fontWeight = '700';
+            }
+        } else if (status === 'error') {
+            el.classList.add('step-error');
+            if (icon) {
+                icon.style.background = 'var(--danger-gradient)';
+                icon.style.color = 'white';
+                icon.innerHTML = '<i class="bi bi-exclamation-triangle-fill" style="color: white !important;"></i>';
+                icon.style.boxShadow = 'none';
+            }
+            if (title) {
+                title.style.color = 'var(--danger-color)';
+                title.style.fontWeight = '700';
+            }
+        }
+    }
+
+    function animatePipeline() {
+        resetPipelineSteps();
+        
+        const steps = ['step-prep', 'step-class', 'step-ocr', 'step-llm', 'step-rules', 'step-db'];
+        let currentIdx = 0;
+        
+        setStepStatus(steps[0], 'active');
+        
+        const interval = setInterval(() => {
+            if (currentIdx < steps.length - 1) {
+                setStepStatus(steps[currentIdx], 'success');
+                currentIdx++;
+                setStepStatus(steps[currentIdx], 'active');
+            } else {
+                clearInterval(interval);
+            }
+        }, 1200);
+        
+        pipelineIntervals.push(interval);
+    }
+
+    function completeAllPipelineSteps() {
+        pipelineIntervals.forEach(id => clearInterval(id));
+        pipelineIntervals = [];
+        
+        const steps = ['step-prep', 'step-class', 'step-ocr', 'step-llm', 'step-rules', 'step-db'];
+        steps.forEach(id => {
+            setStepStatus(id, 'success');
+        });
+    }
+
+    function failCurrentPipelineStep() {
+        pipelineIntervals.forEach(id => clearInterval(id));
+        pipelineIntervals = [];
+        
+        const steps = ['step-prep', 'step-class', 'step-ocr', 'step-llm', 'step-rules', 'step-db'];
+        steps.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.querySelector('.step-icon').innerHTML.includes('spin-animation')) {
+                setStepStatus(id, 'error');
+            }
+        });
+    }
     
-    // Single File Upload
+    // Recent Uploads - Client Side Pagination
+    let recentPage = 1;
+    const recordsPerPage = 5;
+    
+    function updateRecentPagination() {
+        const list = document.getElementById('recentUploadsList');
+        if (!list) return;
+        
+        const items = Array.from(list.getElementsByClassName('recent-upload-link'));
+        const totalItems = items.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / recordsPerPage));
+        
+        if (recentPage > totalPages) recentPage = totalPages;
+        if (recentPage < 1) recentPage = 1;
+        
+        items.forEach((item, idx) => {
+            const start = (recentPage - 1) * recordsPerPage;
+            const end = start + recordsPerPage;
+            if (idx >= start && idx < end) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        document.getElementById('pageIndicator').textContent = `Page ${recentPage} of ${totalPages}`;
+        document.getElementById('prevPageBtn').disabled = recentPage === 1;
+        document.getElementById('nextPageBtn').disabled = recentPage === totalPages;
+    }
+    
+    // Dynamic prepend of newly processed file
+    function prependRecentUpload(data) {
+        const list = document.getElementById('recentUploadsList');
+        if (!list) return;
+        
+        if (list.innerHTML.includes('No recent extractions found')) {
+            list.innerHTML = '';
+        }
+        
+        // Cap list elements: we only paginate what's fetched (up to 50 max)
+        if (list.children.length >= 50) {
+            list.removeChild(list.lastElementChild);
+        }
+        
+        const tierMap = {
+            'tier_a': 'CMS-1500',
+            'tier_b': 'CMS-1500+Attach',
+            'tier_c': 'UB-04',
+            'tier_d': 'Separator',
+            'unknown_layout': 'Unknown'
+        };
+        
+        const dateStr = new Date().toLocaleString();
+        const confBarClass = data.confidence > 75 ? 'bg-success' : data.confidence > 50 ? 'bg-warning' : 'bg-danger';
+        
+        const newRow = document.createElement('tr');
+        newRow.className = 'recent-upload-link';
+        newRow.style.cursor = 'pointer';
+        newRow.onclick = function() {
+            window.location.href = `/results?id=${data.extraction_id}`;
+        };
+        
+        newRow.innerHTML = `
+            <td>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-file-earmark-text text-primary" style="font-size: 1.15rem;"></i>
+                    <strong class="filename-text text-dark" style="font-size: 0.85rem;">${data.filename}</strong>
+                </div>
+            </td>
+            <td><small class="text-secondary">${dateStr}</small></td>
+            <td>
+                <span class="badge" style="background: rgba(79, 70, 229, 0.08); color: var(--primary-color); border: 1px solid rgba(79, 70, 229, 0.1); font-weight: 700;">${tierMap[data.tier] || data.tier}</span>
+            </td>
+            <td>
+                <div class="d-flex align-items-center gap-2" style="width: 140px;">
+                    <div class="progress flex-grow-1" style="height: 6px; background-color: #E2E8F0;">
+                        <div class="progress-bar ${confBarClass}" style="width: ${data.confidence}%"></div>
+                    </div>
+                    <small class="fw-bold">${data.confidence.toFixed(1)}%</small>
+                </div>
+            </td>
+            <td><strong style="color: var(--success-color); font-size: 0.85rem;">$${data.cost.toFixed(4)}</strong></td>
+            <td>
+                <a href="/results?id=${data.extraction_id}" class="btn btn-xs btn-outline-primary py-1 px-2 fw-bold" style="font-size: 0.75rem; border-radius: 6px;">
+                    Explore <i class="bi bi-chevron-right chevron-icon" style="font-size: 0.7rem;"></i>
+                </a>
+            </td>
+        `;
+        
+        list.insertBefore(newRow, list.firstChild);
+        
+        // Reset to page 1 and paginate
+        recentPage = 1;
+        updateRecentPagination();
+    }
+    
+    // Page load initialization
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeSelector = document.getElementById('uploadTypeSelector');
+        const singlePane = document.getElementById('single-upload');
+        const batchPane = document.getElementById('batch-upload');
+        
+        // Force initial tab visibility synchronization with the select box default state
+        if (typeSelector) {
+            if (typeSelector.value === 'single') {
+                singlePane.classList.add('show', 'active');
+                batchPane.classList.remove('show', 'active');
+            } else {
+                batchPane.classList.add('show', 'active');
+                singlePane.classList.remove('show', 'active');
+            }
+        }
+        
+        // Handle upload type dropdown select toggling
+        if (typeSelector) {
+            typeSelector.addEventListener('change', function(e) {
+                if (e.target.value === 'single') {
+                    singlePane.classList.add('show', 'active');
+                    batchPane.classList.remove('show', 'active');
+                } else {
+                    batchPane.classList.add('show', 'active');
+                    singlePane.classList.remove('show', 'active');
+                }
+                resetPipelineSteps();
+            });
+        }
+        
+        // Setup pagination buttons
+        document.getElementById('prevPageBtn').addEventListener('click', () => {
+            if (recentPage > 1) {
+                recentPage--;
+                updateRecentPagination();
+            }
+        });
+        
+        document.getElementById('nextPageBtn').addEventListener('click', () => {
+            recentPage++;
+            updateRecentPagination();
+        });
+        
+        // Run initial pagination
+        updateRecentPagination();
+    });
+
+    // Single File Upload Variables
     const singleDropzone = document.getElementById('singleDropzone');
     const singleFileInput = document.getElementById('singleFileInput');
     const singleFileName = document.getElementById('singleFileName');
@@ -593,6 +936,7 @@
             singleFileName.classList.remove('d-none');
             uploadBtn.classList.remove('d-none');
             singleResult.classList.add('d-none');
+            resetPipelineSteps();
         }
     }
     
@@ -602,6 +946,7 @@
         
         uploadBtn.disabled = true;
         singleProgress.classList.remove('d-none');
+        animatePipeline();
         
         const formData = new FormData();
         formData.append('file', file);
@@ -616,19 +961,32 @@
             
             if (data.success) {
                 currentExtraction = data;
-                displaySingleResult(data);
+                completeAllPipelineSteps();
                 showToast('File processed successfully!', 'success');
+                
+                // Show a clean success alert on left side
+                document.getElementById('singleFileName').innerHTML = `
+                    <div class="modern-alert" style="background: rgba(16, 185, 129, 0.08); border-left: 4px solid #10B981; border-color: rgba(16, 185, 129, 0.2);">
+                        <strong style="color: #059669;"><i class="bi bi-check-circle-fill"></i> Processing Successful!</strong><br>
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">
+                            File <strong>${data.filename}</strong> has been extracted. Click the item in the <strong>Recent Uploads</strong> list on the right to explore its full details.
+                        </span>
+                    </div>
+                `;
+                
+                prependRecentUpload(data);
+                uploadBtn.classList.add('d-none');
             } else {
-                // Check if it's a duplicate file error
+                failCurrentPipelineStep();
                 if (data.duplicate) {
-                    showToast('⚠️ Duplicate File: ' + data.error, 'warning');
-                    // Reset the form so user can select a different file
+                    showToast('⚠️ Duplicate File: ' + data.error, 'danger');
                     resetUpload();
                 } else {
                     showToast('Error: ' + data.error, 'danger');
                 }
             }
         } catch (error) {
+            failCurrentPipelineStep();
             showToast('Upload failed: ' + error.message, 'danger');
         } finally {
             uploadBtn.disabled = false;
@@ -676,19 +1034,7 @@
         currentExtraction = null;
     }
     
-    function viewDetails() {
-        if (currentExtraction) {
-            window.location.href = `/results?id=${currentExtraction.extraction_id}`;
-        }
-    }
-    
-    function downloadResult() {
-        if (currentExtraction) {
-            window.location.href = `/api/extraction/${currentExtraction.extraction_id}/export`;
-        }
-    }
-    
-    // Batch Upload
+    // Batch Upload Variables
     const batchDropzone = document.getElementById('batchDropzone');
     const batchFileInput = document.getElementById('batchFileInput');
     const batchFileList = document.getElementById('batchFileList');
@@ -721,28 +1067,53 @@
     batchFileInput.addEventListener('change', handleBatchFileSelect);
     
     function handleBatchFileSelect() {
-        const files = Array.from(batchFileInput.files);
-        if (files.length === 0) return;
+        const newFiles = Array.from(batchFileInput.files);
+        if (newFiles.length === 0) return;
         
-        batchFileCount.textContent = files.length;
+        newFiles.forEach(file => {
+            if (!selectedBatchFiles.some(f => f.name === file.name)) {
+                selectedBatchFiles.push(file);
+            }
+        });
+        
+        // Clear the native file input value so that the change listener triggers every single time,
+        // allowing seamless file additions from different folders without overriding!
+        batchFileInput.value = '';
+        
+        renderBatchFiles();
+    }
+    
+    function renderBatchFiles() {
+        if (selectedBatchFiles.length === 0) {
+            batchFileList.classList.add('d-none');
+            batchUploadBtn.classList.add('d-none');
+            return;
+        }
+        
+        batchFileCount.textContent = selectedBatchFiles.length;
         batchFileList.classList.remove('d-none');
         batchUploadBtn.classList.remove('d-none');
         batchResults.classList.add('d-none');
         
-        fileListContainer.innerHTML = files.map((file, i) => `
-            <div class="list-group-item d-flex justify-content-between align-items-center" style="border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid #E5E7EB;">
-                <div>
-                    <i class="bi bi-file-earmark-check-fill" style="color: #667eea;"></i> 
-                    <strong>${file.name}</strong>
-                    <small class="text-muted ms-2">(${(file.size / 1024).toFixed(1)} KB)</small>
+        fileListContainer.innerHTML = selectedBatchFiles.map((file, i) => `
+            <div class="list-group-item d-flex justify-content-between align-items-center" style="border-radius: 6px; margin-bottom: 0.25rem; border: 1px solid var(--border-color); padding: 0.35rem 0.65rem; background: #FFFFFF; font-size: 0.75rem;">
+                <div class="d-flex align-items-center gap-2" style="max-width: 70%;">
+                    <i class="bi bi-file-earmark-arrow-up text-primary" style="font-size: 0.85rem;"></i> 
+                    <span class="text-dark text-truncate" style="font-weight: 600;">${file.name}</span>
+                    <span class="text-muted">(${(file.size / 1024).toFixed(1)} KB)</span>
                 </div>
-                <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Ready</span>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.08); color: #059669; border: 1px solid rgba(16, 185, 129, 0.15); font-size: 0.65rem; padding: 0.15rem 0.35rem; font-weight: 700;">Ready</span>
+                    <button type="button" class="btn btn-xs btn-link text-danger p-0 ms-1" onclick="removeBatchFile(${i})" title="Remove File" style="font-size: 0.85rem; border: none; background: transparent; line-height: 1; cursor: pointer;">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
         `).join('');
     }
     
     batchUploadBtn.addEventListener('click', async () => {
-        const files = Array.from(batchFileInput.files);
+        const files = selectedBatchFiles;
         if (files.length === 0) return;
         
         batchUploadBtn.disabled = true;
@@ -760,6 +1131,7 @@
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             progressText.textContent = `Processing ${i + 1} of ${total}: ${file.name}`;
+            animatePipeline();
             
             const formData = new FormData();
             formData.append('file', file);
@@ -778,7 +1150,10 @@
                         status: 'success',
                         ...data
                     });
+                    completeAllPipelineSteps();
+                    prependRecentUpload(data);
                 } else {
+                    failCurrentPipelineStep();
                     results.push({
                         filename: file.name,
                         status: data.duplicate ? 'duplicate' : 'error',
@@ -787,12 +1162,10 @@
                     });
                 }
             } catch (error) {
+                failCurrentPipelineStep();
                 results.push({
                     filename: file.name,
                     status: 'error',
-                    error: error.message
-                });
-            }
                     error: error.message
                 });
             }
@@ -840,31 +1213,45 @@
         };
         
         document.getElementById('batchResultsList').innerHTML = results.map(r => {
-            let icon, statusColor, details;
+            let icon, bgStyle, borderLeft, details;
             
             if (r.status === 'success') {
-                icon = '<i class="bi bi-check-circle-fill" style="color: #10B981;"></i>';
+                icon = '<i class="bi bi-check-circle-fill" style="color: #10B981; font-size: 1.15rem;"></i>';
+                bgStyle = 'background: rgba(16, 185, 129, 0.03);';
+                borderLeft = 'border-left: 4px solid #10B981;';
                 details = `
-                    <div class="d-flex gap-3 flex-wrap">
-                        <small style="color: #667eea;"><i class="bi bi-file-earmark-medical"></i> ${tierMap[r.tier] || r.tier}</small>
-                        <small class="text-muted"><i class="bi bi-speedometer2"></i> ${r.confidence.toFixed(1)}%</small>
-                        <small class="text-muted"><i class="bi bi-currency-dollar"></i> ${r.cost.toFixed(4)}</small>
-                        <small class="text-muted"><i class="bi bi-clock"></i> ${r.processing_time.toFixed(1)}s</small>
+                    <div class="d-flex gap-3 flex-wrap mt-1" style="font-size: 0.75rem;">
+                        <small class="fw-bold text-primary"><i class="bi bi-file-earmark-medical"></i> ${tierMap[r.tier] || r.tier}</small>
+                        <small class="text-muted"><i class="bi bi-speedometer2"></i> <strong>${r.confidence.toFixed(1)}%</strong> confidence</small>
+                        <small class="text-muted"><i class="bi bi-currency-dollar"></i> <strong>$${r.cost.toFixed(4)}</strong></small>
+                        <small class="text-muted"><i class="bi bi-clock"></i> <strong>${r.processing_time.toFixed(1)}s</strong></small>
                     </div>
                 `;
             } else if (r.status === 'duplicate') {
-                icon = '<i class="bi bi-exclamation-triangle-fill" style="color: #F59E0B;"></i>';
-                details = `<small style="color: #F59E0B;"><i class="bi bi-files"></i> ${r.error || 'File already processed'}</small>`;
+                icon = '<i class="bi bi-exclamation-triangle-fill" style="color: #F59E0B; font-size: 1.15rem;"></i>';
+                bgStyle = 'background: rgba(245, 158, 11, 0.03);';
+                borderLeft = 'border-left: 4px solid #F59E0B;';
+                details = `
+                    <div style="font-size: 0.75rem; color: #D97706;" class="mt-1">
+                        <i class="bi bi-files"></i> Skip: Claim file <strong>${r.filename}</strong> has already been processed. See results page.
+                    </div>
+                `;
             } else {
-                icon = '<i class="bi bi-x-circle-fill" style="color: #EF4444;"></i>';
-                details = `<small class="text-danger"><i class="bi bi-exclamation-circle"></i> ${r.error || 'Processing failed'}</small>`;
+                icon = '<i class="bi bi-x-circle-fill" style="color: #EF4444; font-size: 1.15rem;"></i>';
+                bgStyle = 'background: rgba(239, 68, 68, 0.03);';
+                borderLeft = 'border-left: 4px solid #EF4444;';
+                details = `
+                    <div style="font-size: 0.75rem; color: #DC2626;" class="mt-1 fw-bold">
+                        <i class="bi bi-exclamation-circle-fill"></i> Fail: ${r.error || 'Processing encountered layout classification or server escalation timeout.'}
+                    </div>
+                `;
             }
             
             return `
-            <div class="list-group-item" style="border-radius: 8px; margin-bottom: 0.75rem; border: 1px solid #E5E7EB;">
+            <div class="list-group-item p-3" style="border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid var(--border-color); ${bgStyle} ${borderLeft}">
                 <div class="d-flex justify-content-between align-items-start">
                     <div class="flex-grow-1">
-                        <h6 class="mb-2">
+                        <h6 class="mb-1 d-flex align-items-center gap-2" style="font-weight: 700; color: var(--text-primary); font-size: 0.85rem;">
                             ${icon}
                             <strong>${r.filename}</strong>
                         </h6>
@@ -874,8 +1261,6 @@
             </div>
             `;
         }).join('');
-            </div>
-        `).join('');
     }
     
     function viewAllResults() {

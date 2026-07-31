@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block title %}Claim Data - Healthcare Claims Extraction{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Truncation CSS styles to prevent table stretching and add beautiful visual eclipses */
+    .truncate-filename {
+        max-width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    .truncate-name {
+        max-width: 140px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    .truncate-cell {
+        max-width: 110px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Compact Premium Heading Row -->
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <div class="d-flex align-items-center gap-3">
+        <span class="d-inline-flex align-items-center justify-content-center" style="background: var(--primary-gradient); color: white; width: 44px; height: 44px; border-radius: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+            <i class="bi bi-file-earmark-medical" style="font-size: 1.40rem; color: white !important;"></i>
+        </span>
+        <div>
+            <h4 class="mb-0" style="font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px;">Claim Data Grid</h4>
+            <p class="text-muted small mb-0 d-none d-md-block">Browse and audit 100% of captured billing fields across all processed claims inside a massive, spreadsheet-style ledger.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Highly Compact Horizontal Filter Bar & Export Row -->
+<div class="card mb-4 shadow-sm" style="border-radius: 12px;">
+    <div class="card-body py-2 px-3">
+        <div class="d-flex align-items-center gap-2">
+            <!-- Search Message -->
+            <div class="flex-grow-1">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white" style="border-right: none; border-radius: 8px 0 0 8px;"><i class="bi bi-search text-primary"></i></span>
+                    <input type="text" id="gridSearchInput" class="form-control" placeholder="Search claims dataset (filename, patient name, DOB, ID, NPI, charges...)" autocomplete="off" style="border-left: none; border-radius: 0 8px 8px 0; font-size: 0.85rem;">
+                </div>
+            </div>
+            <!-- Export Dataset Button side-by-side with Search -->
+            {% if claims %}
+            <button onclick="exportClaimsGrid()" class="btn btn-sm btn-outline-primary" title="Export Claims Dataset to CSV" style="border-radius: 8px; padding: 0.35rem 0.65rem; height: 31px; display: inline-flex; align-items: center; justify-content: center;">
+                <i class="bi bi-download"></i>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Claims Master Data Grid Table Card (Header removed as requested!) -->
+<div class="card shadow-sm col-12" style="border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid var(--border-color) !important;">
+    <div class="card-body p-0">
+        {% if claims %}
+        <div class="table-responsive" style="overflow-x: auto; max-height: 420px; overflow-y: auto;">
+            <table class="table table-hover mb-0 align-middle text-start" id="claimsGridTable" style="font-size: 0.825rem; min-width: 1400px; vertical-align: middle;">
+                <thead class="table-light">
+                    <tr>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 50px;">ID</th>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 180px;">Filename</th>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 100px;">Form Type</th>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 150px;">Patient Name</th>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 100px;">Patient DOB</th>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 130px;">Member ID</th>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 110px;">Group ID</th>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 150px;">Billing Physician</th>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 100px;">Provider NPI</th>
+                        <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 120px;">ICD-10 Diag</th>
+                        <th class="py-2 px-2 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 100px;">Charges</th>
+                        <th class="py-2 px-2 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 100px;">Platform Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in claims %}
+                    <tr class="grid-row">
+                        <td class="py-2 px-2" style="height: 38px;"><small class="text-muted fw-bold">#{{ c.id }}</small></td>
+                        <td class="py-2 px-2" style="height: 38px;">
+                            <strong class="text-dark filename-text truncate-filename" title="{{ c.filename }}">{{ c.filename }}</strong>
+                        </td>
+                        <td class="py-2 px-2" style="height: 38px;">
+                            <span class="badge" style="background: rgba(79, 70, 229, 0.1); color: var(--primary-color); border: 1px solid rgba(79, 70, 229, 0.15); font-weight: 700; height: 22px; display: inline-flex; align-items: center;">{{ c.form_type }}</span>
+                        </td>
+                        <td class="py-2 px-2" style="height: 38px;">
+                            <strong class="truncate-name" title="{{ c.patient_name }}">{{ c.patient_name }}</strong>
+                        </td>
+                        <td class="py-2 px-2" style="height: 38px;">
+                            <span class="truncate-cell text-secondary font-monospace" title="{{ c.patient_dob }}" style="font-family: monospace;">{{ c.patient_dob }}</span>
+                        </td>
+                        <td class="py-2 px-2" style="height: 38px;"><span class="truncate-cell font-monospace fw-bold" title="{{ c.insured_id }}" style="font-family: monospace;">{{ c.insured_id }}</span></td>
+                        <td class="py-2 px-2" style="height: 38px;"><span class="truncate-cell font-monospace text-secondary" title="{{ c.group_number }}" style="font-family: monospace;">{{ c.group_number }}</span></td>
+                        <td class="py-2 px-2" style="height: 38px;">
+                            <strong class="truncate-name" title="{{ c.physician_name }}">{{ c.physician_name }}</strong>
+                        </td>
+                        <td class="py-2 px-2" style="height: 38px;"><span class="truncate-cell font-monospace fw-bold" title="{{ c.npi }}" style="font-family: monospace;">{{ c.npi }}</span></td>
+                        <td class="py-2 px-2" style="height: 38px;">
+                            <span class="truncate-cell" title="{{ c.diagnosis_codes }}">
+                                {% if c.diagnosis_codes and c.diagnosis_codes != 'N/A' %}
+                                    <span class="badge" style="background: rgba(100, 116, 139, 0.1); color: #475569; border: 1px solid rgba(100, 116, 139, 0.15); font-weight: 700; font-size: 0.7rem; height: 18px; display: inline-flex; align-items: center;">{{ c.diagnosis_codes }}</span>
+                                {% else %}
+                                    <small class="text-muted">N/A</small>
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td class="py-2 px-2 text-end font-monospace fw-bold text-primary" style="height: 38px; font-family: monospace;">
+                            <span class="truncate-cell" title="{% if c.total_charge and c.total_charge != 'N/A' %}${{ c.total_charge }}{% else %}N/A{% endif %}">
+                                {% if c.total_charge and c.total_charge != 'N/A' %}
+                                    ${{ c.total_charge }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td class="py-2 px-2 text-end font-monospace fw-bold text-success" style="height: 38px; font-family: monospace;">
+                            <span class="truncate-cell" title="${{ "%.4f"|format(c.cost) }}">${{ "%.4f"|format(c.cost) }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Modern Pagination Controls (Fully visual-matched to upload.html!) -->
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top px-3 pb-3" id="gridPaginationControls" style="border-color: rgba(226,232,240,0.6) !important;">
+            <button type="button" class="btn btn-xs btn-outline-secondary" id="gridPrevBtn" disabled style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border-radius: 6px; font-weight: 600;">
+                <i class="bi bi-chevron-left"></i> Prev
+            </button>
+            <small class="text-muted" id="gridPageIndicator" style="font-size: 0.75rem; font-weight: 700;">Page 1 of 1</small>
+            <button type="button" class="btn btn-xs btn-outline-secondary" id="gridNextBtn" disabled style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border-radius: 6px; font-weight: 600;">
+                Next <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 3.5rem; color: #cbd5e1;"></i>
+            <h5 class="mt-3" style="color: var(--text-primary); font-weight: 700;">No Captured Claims Found</h5>
+            <p class="text-muted small">Please upload and process claims on the Upload page to build your master database grid.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    console.log('🔵 claim_data.html Grid JS loaded successfully');
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('gridSearchInput');
+        const rows = document.querySelectorAll('#claimsGridTable tbody tr.grid-row');
+        const totalItems = rows.length;
+        
+        // Claims Grid - Client Side Pagination
+        let gridPage = 1;
+        const recordsPerPage = 10;
+        
+        function updateGridPagination() {
+            // Apply filtering logic alongside pagination
+            const term = searchInput ? searchInput.value.toLowerCase() : '';
+            let visibleRows = [];
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(term)) {
+                    visibleRows.push(row);
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            const filteredTotal = visibleRows.length;
+            const totalPages = Math.max(1, Math.ceil(filteredTotal / recordsPerPage));
+            
+            if (gridPage > totalPages) gridPage = totalPages;
+            if (gridPage < 1) gridPage = 1;
+            
+            visibleRows.forEach((row, idx) => {
+                const start = (gridPage - 1) * recordsPerPage;
+                const end = start + recordsPerPage;
+                
+                if (idx >= start && idx < end) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            const pageIndicator = document.getElementById('gridPageIndicator');
+            const prevBtn = document.getElementById('gridPrevBtn');
+            const nextBtn = document.getElementById('gridNextBtn');
+            
+            if (pageIndicator) {
+                pageIndicator.innerHTML = `Page <strong>${gridPage}</strong> of <strong>${totalPages}</strong> <span class="text-secondary mx-1">|</span> Total: <strong>${filteredTotal}</strong> claims`;
+            }
+            if (prevBtn) prevBtn.disabled = gridPage === 1;
+            if (nextBtn) nextBtn.disabled = gridPage === totalPages;
+        }
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                gridPage = 1; // Reset to page 1 on active typing search
+                updateGridPagination();
+            });
+        }
+        
+        // Setup pagination buttons
+        const prevBtn = document.getElementById('gridPrevBtn');
+        const nextBtn = document.getElementById('gridNextBtn');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (gridPage > 1) {
+                    gridPage--;
+                    updateGridPagination();
+                }
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const term = searchInput ? searchInput.value.toLowerCase() : '';
+                const filteredRows = Array.from(rows).filter(r => r.textContent.toLowerCase().includes(term));
+                const totalPages = Math.max(1, Math.ceil(filteredRows.length / recordsPerPage));
+                if (gridPage < totalPages) {
+                    gridPage++;
+                    updateGridPagination();
+                }
+            });
+        }
+        
+        // Run initial pagination
+        updateGridPagination();
+        
+        // Initialize tooltips
+        document.querySelectorAll('[title]').forEach(el => {
+            el.setAttribute('data-bs-toggle', 'tooltip');
+        });
+        
+        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+    });
+    
+    function exportClaimsGrid() {
+        const rows = document.querySelectorAll('#claimsGridTable tbody tr.grid-row');
+        if (rows.length === 0) {
+            showToast('No claims dataset to export', 'warning');
+            return;
+        }
+        
+        let csv = 'ID,Filename,Form Type,Patient Name,Patient DOB,Member ID,Group ID,Billing Physician,NPI,ICD-10,Total Charges ($),Platform Cost ($)\n';
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const id = cells[0].textContent.trim().replace('#', '');
+            const filename = cells[1].textContent.trim();
+            const formType = cells[2].textContent.trim();
+            const patientName = cells[3].textContent.trim();
+            const patientDob = cells[4].textContent.trim();
+            const memberId = cells[5].textContent.trim();
+            const groupId = cells[6].textContent.trim();
+            const physician = cells[7].textContent.trim();
+            const npi = cells[8].textContent.trim();
+            const icd10 = cells[9].textContent.trim();
+            const charges = cells[10].textContent.trim().replace('$', '');
+            const cost = cells[11].textContent.trim().replace('$', '');
+            
+            csv += `${id},"${filename}","${formType}","${patientName}","${patientDob}","${memberId}","${groupId}","${physician}","${npi}","${icd10}",${charges},${cost}\n`;
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `claims_master_dataset_grid_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        showToast('Claims Master Dataset Grid exported successfully', 'success');
+    }
+</script>
+{% endblock %}

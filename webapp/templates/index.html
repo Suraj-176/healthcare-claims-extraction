@@ -4,40 +4,53 @@
 
 {% block extra_css %}
 <style>
-    .hero-section {
-        background: linear-gradient(135deg, #0066FF 0%, #00A3FF 100%) !important;
-        border-radius: 1rem;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        color: white !important;
-        box-shadow: 0 8px 24px rgba(0, 102, 255, 0.3);
+    /* Custom Range Slider Overrides (Matched to Amethyst Orchid!) */
+    #volumeSlider {
+        -webkit-appearance: none;
+        background: transparent;
     }
-    .hero-section h2 {
-        font-weight: 700 !important;
-        margin-bottom: 0.5rem;
-        color: white !important;
+    #volumeSlider::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 8px;
+        background: #E2E8F0;
+        border-radius: 4px;
+        border: 1px solid var(--border-color);
     }
+    #volumeSlider::-webkit-slider-thumb {
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: var(--primary-gradient);
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -6px;
+        box-shadow: 0 0 10px rgba(109, 40, 217, 0.4);
+        border: 2px solid white;
+        transition: transform 0.1s ease;
     }
-    .hero-section p {
-        opacity: 0.95;
-        font-size: 1.1rem;
+    #volumeSlider::-webkit-slider-thumb:hover {
+        transform: scale(1.15);
     }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<div class="hero-section">
-    <div class="d-flex justify-content-between align-items-center">
+<!-- Compact Premium Heading Row -->
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <div class="d-flex align-items-center gap-3">
+        <span class="d-inline-flex align-items-center justify-content-center" style="background: var(--primary-gradient); color: white; width: 44px; height: 44px; border-radius: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+            <i class="bi bi-speedometer2" style="font-size: 1.40rem; color: white !important;"></i>
+        </span>
         <div>
-            <h2 style="color: white; font-weight: 700;"><i class="bi bi-speedometer2"></i> Claims Extraction Dashboard</h2>
-            <p class="mb-0" style="color: white; opacity: 0.95;">Real-time pipeline performance &bull; Hybrid OCR + LLM Technology</p>
+            <h4 class="mb-0" style="font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px;">Extraction Dashboard</h4>
+            <p class="text-muted small mb-0 d-none d-md-block">Real-time pipeline performance, accuracy metrics, and blended cost summaries.</p>
         </div>
-        <div>
-            <a href="{{ url_for('upload_page') }}" class="btn btn-light btn-lg">
-                <i class="bi bi-cloud-upload"></i> Upload Files
-            </a>
-        </div>
+    </div>
+    <div>
+        <a href="{{ url_for('upload_page') }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-cloud-upload"></i> Upload Files
+        </a>
     </div>
 </div>
 
@@ -76,6 +89,66 @@
             <h6><i class="bi bi-check-circle"></i> Success Rate</h6>
             <div class="value">{{ "%.1f"|format(stats.success_rate) }}%</div>
             <div class="text-muted delta">Successful extractions</div>
+        </div>
+    </div>
+</div>
+
+<!-- Interactive ROI Calculator Card (High visibility, matched to Amethyst Orchid!) -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm" style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color) !important;">
+            <div class="card-header d-flex justify-content-between align-items-center" style="background: #F8FAFC; border-bottom: 1px solid var(--border-color);">
+                <span class="fw-bold text-dark" style="font-size: 0.9rem;"><i class="bi bi-calculator text-primary"></i> Interactive ROI & Cost Savings Calculator</span>
+                <span class="badge" style="background: rgba(109, 40, 217, 0.1) !important; color: var(--primary-color) !important; border: 1px solid rgba(109, 40, 217, 0.15) !important; font-weight: 700; font-size: 0.65rem;">Real-time Estimation</span>
+            </div>
+            <div class="card-body p-3">
+                <div class="row align-items-center g-3">
+                    <!-- Left: Slider Volume Control -->
+                    <div class="col-md-5 border-end pe-md-4">
+                        <label for="volumeSlider" class="form-label fw-bold mb-2 d-flex justify-content-between align-items-center" style="color: var(--text-secondary); font-size: 0.8rem;">
+                            <span>ESTIMATED MONTHLY CLAIMS VOLUME</span>
+                            <span class="fs-6 fw-extrabold text-primary" id="volumeDisplay" style="font-family: monospace;">5,000 pages</span>
+                        </label>
+                        <input type="range" class="form-range" id="volumeSlider" min="1000" max="100000" step="1000" value="5000" style="cursor: pointer; height: 6px;">
+                        <div class="d-flex justify-content-between text-muted small mt-2 fw-bold" style="font-size: 0.65rem;">
+                            <span>1,000 pages</span>
+                            <span>100,000 pages</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Comparative Metrics Cards -->
+                    <div class="col-md-7 ps-md-4">
+                        <div class="row g-2">
+                            <!-- Column 1: Manual cost -->
+                            <div class="col-sm-4">
+                                <div class="p-2 bg-light rounded text-center border" style="border-style: dashed !important; border-color: #cbd5e1 !important;">
+                                    <small class="text-muted d-block fw-bold mb-1" style="font-size: 0.625rem; text-transform: uppercase;">Manual Entry Cost</small>
+                                    <h5 class="mb-0 text-dark fw-extrabold" id="manualCostDisplay" style="font-family: monospace; font-size: 1.15rem;">$250.00</h5>
+                                    <small class="text-muted" style="font-size: 0.6rem;">@ $0.050/page</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Column 2: AI Cost -->
+                            <div class="col-sm-4">
+                                <div class="p-2 rounded text-center border" style="background: rgba(109, 40, 217, 0.03); border-color: rgba(109, 40, 217, 0.15) !important;">
+                                    <small class="d-block fw-bold mb-1" style="font-size: 0.625rem; text-transform: uppercase; color: var(--primary-color);">Platform AI Cost</small>
+                                    <h5 class="mb-0 fw-extrabold" id="aiCostDisplay" style="color: var(--primary-color); font-family: monospace; font-size: 1.15rem;">$47.00</h5>
+                                    <small style="font-size: 0.6rem; color: var(--primary-color);">@ ${{"%.4f"|format(stats.avg_cost if stats.avg_cost > 0 else 0.0094)}}/page</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Column 3: Savings -->
+                            <div class="col-sm-4">
+                                <div class="p-2 rounded text-center border" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2) !important;">
+                                    <small class="text-success d-block fw-bold mb-1" style="font-size: 0.625rem; text-transform: uppercase;">Monthly Savings</small>
+                                    <h5 class="mb-0 text-success fw-bolder" id="savingsDisplay" style="font-family: monospace; font-size: 1.15rem;">$203.00</h5>
+                                    <small class="text-success fw-bold" style="font-size: 0.6rem;">{{ "%.1f"|format(((0.050 - (stats.avg_cost if stats.avg_cost > 0 else 0.0094)) / 0.050 * 100)) }}% Reduction!</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -154,6 +227,40 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 DOM loaded, initializing charts...');
     
+    // --- INTERACTIVE ROI CALCULATOR LOGIC ---
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volumeDisplay = document.getElementById('volumeDisplay');
+    const manualCostDisplay = document.getElementById('manualCostDisplay');
+    const aiCostDisplay = document.getElementById('aiCostDisplay');
+    const savingsDisplay = document.getElementById('savingsDisplay');
+    
+    // Average cost passed from template stats (or default to $0.0094)
+    const platformCostRate = {{ stats.avg_cost if stats.avg_cost > 0 else 0.0094 }};
+    const manualCostRate = 0.050; // $0.050 per page manual baseline cost
+    
+    function calculateSavings() {
+        if (!volumeSlider) return;
+        const volume = parseInt(volumeSlider.value);
+        
+        // Format volume number nicely (e.g. 5,000)
+        if (volumeDisplay) volumeDisplay.textContent = volume.toLocaleString('en-US') + ' pages';
+        
+        const manualCost = volume * manualCostRate;
+        const aiCost = volume * platformCostRate;
+        const savings = manualCost - aiCost;
+        
+        // Update display nodes with formatted currency
+        if (manualCostDisplay) manualCostDisplay.textContent = '$' + manualCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        if (aiCostDisplay) aiCostDisplay.textContent = '$' + aiCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        if (savingsDisplay) savingsDisplay.textContent = '$' + savings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    
+    if (volumeSlider) {
+        volumeSlider.addEventListener('input', calculateSavings);
+        // Run initial calculations
+        calculateSavings();
+    }
+    
     // Check if Chart.js is loaded
     if (typeof Chart === 'undefined') {
         console.error('❌ Chart.js is not loaded!');
@@ -205,8 +312,8 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const costCtx = costCanvas.getContext('2d');
             const costGradient = costCtx.createLinearGradient(0, 0, 0, 300);
-            costGradient.addColorStop(0, 'rgba(0, 163, 255, 0.3)');
-            costGradient.addColorStop(1, 'rgba(0, 163, 255, 0.01)');
+            costGradient.addColorStop(0, 'rgba(109, 40, 217, 0.3)');
+            costGradient.addColorStop(1, 'rgba(109, 40, 217, 0.01)');
             
             new Chart(costCtx, {
                 type: 'line',
@@ -215,13 +322,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     datasets: [{
                         label: 'Cost per Extraction',
                         data: costs,
-                        borderColor: '#00A3FF',
+                        borderColor: '#8B5CF6',
                         backgroundColor: costGradient,
                         fill: true,
                         tension: 0.4,
                         borderWidth: 3,
                         pointRadius: 4,
-                        pointBackgroundColor: '#00A3FF',
+                        pointBackgroundColor: '#8B5CF6',
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2,
                         pointHoverRadius: 6

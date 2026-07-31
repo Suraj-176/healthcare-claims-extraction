@@ -2,24 +2,89 @@
 
 {% block title %}Settings - Healthcare Claims Extraction{% endblock %}
 
+{% block extra_css %}
+<style>
+    body {
+        background: #F8FAFC;
+    }
+    
+    /* Custom Modern Range Slider (Fixes invisibility issues) */
+    .form-range {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        width: 100% !important;
+        height: 6px !important;
+        border-radius: 10px !important;
+        background: #E2E8F0 !important; /* Highly visible light grey track */
+        outline: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .form-range::-webkit-slider-thumb {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        width: 18px !important;
+        height: 18px !important;
+        border-radius: 50% !important;
+        background: var(--primary-color) !important; /* Premium Indigo thumb */
+        border: 2px solid #FFFFFF !important;
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35) !important;
+        transition: transform 0.15s ease-in-out !important;
+    }
+    
+    .form-range::-webkit-slider-thumb:hover {
+        transform: scale(1.2) !important;
+    }
+    
+    .form-range::-moz-range-thumb {
+        width: 18px !important;
+        height: 18px !important;
+        border-radius: 50% !important;
+        background: var(--primary-color) !important; /* Premium Indigo thumb */
+        border: 2px solid #FFFFFF !important;
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35) !important;
+        transition: transform 0.15s ease-in-out !important;
+        cursor: pointer !important;
+    }
+    
+    .form-range::-moz-range-thumb:hover {
+        transform: scale(1.2) !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
-<h2 class="mb-4"><i class="bi bi-gear text-primary"></i> Configuration & Settings</h2>
+<!-- Compact Premium Heading Row -->
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <div class="d-flex align-items-center gap-3">
+        <span class="d-inline-flex align-items-center justify-content-center" style="background: var(--primary-gradient); color: white; width: 44px; height: 44px; border-radius: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+            <i class="bi bi-gear" style="font-size: 1.40rem; color: white !important;"></i>
+        </span>
+        <div>
+            <h4 class="mb-0" style="font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px;">System Configuration</h4>
+            <p class="text-muted small mb-0 d-none d-md-block">Manage LLM models, confidence thresholds, force-escalation triggers, and database preferences.</p>
+        </div>
+    </div>
+</div>
 
-<div class="row">
+<div class="row g-4">
     <div class="col-md-8">
         
         <!-- LLM Provider Settings -->
-        <div class="card mb-4">
+        <div class="card mb-4 shadow-sm" style="border-radius: 12px;">
             <div class="card-header">
                 <i class="bi bi-cpu"></i> LLM Provider Configuration
             </div>
             <div class="card-body">
-                <p class="text-muted">Select which LLM provider to use for field escalation. The system auto-detects available providers based on environment variables.</p>
+                <p class="text-muted small">Select which LLM provider to use for field escalation. The system auto-detects available providers based on environment variables.</p>
                 
                 <div class="mb-3">
-                    <label class="form-label">LLM Provider</label>
-                    <select id="llmProvider" class="form-select">
+                    <label class="form-label fw-bold small">LLM Provider</label>
+                    <select id="llmProvider" class="form-select form-select-sm" style="border-radius: 8px;">
                         <option value="auto" {% if settings.llm_provider == 'auto' %}selected{% endif %}>Auto (recommended)</option>
                         <option value="azure_openai" {% if settings.llm_provider == 'azure_openai' %}selected{% endif %}>Azure OpenAI</option>
                         <option value="openai" {% if settings.llm_provider == 'openai' %}selected{% endif %}>OpenAI</option>
@@ -28,39 +93,39 @@
                         <option value="groq" {% if settings.llm_provider == 'groq' %}selected{% endif %}>Groq</option>
                         <option value="ollama" {% if settings.llm_provider == 'ollama' %}selected{% endif %}>Ollama (Local)</option>
                     </select>
-                    <div class="form-text">
+                    <div class="form-text small">
                         'Auto' will try providers in priority order: Azure OpenAI → OpenAI → Gemini → Anthropic → Groq → Ollama
                     </div>
                 </div>
                 
-                <h6 class="mt-4">Provider Status</h6>
-                <div class="list-group list-group-flush">
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-microsoft"></i> Azure OpenAI</span>
+                <h6 class="mt-4 fw-bold small">Provider Status</h6>
+                <div class="list-group list-group-flush small">
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span><i class="bi bi-microsoft text-primary"></i> Azure OpenAI</span>
                         {% if env_status.azure_openai %}
                             <span class="badge bg-success">✓ Configured</span>
                         {% else %}
                             <span class="badge bg-secondary">✗ Not configured</span>
                         {% endif %}
                     </div>
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-lightning"></i> OpenAI</span>
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span><i class="bi bi-lightning text-warning"></i> OpenAI</span>
                         {% if env_status.openai %}
                             <span class="badge bg-success">✓ Configured</span>
                         {% else %}
                             <span class="badge bg-secondary">✗ Not configured</span>
                         {% endif %}
                     </div>
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-google"></i> Google Gemini</span>
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span><i class="bi bi-google text-info"></i> Google Gemini</span>
                         {% if env_status.gemini %}
                             <span class="badge bg-success">✓ Configured</span>
                         {% else %}
                             <span class="badge bg-secondary">✗ Not configured</span>
                         {% endif %}
                     </div>
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-robot"></i> Anthropic Claude</span>
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span><i class="bi bi-robot text-danger"></i> Anthropic Claude</span>
                         {% if env_status.anthropic %}
                             <span class="badge bg-success">✓ Configured</span>
                         {% else %}
@@ -71,86 +136,62 @@
             </div>
         </div>
         
-        <!-- Extraction Settings -->
-        <div class="card mb-4">
+        <!-- Extraction Configuration (Full Width in Left Column) -->
+        <div class="card mb-4 shadow-sm" style="border-radius: 12px;">
             <div class="card-header">
                 <i class="bi bi-sliders"></i> Extraction Configuration
             </div>
             <div class="card-body">
-                <div class="mb-4">
-                    <label class="form-label">Confidence Threshold for LLM Escalation</label>
-                    <input type="range" class="form-range" id="confidenceThreshold" 
-                           min="0" max="100" step="5" value="{{ settings.confidence_threshold }}">
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">0%</span>
-                        <span id="thresholdValue" class="badge bg-primary">{{ settings.confidence_threshold|int }}%</span>
-                        <span class="text-muted">100%</span>
+                <div class="row g-3">
+                    <div class="col-md-6 border-end" style="border-color: var(--border-color) !important;">
+                        <div class="mb-3 me-2">
+                            <label class="form-label fw-bold small">Confidence Threshold</label>
+                            <input type="range" class="form-range" id="confidenceThreshold" 
+                                   min="0" max="100" step="5" value="{{ settings.confidence_threshold }}">
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted small">0%</span>
+                                <span id="thresholdValue" class="badge bg-primary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">{{ settings.confidence_threshold|int }}%</span>
+                                <span class="text-muted small">100%</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-text mt-2">
-                        Fields with OCR confidence below this threshold will be escalated to LLM processing.
-                        Lower = more LLM usage (higher accuracy, higher cost).
+                    
+                    <div class="col-md-6">
+                        <div class="ms-2">
+                            <h6 class="fw-bold small mb-2">Force Escalation Rules</h6>
+                            <div class="form-check form-switch mb-2 small">
+                                <input class="form-check-input" type="checkbox" id="forceServiceLines" 
+                                       {% if settings.force_escalate_service_lines %}checked{% endif %}>
+                                <label class="form-check-label" for="forceServiceLines">
+                                    Service Lines (CPT)
+                                </label>
+                            </div>
+                            <div class="form-check form-switch mb-2 small">
+                                <input class="form-check-input" type="checkbox" id="forceRevenueLines"
+                                       {% if settings.force_escalate_revenue_lines %}checked{% endif %}>
+                                <label class="form-check-label" for="forceRevenueLines">
+                                    Revenue Codes
+                                </label>
+                            </div>
+                            <div class="form-check form-switch small">
+                                <input class="form-check-input" type="checkbox" id="forceTotalCharge"
+                                       {% if settings.force_escalate_total_charge %}checked{% endif %}>
+                                <label class="form-check-label" for="forceTotalCharge">
+                                    Total Charge
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <h6>Force Escalation Rules</h6>
-                <p class="text-muted small">Force certain fields to always use LLM, regardless of OCR confidence.</p>
-                
-                <div class="form-check form-switch mb-2">
-                    <input class="form-check-input" type="checkbox" id="forceServiceLines" 
-                           {% if settings.force_escalate_service_lines %}checked{% endif %}>
-                    <label class="form-check-label" for="forceServiceLines">
-                        <strong>Service Lines (CPT codes)</strong> - Complex field, ~100% accuracy with LLM
-                    </label>
-                </div>
-                
-                <div class="form-check form-switch mb-2">
-                    <input class="form-check-input" type="checkbox" id="forceRevenueLines"
-                           {% if settings.force_escalate_revenue_lines %}checked{% endif %}>
-                    <label class="form-check-label" for="forceRevenueLines">
-                        <strong>Revenue Codes</strong> - UB-04 revenue lines benefit from LLM
-                    </label>
-                </div>
-                
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="forceTotalCharge"
-                           {% if settings.force_escalate_total_charge %}checked{% endif %}>
-                    <label class="form-check-label" for="forceTotalCharge">
-                        <strong>Total Charge</strong> - Critical field for validation
-                    </label>
                 </div>
             </div>
         </div>
         
-        <!-- Display Settings -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="bi bi-eye"></i> Display Preferences
-            </div>
-            <div class="card-body">
-                <div class="form-check form-switch mb-2">
-                    <input class="form-check-input" type="checkbox" id="showCosts"
-                           {% if settings.show_costs %}checked{% endif %}>
-                    <label class="form-check-label" for="showCosts">
-                        Show cost information in results
-                    </label>
-                </div>
-                
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="showSavings"
-                           {% if settings.show_savings %}checked{% endif %}>
-                    <label class="form-check-label" for="showSavings">
-                        Show cost savings percentage
-                    </label>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Save/Reset Buttons -->
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-            <button type="button" class="btn btn-outline-secondary" onclick="resetSettings()">
+        <!-- Save/Reset Buttons (Styled to match premium layout) -->
+        <div class="d-flex justify-content-end gap-2 mb-4">
+            <button type="button" class="btn btn-outline-secondary fw-bold" onclick="resetSettings()" style="border-radius: 8px; font-size: 0.85rem; border-width: 2px; padding: 0.5rem 1.25rem;">
                 <i class="bi bi-arrow-counterclockwise"></i> Reset to Defaults
             </button>
-            <button type="button" class="btn btn-primary" onclick="saveSettings()">
+            <button type="button" class="btn btn-primary fw-bold" onclick="saveSettings()" style="border-radius: 8px; font-size: 0.85rem; padding: 0.5rem 1.25rem;">
                 <i class="bi bi-save"></i> Save Settings
             </button>
         </div>
@@ -159,7 +200,7 @@
     
     <div class="col-md-4">
         <!-- Info Card -->
-        <div class="card mb-4 border-primary">
+        <div class="card mb-4 border-primary shadow-sm" style="border-radius: 12px;">
             <div class="card-header bg-primary text-white">
                 <i class="bi bi-info-circle"></i> Settings Info
             </div>
@@ -177,8 +218,8 @@
         </div>
         
         <!-- Database Maintenance -->
-        <div class="card">
-            <div class="card-header bg-warning">
+        <div class="card mb-4 shadow-sm" style="border-radius: 12px;">
+            <div class="card-header bg-warning text-dark">
                 <i class="bi bi-database"></i> Database Maintenance
             </div>
             <div class="card-body">
@@ -187,9 +228,35 @@
                 </p>
                 
                 <div class="d-grid gap-2">
-                    <button class="btn btn-outline-danger btn-sm" onclick="clearOldData()">
+                    <button class="btn btn-outline-danger btn-sm fw-bold" onclick="clearOldData()" style="border-radius: 8px; border-width: 2px;">
                         <i class="bi bi-trash"></i> Clear Old Results (30+ days)
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Display Preferences (Moved under Database Maintenance!) -->
+        <div class="card shadow-sm" style="border-radius: 12px;">
+            <div class="card-header">
+                <i class="bi bi-eye text-primary"></i> Display Preferences
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">Configure how financial summaries are presented in results tables.</p>
+                
+                <div class="form-check form-switch mb-2 small">
+                    <input class="form-check-input" type="checkbox" id="showCosts"
+                           {% if settings.show_costs %}checked{% endif %}>
+                    <label class="form-check-label" for="showCosts">
+                        Show cost information in results
+                    </label>
+                </div>
+                
+                <div class="form-check form-switch small">
+                    <input class="form-check-input" type="checkbox" id="showSavings"
+                           {% if settings.show_savings %}checked{% endif %}>
+                    <label class="form-check-label" for="showSavings">
+                        Show cost savings percentage
+                    </label>
                 </div>
             </div>
         </div>

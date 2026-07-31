@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+
+{% block title %}Benchmark - Healthcare Claims Extraction{% endblock %}
+
+{% block content %}
+
+<!-- Compact Premium Heading Row -->
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <div class="d-flex align-items-center gap-3">
+        <span class="d-inline-flex align-items-center justify-content-center" style="background: var(--primary-gradient); color: white; width: 44px; height: 44px; border-radius: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+            <i class="bi bi-award" style="font-size: 1.40rem; color: white !important;"></i>
+        </span>
+        <div>
+            <h4 class="mb-0" style="font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px;">Claim Benchmarking Report</h4>
+            <p class="text-muted small mb-0 d-none d-md-block">Auditing pipeline throughput, ocr accuracies, and blended platform processing costs across 6 interactive spreadsheet sheets.</p>
+        </div>
+    </div>
+    {% if not empty %}
+    <div>
+        <button onclick="exportBenchmarkExcel()" class="btn btn-sm btn-outline-primary" title="Export Benchmark Report" style="border-radius: 8px; padding: 0.35rem 0.65rem;">
+            <i class="bi bi-download"></i>
+        </button>
+    </div>
+    {% endif %}
+</div>
+
+{% if empty %}
+<div class="p-5 text-center bg-white shadow-sm" style="border-radius: 16px; border: 1px solid var(--border-color);">
+    <i class="bi bi-bar-chart-steps text-muted" style="font-size: 4rem; opacity: 0.3; margin-bottom: 1.5rem; display: block;"></i>
+    <h5 style="color: var(--text-primary); font-weight: 700;">No Benchmark Data Found</h5>
+    <p class="text-muted small">Please upload and process claim files on the Upload Console to generate dynamic benchmark calculations.</p>
+    <a href="{{ url_for('upload_page') }}" class="btn btn-primary btn-sm fw-bold" style="border-radius: 8px;">Go to Upload Console</a>
+</div>
+{% else %}
+
+<!-- Dynamic Excel Sheet Multi-Tabs Container (All 6 Sheets represented!) -->
+<div class="card shadow-sm col-12" style="border-radius: 16px; overflow: hidden; background: white; border: 1px solid var(--border-color) !important;">
+    <!-- Excel Tab Bar (Styled like Microsoft Excel sheet tabs!) -->
+    <div class="card-header bg-light py-2 px-3 border-bottom d-flex align-items-center" style="background: #F8FAFC !important; border-bottom: 1px solid var(--border-color) !important;">
+        <span class="fw-bold text-dark d-flex align-items-center gap-1 small uppercase me-auto" style="font-size: 0.85rem;"><i class="bi bi-grid-3x3 text-success"></i> 05_Benchmark.xlsx</span>
+        
+        <ul class="nav nav-pills" id="excelTabs" role="tablist" style="gap: 0.25rem;">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active py-1 px-2 btn-sm fw-bold" id="tab-overall" data-bs-toggle="pill" data-bs-target="#sheet-overall" type="button" role="tab" style="font-size: 0.725rem; border-radius: 6px;">
+                    <i class="bi bi-file-earmark-text-fill text-primary"></i> 1. Overall Metrics
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link py-1 px-2 btn-sm fw-bold" id="tab-cost" data-bs-toggle="pill" data-bs-target="#sheet-cost" type="button" role="tab" style="font-size: 0.725rem; border-radius: 6px;">
+                    <i class="bi bi-pie-chart-fill text-warning"></i> 2. Cost Analysis
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link py-1 px-2 btn-sm fw-bold" id="tab-detailed" data-bs-toggle="pill" data-bs-target="#sheet-detailed" type="button" role="tab" style="font-size: 0.725rem; border-radius: 6px;">
+                    <i class="bi bi-table text-success"></i> 3. Detailed Results
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link py-1 px-2 btn-sm fw-bold" id="tab-tier" data-bs-toggle="pill" data-bs-target="#sheet-tier" type="button" role="tab" style="font-size: 0.725rem; border-radius: 6px;">
+                    <i class="bi bi-diagram-3-fill text-info"></i> 4. Tier Breakdown
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link py-1 px-2 btn-sm fw-bold" id="tab-provider" data-bs-toggle="pill" data-bs-target="#sheet-provider" type="button" role="tab" style="font-size: 0.725rem; border-radius: 6px;">
+                    <i class="bi bi-robot text-danger"></i> 5. Provider Usage
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link py-1 px-2 btn-sm fw-bold" id="tab-accuracy" data-bs-toggle="pill" data-bs-target="#sheet-accuracy" type="button" role="tab" style="font-size: 0.725rem; border-radius: 6px;">
+                    <i class="bi bi-bullseye text-dark"></i> 6. Accuracy Metrics
+                </button>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="card-body p-0">
+        <div class="tab-content" id="excelTabContent">
+            
+            <!-- SHEET 1: Overall Metrics -->
+            <div class="tab-pane fade show active" id="sheet-overall" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table mb-0 align-middle text-start" style="font-size: 0.85rem;">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-2 px-3" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 50%;">Metric Description</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 50%;">Metric Calculated Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in overall_metrics %}
+                            <tr>
+                                <td class="py-2 px-3 text-dark fw-bold">{{ m.Metric }}</td>
+                                <td class="py-2 px-3 text-end fw-extrabold text-primary" style="font-family: monospace;">
+                                    {% if '$' in m.Metric or 'Cost' in m.Metric %}
+                                        ${{ m.Value }}
+                                    {% else %}
+                                        {{ m.Value }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- SHEET 2: Cost Analysis -->
+            <div class="tab-pane fade" id="sheet-cost" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table mb-0 align-middle text-start" style="font-size: 0.85rem;">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-2 px-3" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Pipeline Component</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Total Blended Expense</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Avg Cost per Page</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">% of Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in cost_analysis %}
+                            <tr>
+                                <td class="py-2 px-3 text-dark fw-bold">{{ c.Component }}</td>
+                                <td class="py-2 px-3 text-end fw-extrabold" style="font-family: monospace; color: var(--success-color);">${{ "%.4f"|format(c.Total_Cost) }}</td>
+                                <td class="py-2 px-3 text-end" style="font-family: monospace;">${{ "%.6f"|format(c.Avg_Cost) }}</td>
+                                <td class="py-2 px-3 text-end"><span class="badge" style="background: rgba(100, 116, 139, 0.1); color: #475569; border: 1px solid rgba(100, 116, 139, 0.15); font-weight: 700;">{{ c.Percent }}%</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- SHEET 3: Detailed Results (With ellipsis overflow on long strings + title hover tooltips!) -->
+            <div class="tab-pane fade" id="sheet-detailed" role="tabpanel">
+                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                    <table class="table table-hover mb-0 align-middle text-start" id="detailedTable" style="font-size: 0.8rem;">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 60px;">ID</th>
+                                <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 220px;">Claim Filename</th>
+                                <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 130px;">Form Type</th>
+                                <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 120px;">Status</th>
+                                <th class="py-2 px-2 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 100px;">Time (sec)</th>
+                                <th class="py-2 px-2 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 80px;">Fields</th>
+                                <th class="py-2 px-2 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 110px;">Confidence</th>
+                                <th class="py-2 px-2 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 100px;">Cost ($)</th>
+                                <th class="py-2 px-2" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 140px;">Provider</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in detailed_results %}
+                            <tr>
+                                <td class="py-2 px-2"><small class="text-muted fw-bold">#{{ r.ID }}</small></td>
+                                <td class="py-2 px-2">
+                                    <strong class="text-dark truncate-filename" title="{{ r.Filename }}">{{ r.Filename }}</strong>
+                                </td>
+                                <td class="py-2 px-2">
+                                    <span class="badge" style="background: rgba(79, 70, 229, 0.1); color: var(--primary-color); border: 1px solid rgba(79, 70, 229, 0.15); font-weight: 700;">{{ r.Form_Type }}</span>
+                                </td>
+                                <td class="py-2 px-2">
+                                    {% if r.Status == 'OK' %}
+                                        <span class="badge bg-success" style="font-size: 0.65rem;">SUCCESS</span>
+                                    {% else %}
+                                        <span class="badge bg-danger d-inline-flex align-items-center gap-1" title="{{ r.Status }}">
+                                            <span class="truncate-status" style="max-width: 100px; font-size: 0.65rem;">{{ r.Status }}</span>
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-2 px-2 text-end font-monospace" style="font-family: monospace;">{{ r.Time }}s</td>
+                                <td class="py-2 px-2 text-end font-monospace" style="font-family: monospace;">{{ r.Fields }}</td>
+                                <td class="py-2 px-2 text-end font-monospace fw-bold text-primary" style="font-family: monospace;">{{ r.Confidence }}%</td>
+                                <td class="py-2 px-2 text-end font-monospace fw-bold text-success" style="font-family: monospace;">${{ "%.4f"|format(r.Cost) }}</td>
+                                <td class="py-2 px-2">
+                                    <!-- Resolved Provider badge background coloring to be visual-matched and eliminate black backgrounds! -->
+                                    <span class="badge" style="background: rgba(100, 116, 139, 0.1); color: #475569; border: 1px solid rgba(100, 116, 139, 0.15); font-weight: 700; text-transform: uppercase;">{{ r.Provider }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SHEET 4: Tier Breakdown -->
+            <div class="tab-pane fade" id="sheet-tier" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table mb-0 align-middle text-start" style="font-size: 0.85rem;">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-2 px-3" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Form Layout Tier</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Pages Processed</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Avg Time (sec)</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Avg Confidence (%)</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Avg Cost ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in tier_breakdown %}
+                            <tr>
+                                <td class="py-2 px-3 text-dark fw-bold">{{ t.Tier }}</td>
+                                <td class="py-2 px-3 text-end font-monospace" style="font-family: monospace;">{{ t.Count }}</td>
+                                <td class="py-2 px-3 text-end font-monospace" style="font-family: monospace;">{{ t.Avg_Time }}s</td>
+                                <td class="py-2 px-3 text-end font-monospace fw-bold text-primary" style="font-family: monospace;">{{ t.Avg_Confidence }}%</td>
+                                <td class="py-2 px-3 text-end font-monospace fw-bold text-success" style="font-family: monospace;">${{ "%.4f"|format(t.Avg_Cost) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SHEET 5: Provider Usage -->
+            <div class="tab-pane fade" id="sheet-provider" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table mb-0 align-middle text-start" style="font-size: 0.85rem;">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-2 px-3" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">LLM Provider Name</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Escalation Count</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Total cost ($)</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569;">Avg Confidence (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in provider_usage %}
+                            <tr>
+                                <td class="py-2 px-3 text-dark fw-bold">{{ p.Provider }}</td>
+                                <td class="py-2 px-3 text-end font-monospace" style="font-family: monospace;">{{ p.Count }}</td>
+                                <td class="py-2 px-3 text-end font-monospace fw-bold text-success" style="font-family: monospace;">${{ "%.4f"|format(p.Total_Cost) }}</td>
+                                <td class="py-2 px-3 text-end font-monospace fw-bold text-primary" style="font-family: monospace;">{{ p.Avg_Confidence }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SHEET 6: Accuracy Metrics Summary -->
+            <div class="tab-pane fade" id="sheet-accuracy" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table mb-0 align-middle text-start" style="font-size: 0.85rem;">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-2 px-3" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 50%;">Statistical Accuracy Metrics</th>
+                                <th class="py-2 px-3 text-end" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; width: 50%;">Calculated Summary Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for a in accuracy_metrics %}
+                            <tr>
+                                <td class="py-2 px-3 text-dark fw-bold">{{ a.Metric }}</td>
+                                <td class="py-2 px-3 text-end fw-extrabold text-success" style="font-family: monospace;">{{ a.Value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Truncation CSS styles to prevent table stretching and add beautiful visual eclipses */
+    .truncate-filename {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    .truncate-status {
+        max-width: 110px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    console.log('🔵 benchmark.html JS loaded successfully');
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize tooltips
+        document.querySelectorAll('[title]').forEach(el => {
+            el.setAttribute('data-bs-toggle', 'tooltip');
+        });
+        
+        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+    });
+    
+    function exportBenchmarkExcel() {
+        const rows = document.querySelectorAll('#detailedTable tbody tr');
+        if (rows.length === 0) {
+            showToast('No detailed results to export', 'warning');
+            return;
+        }
+        
+        let csv = 'ID,Filename,Form Type,Status,Time (sec),Fields,Confidence (%),Cost ($),LLM Provider\n';
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const id = cells[0].textContent.trim().replace('#', '');
+            const filename = cells[1].querySelector('.truncate-filename')?.getAttribute('title') || cells[1].textContent.trim();
+            const formType = cells[2].textContent.trim();
+            const status = cells[3].querySelector('.truncate-status')?.getAttribute('title') || cells[3].textContent.trim();
+            const time = cells[4].textContent.trim().replace('s', '');
+            const fields = cells[5].textContent.trim();
+            const confidence = cells[6].textContent.trim().replace('%', '');
+            const cost = cells[7].textContent.trim().replace('$', '');
+            const provider = cells[8].textContent.trim();
+            
+            csv += `${id},"${filename}","${formType}",${status},${time},${fields},${confidence},${cost},"${provider}"\n`;
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `detailed_results_05_Benchmark.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        showToast('Benchmark CSV exported successfully', 'success');
+    }
+</script>
+{% endblock %}
